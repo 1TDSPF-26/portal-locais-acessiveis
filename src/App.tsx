@@ -2,7 +2,9 @@
 
 export default function App() {
   return (
-    <div>App</div>
+    <div>
+      <h1>Portal Acessível Template</h1>
+    </div>
   )
 }
 
