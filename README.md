@@ -13,3 +13,5 @@ SEU-PROJETO/
 ├── src/
 ├── package.json
 └── vite.config.ts
+
+docs: melhora apresentação do projeto
