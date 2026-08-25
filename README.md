@@ -2,6 +2,10 @@
 
 Este pacote contém modelos padronizados para o projeto continuado do Portal de Locais e Serviços Acessíveis.
 
+## Projeto de Acessibilidade Geral
+
+- Projeto que contempla auxiliar usuarios que possuem dificuldades digitais.
+
 ## Conteúdo
 
 ```text
