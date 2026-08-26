@@ -9,8 +9,8 @@ import Sobre from '../pages/Sobre/Sobre'
 function AppRoutes() {
   return (
     <Routes>
-      <Route element={<MainLayout />}>   //faz com que o header e o footer fiquem em todas as paginas que for criar
-        <Route path="/" element={<Home />} />  //esse "/" faz com que a pagina home abra automaticamente quando entrar no site
+      <Route element={<MainLayout />}>   {/*faz com que o header e o footer fiquem em todas as paginas que for criar*/}
+        <Route path="/" element={<Home />} />  {/*esse "/" faz com que a pagina home abra automaticamente quando entrar no site*/}
         <Route path="/locais" element={<Locais />} />
         <Route path="/cadastrar" element={<Cadastro />} />
         <Route path="/sobre" element={<Sobre />} />
