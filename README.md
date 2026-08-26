@@ -4,7 +4,7 @@ Este pacote contém modelos padronizados para o projeto continuado do Portal de 
 
 ## Projeto de Acessibilidade Geral
 
-- Projeto que contempla auxiliar usuarios que possuem dificuldades digitais.
+- Projeto acadêmico que contempla auxiliar usuarios que possuem dificuldades digitais.
 
 ## Conteúdo
 
