@@ -4,7 +4,6 @@ function MainLayout() {
   return (
     <div>
       <header>
-        {/* o menu vai ficar aqui */}
       </header>
 
       <main>
@@ -12,7 +11,6 @@ function MainLayout() {
       </main>
 
       <footer>
-        {/* o rodape vai ficar aqui depois */}
       </footer>
     </div>
   )
