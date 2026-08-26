@@ -1,10 +1,11 @@
-
+import { MainLayout } from "./layouts/MainLayout/MainLayout";
 
 export default function App() {
   return (
-    <div>
-      <h1>Portal Acessível Template</h1>
-    </div>
+     <MainLayout>
+      <h2>Conteúdo de teste</h2>
+      <p>O MainLayout está funcionando corretamente.</p>
+    </MainLayout>
   )
 }
 
