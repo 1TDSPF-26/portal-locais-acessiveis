@@ -1,19 +1,21 @@
-import { Outlet } from 'react-router-dom'
+import type { ReactNode } from "react";
+import { Header } from "../components/Header/Header";
+import { Footer } from "../components/Footer/Footer";
 
-function MainLayout() {
-  return (
-    <div>
-      <header>
-      </header>
-
-      <main>
-        <Outlet />
-      </main>
-
-      <footer>
-      </footer>
-    </div>
-  )
+interface MainLayoutProps {
+  children: ReactNode;
 }
 
-export default MainLayout
+export function MainLayout({ children }: MainLayoutProps) {
+  return (
+    <>
+      <Header />
+
+      <main>
+        {children}
+      </main>
+
+      <Footer />
+    </>
+  );
+}
