@@ -1,11 +1,7 @@
-import { MainLayout } from "./layouts/MainLayout/MainLayout";
+import AppRoutes from './routes/AppRoutes'
 
-export default function App() {
-  return (
-     <MainLayout>
-      <h2>Conteúdo de teste</h2>
-      <p>O MainLayout está funcionando corretamente.</p>
-    </MainLayout>
-  )
+function App() {
+  return <AppRoutes />
 }
 
+export default App
