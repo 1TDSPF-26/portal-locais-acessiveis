@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export default function NotFound(){
     return(
 
-        <main>
+        <div>
             
             <h2>Erro - 404</h2>
             <h3>Página não encontrada</h3>
@@ -16,7 +16,7 @@ export default function NotFound(){
             </Link>
 
 
-        </main>
+        </div>
 
     );
 }
