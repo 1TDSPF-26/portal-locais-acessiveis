@@ -20,8 +20,8 @@ export function Header() {
           </li>
           <li>
             <NavLink to="/cadastrar">
-              Cadastro"
-            </NavLink>"
+              Cadastro
+            </NavLink>
           </li>
           <li>
             <NavLink to="/sobre">
