@@ -1,0 +1,23 @@
+.mainNav ul{
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+    margin: 0;
+    padding: 0;
+}
+
+.mainNav ul li a{
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+}
+
+.mainNav a.active{
+    font-weight: 700;
+    border-bottom-color: currentColor;
+}
+
+.mainNav a:focus-visible{
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}
