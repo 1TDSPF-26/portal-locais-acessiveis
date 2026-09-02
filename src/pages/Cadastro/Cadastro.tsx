@@ -21,6 +21,13 @@ function Cadastro() {
           <li><strong>Informações de acessibilidade:</strong> Detalhes de recursos como rampas, elevadores, piso tátil ou banheiros adaptados</li>
         </ul>
       </section>
+
+      <aside>
+        <h2>Status do Desenvolvimento</h2>
+        <p>
+          <strong>Aviso importante:</strong> Esta página é exclusivamente informativa nesta etapa. O formulário funcional de envio, validação de campos e persistência de dados serão implementados em entregas futuras do projeto. Nenhum dado é enviado ou salvo no momento.
+        </p>
+      </aside>
     </main>
   )
 }
