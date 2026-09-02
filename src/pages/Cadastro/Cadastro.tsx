@@ -1,9 +1,13 @@
 function Cadastro() {
   return (
-    <div>
-      <h1>Cadastro</h1>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque eos molestias debitis tempore, aut autem ducimus numquam soluta, consequuntur aspernatur maxime, sit eaque enim. Tenetur error ad alias nam praesentium.</p>
-    </div>
+    <main>
+      <header>
+        <h1>Cadastro de Locais Acessíveis</h1>
+        <p>
+          Esta área foi desenvolvida para apresentar a proposta e a estrutura inicial do futuro cadastro de novos locais e serviços acessíveis na plataforma.
+        </p>
+      </header>
+    </main>
   )
 }
 
