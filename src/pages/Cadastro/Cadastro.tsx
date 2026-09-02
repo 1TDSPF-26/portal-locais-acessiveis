@@ -1,6 +1,6 @@
 function Cadastro() {
   return (
-    <main>
+    <div>
       <header>
         <h1>Cadastro de Locais Acessíveis</h1>
         <p>
@@ -28,7 +28,7 @@ function Cadastro() {
           <strong>Aviso importante:</strong> Esta página é exclusivamente informativa nesta etapa. O formulário funcional de envio, validação de campos e persistência de dados serão implementados em entregas futuras do projeto. Nenhum dado é enviado ou salvo no momento.
         </p>
       </aside>
-    </main>
+    </div>
   )
 }
 
