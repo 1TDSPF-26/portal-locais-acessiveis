@@ -161,3 +161,14 @@ Os cards são utilizados para agrupar informações de forma clara e acessível.
 3. **Descrição Curta** (texto principal do card).
 4. **CTA** (Botão "Saiba mais").
 *Nota de UI:* Utilizar `8px` ou `16px` de arredondamento (border-radius) nas bordas dos cards.
+
+## 5. Estados de Feedback e Alerta
+
+Para critérios de acessibilidade, os alertas combinam o uso de **Cores + Ícones + Textos claros**.
+* **Sucesso:**
+* **Uso:** Confirmações de ações (ex: "Local cadastrado com sucesso").
+* **Visual:** Fundo verde claro, bordas e textos em verde escuro (`#087443`). Acompanha ícone de check (`✓`).
+
+* **Erro:**
+* **Uso:** Falhas em formulários ou ações interrompidas (ex: "Não foi possível concluir a ação").
+* **Visual:** Fundo vermelho claro, bordas e textos em vermelho escuro (`#B42318`). Acompanha ícone de X (`✕`).
