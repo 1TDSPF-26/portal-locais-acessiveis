@@ -99,3 +99,15 @@ vercel.json
 - dado médico ou pessoal sensível.
 
 O controle de notas deverá permanecer em ambiente privado do professor.
+
+# Design System — Issue #21
+
+**Projeto:** Portal de Locais e Serviços Acessíveis
+**Objetivo:** Definição e documentação da identidade visual inicial, componentes, tipografia e estados de interação para garantir acessibilidade e consistência na interface.
+
+## 🔗 Links Úteis
+
+**Figma:** [Acessar o Projeto no Figma](https://www.figma.com/design/FuzX9WRvPhFs943gbVv6Fx/cp-ale-fernandes-e-kaua?node-id=0-1&t=tBf9TXX9Zq4pdht5-1)
+
+**Vídeo de Referência (Apoio):** [Assistir no YouTube] (https://youtu.be/RX-iy9sHPpg)
+
