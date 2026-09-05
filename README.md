@@ -109,6 +109,7 @@ https://www.figma.com/design/FuzX9WRvPhFs943gbVv6Fx/cp-ale-fernandes-e-kaua?node
 
 ### Vídeo de referência
 Material utilizado como apoio:
+https://www.youtube.com/watch?v=sEevoA8M9wA&feature=youtu.be
 
 
 
