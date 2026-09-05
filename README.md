@@ -111,3 +111,18 @@ O controle de notas deverá permanecer em ambiente privado do professor.
 
 **Vídeo de Referência (Apoio):** [Assistir no YouTube] (https://youtu.be/RX-iy9sHPpg)
 
+## 1. Identidade Visual e Paleta de Cores
+
+A paleta foi atualizada para garantir contraste adequado e legibilidade, focando em uma experiência clara e acessível.
+
+| Elemento | Cor | Hexadecimal |
+| **Fundo Principal** | Branco Acinzentado | `#F5F7FA` |
+| **Cards / Superfícies** | Azul Gelo | `#DDEEF2` |
+| **Detalhes / Ícones** | Azul Intermediário | `#44A0B4` |
+| **Títulos** | Azul Escuro | `#172033` |
+| **Textos do Corpo** | Cinza Escuro | `#465268` |
+| **Botões Principais (Base)** | Azul Vivo | `#155EEF` |
+| **Foco / Interativos** | Verde Água | `#64CCC5` |
+| **Azul Petróleo (Apoio)** | Petróleo | `#244A5A` |
+| **Sucesso (Feedback)** | Verde Escuro | `#087443` |
+| **Erro (Feedback)** | Vermelho Escuro | `#B42318` |
