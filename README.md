@@ -138,8 +138,26 @@ A fonte padrão escolhida para o projeto é a **Montserrat**. Abaixo estão as h
 **Legendas (Textos Pequenos):** Regular (400) | `16px` ou `14px` | Cor: Textos (`#465268`)
 **Botões:** SemiBold (600) | `16px` | Cor: Branco (`#FFFFFF`)
 
-
 ## 3. Espaçamento (Spacing)
 
 Foi definido um sistema de grids e espaçamentos (padding/margin) com base em múltiplos de 4 e 8 para manter a consistência do layout:
 **Escala:** `4px`, `8px`, `12px`, `16px`, `24px`, `32px`, `40px` e `48px`.
+
+## 4. Componentes e Interações
+### 4.1. Botões (Call to Action)
+
+Os botões possuem estados visuais bem definidos para ajudar a o usuário a entender interações e o status do sistema.
+
+| Estado | Fundo (Hex) | Texto (Hex) | Borda / Traço |
+| **Ativado (Default)** | `#216FCE` | `#FFFFFF` | Nenhuma |
+| **Hover (Passar o mouse)** | `#144787` | `#FFFFFF` | Nenhuma |
+| **Foco (Navegação por teclado)** | `#216FCE` | `#FFFFFF` | Contorno de foco usando `#64CCC5` |
+| **Desativado (Disabled)** | `#E0E4E8` | `#98A2B3` | Nenhuma |
+
+### 4.2. Anatomia dos Cards
+Os cards são utilizados para agrupar informações de forma clara e acessível. Estrutura padrão:
+1. **Ícone ou Ilustração** (superior ou lateral).
+2. **Título do Card (H3)**.
+3. **Descrição Curta** (texto principal do card).
+4. **CTA** (Botão "Saiba mais").
+*Nota de UI:* Utilizar `8px` ou `16px` de arredondamento (border-radius) nas bordas dos cards.
