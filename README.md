@@ -126,3 +126,14 @@ A paleta foi atualizada para garantir contraste adequado e legibilidade, focando
 | **Azul Petróleo (Apoio)** | Petróleo | `#244A5A` |
 | **Sucesso (Feedback)** | Verde Escuro | `#087443` |
 | **Erro (Feedback)** | Vermelho Escuro | `#B42318` |
+
+## 2. Tipografia
+
+A fonte padrão escolhida para o projeto é a **Montserrat**. Abaixo estão as hierarquias definidas:
+
+**H1 (Títulos Grandes):** Bold (700) | `32px` | Cor: Títulos (`#172033`)
+**H2 (Títulos de Seção):** SemiBold (600) | `28px` | Cor: Títulos (`#172033`)
+**H3 (Subtítulos / Cards):** Medium (500) ou SemiBold (600) | `24px` | Cor: Títulos (`#172033`)
+**Body (Corpo de Texto):** Regular (400) | `20px` | Cor: Textos (`#465268`)
+**Legendas (Textos Pequenos):** Regular (400) | `16px` ou `14px` | Cor: Textos (`#465268`)
+**Botões:** SemiBold (600) | `16px` | Cor: Branco (`#FFFFFF`)
