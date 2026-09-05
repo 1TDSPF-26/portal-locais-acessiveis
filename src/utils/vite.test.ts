@@ -13,9 +13,9 @@ function somar(a: number, b: number): number {
 describe('Configuração Inicial do Vitest', () => {
   
   it('deve somar dois números corretamente', () => {
-    const resultado = somar(2, 3);
+    const resultado = somar(4, 3);
 
-    expect(resultado).toBe(5); 
+    expect(resultado).toBe(7); 
 
 
     console.log('resultado: ',resultado);
