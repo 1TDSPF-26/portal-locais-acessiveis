@@ -99,3 +99,39 @@ vercel.json
 - dado médico ou pessoal sensível.
 
 O controle de notas deverá permanecer em ambiente privado do professor.
+
+## Design System — Issue #21
+
+### Figma
+Link do projeto no Figma:
+https://www.figma.com/design/FuzX9WRvPhFs943gbVv6Fx/cp-ale-fernandes-e-kaua?node-id=0-1&t=tBf9TXX9Zq4pdht5-1
+
+
+### Vídeo de referência
+Material utilizado como apoio:
+
+
+
+### Paleta de cores
+- Cards: `#44A0B4`
+- Títulos: `#172033`
+- Textos: `#465268`
+- Fundo: `#F5F7FA`
+- Botões: `#155EEF`
+- Sucesso: `#087443`
+- Erro: `#B42318`
+
+### Resumo
+Foi definida uma identidade visual inicial para o Portal de Locais e Serviços Acessíveis, com referências de cores, tipografia, espaçamento, botões, cards e estados visuais.
+
+### Alterações
+- adição do link do Figma;
+- documentação da paleta de cores;
+- registro das referências visuais do Design System;
+- incluindo um  material de apoio utilizado.
+
+### Testes e validações
+- links revisados;
+- documentação conferida;
+- paleta de cores validada;
+- conteúdo disponível para consulta da equipe.
