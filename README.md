@@ -137,3 +137,9 @@ A fonte padrão escolhida para o projeto é a **Montserrat**. Abaixo estão as h
 **Body (Corpo de Texto):** Regular (400) | `20px` | Cor: Textos (`#465268`)
 **Legendas (Textos Pequenos):** Regular (400) | `16px` ou `14px` | Cor: Textos (`#465268`)
 **Botões:** SemiBold (600) | `16px` | Cor: Branco (`#FFFFFF`)
+
+
+## 3. Espaçamento (Spacing)
+
+Foi definido um sistema de grids e espaçamentos (padding/margin) com base em múltiplos de 4 e 8 para manter a consistência do layout:
+**Escala:** `4px`, `8px`, `12px`, `16px`, `24px`, `32px`, `40px` e `48px`.
