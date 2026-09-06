@@ -18,7 +18,7 @@ function Sobre() {
           simplórios, uma rampa de acesso para cadeirantes, ou um adaptador de cores de um site para um daltônico, esse tipo de coisa é o mínimo 
           aceitável de acessibilidade que uma pessoa merece.<br />
           Pessoas com deficiência de modo geral, não devem se sentir diferentes, elas devem se sentir como qualquer outra, recebendo os devidos
-          benefícios para que possam viver a vida, o que é um direito do ser humano, ninguém merece menos do que ninguém por ser diferente.<br />
+          benefícios para que possam viver a vida, o que é um direito do ser humano, ninguém merece menos do que ninguém por ser diferente.
         </p>
       </section>
     </div>
