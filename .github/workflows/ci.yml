@@ -58,4 +58,4 @@ jobs:
 
       - name: Executar testes disponíveis
         if: steps.project.outputs.ready == 'true'
-        run: npm run test --if-present
+        run: npm run test:run --if-present
