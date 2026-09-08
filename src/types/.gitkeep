@@ -4,6 +4,10 @@ export interface Endereco {
   cidade?: string;
   estado?: string;
 }
+export interface Coordenadas {
+  latitude: number;
+  longitude: number;
+}
 export interface Local {
   id: string;
   nome: string;
