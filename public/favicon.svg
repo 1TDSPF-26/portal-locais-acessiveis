@@ -1,0 +1,28 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 64 64"
+>
+  <circle
+    cx="32"
+    cy="32"
+    r="28"
+    fill="#444444"
+  />
+
+  <path
+    d="M32 14
+       C24 14 18 20 18 28
+       C18 38 32 52 32 52
+       C32 52 46 38 46 28
+       C46 20 40 14 32 14
+       Z"
+    fill="white"
+  />
+
+  <circle
+    cx="32"
+    cy="28"
+    r="6"
+    fill="#444444"
+  />
+</svg>
