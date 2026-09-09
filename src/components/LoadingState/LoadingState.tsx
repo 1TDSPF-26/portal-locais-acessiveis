@@ -9,14 +9,13 @@ export function LoadingState({
         <div
             role="status"
             aria-live="polite"
-            className="my-4 flex flex-col items-center justify-center rounded-lg border border-gray-200 bg-gray-50 p-6 text-center"
+            className="my-4 flex flex-col items-center justify-center rounded-lg border border-[#DDEEF2] bg-[#F7F9FA] p-6 text-center"
         >
             <div
-                className="mb-3 h-10 w-10 animate-spin rounded-full border-4 border-blue-600 border-t-transparent"
+                className="mb-3 h-10 w-10 animate-spin rounded-full border-4 border-[#216FCE] border-t-transparent"
                 aria-hidden="true"
             />
-
-            <p className="text-base font-medium text-gray-800">
+            <p className="text-base font-medium text-[#465268]">
                 {message}
             </p>
         </div>
