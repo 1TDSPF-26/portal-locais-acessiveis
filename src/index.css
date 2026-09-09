@@ -21,7 +21,7 @@
     --text-h1--font-weight: 700;
 
     --text-h2: 28px;
-    --text-h2-font--weight: 600;
+    --text-h2--font-weight: 600;
 
     --text-h3: 24px;
 
@@ -35,6 +35,6 @@
 
     --text-botao: 16px;
     --text-botao--font-weight: 600;
-
+F
     /*Não foram criados tokens personalizados para espaçamento pois a escala padrão do Tailwind já corresponde ao Design System.*/
 }
