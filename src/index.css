@@ -35,6 +35,6 @@
 
     --text-botao: 16px;
     --text-botao--font-weight: 600;
-F
+    
     /*Não foram criados tokens personalizados para espaçamento pois a escala padrão do Tailwind já corresponde ao Design System.*/
 }
