@@ -25,7 +25,7 @@ export function ErrorState({
                 <button
                     type="button"
                     onClick={onRetry}
-                    className="mt-4 rounded-md bg-[#B42318] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#244A5A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#64CCC5] focus-visible:ring-offset-2"
+                    className="mt-4 rounded-md bg-[#B42318] px-4 py-2 text-base font-semibold text-white transition-colors hover:bg-[#244A5A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#244A5A] focus-visible:ring-offset-2"
                 >
                     Tentar novamente
                 </button>
