@@ -1,1 +1,40 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
+
+@theme {
+    /*===== CORES =====*/
+    --color-cor-fundo-principal: #F7F9FA;   
+    --color-cor-superficies-cards: #DDEEF2;
+    --color-cor-detalhes-icones: #44A0B4;
+    --color-cor-botao-principal: #216FCE;
+    --color-cor-apoio: #244A5A;
+    --color-cor-titulos: #172A3A;
+    --color-cor-textos: #465268;
+    --color-cor-foco-interativos:#64CCC5;
+    --color-cor-sucesso: #087443;
+    --color-cor-erro: #B42318;
+
+    /*===== TEXTO ====*/
+    --font-sans: "Montserrat", sans-serif;
+    
+    --text-h1: 32px;
+    --text-h1--font-weight: 700;
+
+    --text-h2: 28px;
+    --text-h2--font-weight: 600;
+
+    --text-h3: 24px;
+
+    --text-body: 20px;
+    --text-body-font--weight: 400;
+
+    --text-legendas-pequena: 14px;
+    --text-legendas-pequena--font-weight: 400;
+    --text-legendas: 16px;
+    --text-legendas--font-weight: 400;
+
+    --text-botao: 16px;
+    --text-botao--font-weight: 600;
+    
+    /*Não foram criados tokens personalizados para espaçamento pois a escala padrão do Tailwind já corresponde ao Design System.*/
+}
