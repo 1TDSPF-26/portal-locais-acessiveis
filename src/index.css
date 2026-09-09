@@ -1,22 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
-/*
-
-
-H1:       32px / Bold 700
-H2:       28px / SemiBold 600
-H3:       24px / Medium 500 ou SemiBold 600
-Body:     20px / Regular 400
-Legendas: 14px ou 16px / Regular 400
-Botões:   16px / SemiBold 600
-
-4px, 8px, 12px, 16px, 24px, 32px, 40px e 48px
-*/
-
 @theme {
-    /*=========== CORES ==========*/
-    --color-cor-fundo-principal: #F7F9FA;
+    /*===== CORES =====*/
+    --color-cor-fundo-principal: #F7F9FA;   
     --color-cor-superficies-cards: #DDEEF2;
     --color-cor-detalhes-icones: #44A0B4;
     --color-cor-botao-principal: #216FCE;
@@ -27,7 +14,7 @@ Botões:   16px / SemiBold 600
     --color-cor-sucesso: #087443;
     --color-cor-erro: #B42318;
 
-    /*=========== TEXTO ==========*/
+    /*===== TEXTO ====*/
     --font-sans: "Montserrat", sans-serif;
     
     --text-h1: 32px;
@@ -48,4 +35,6 @@ Botões:   16px / SemiBold 600
 
     --text-botao: 16px;
     --text-botao--font-weight: 600;
+
+    /*Não foram criados tokens personalizados para espaçamento pois a escala padrão do Tailwind já corresponde ao Design System.*/
 }
