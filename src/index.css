@@ -72,4 +72,23 @@ body {
     background-color: var(--color-cor-fundo-principal);
     color: var(--color-cor-textos);
     font-family: var(--font-sans);
+    font-size: calc(16px * var(--font-scale));
+}
+
+h1 {
+    font-size: calc(32px * var(--font-scale));
+}
+
+h2 {
+    font-size: calc(28px * var(--font-scale));
+}
+
+h3 {
+    font-size: calc(24px * var(--font-scale));
+}
+
+p,
+li,
+a {
+    font-size: calc(20px * var(--font-scale));
 }
