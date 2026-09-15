@@ -28,7 +28,7 @@ const defaultPreferences: AccessibilityPreferences = {
     highContrast: false,
 };
 
-const AccessibilityContext = createContext<
+export const AccessibilityContext = createContext<
     AccessibilityContextData | undefined
 >(undefined);
 
