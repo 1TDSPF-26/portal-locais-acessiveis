@@ -1,6 +1,5 @@
 import {
     createContext,
-    useContext,
     useEffect,
     useState,
     type ReactNode,
@@ -136,14 +135,3 @@ export function AccessibilityProvider({
     );
 }
 
-export function useAccessibility() {
-    const context = useContext(AccessibilityContext);
-
-    if (!context) {
-        throw new Error(
-            "useAccessibility deve ser utilizado dentro de AccessibilityProvider"
-        );
-    }
-
-    return context;
-}

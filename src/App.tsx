@@ -1,4 +1,4 @@
-import { AccessibilityProvider } from './contexts/AcessibilityContext'
+import { AccessibilityProvider } from './contexts/AccessibilityContext'
 import AppRoutes from './routes/AppRoutes'
 
 function App() {
