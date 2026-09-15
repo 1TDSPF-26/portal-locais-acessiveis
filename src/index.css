@@ -17,23 +17,23 @@
     /*===== TEXTO ====*/
     --font-sans: "Montserrat", sans-serif;
     
-    --text-h1: 32px;
+    --text-h1: calc(32px * var(--font-scale));
     --text-h1--font-weight: 700;
 
-    --text-h2: 28px;
+    --text-h2: calc(28px * var(--font-scale));
     --text-h2--font-weight: 600;
 
-    --text-h3: 24px;
+    --text-h3: calc(24px * var(--font-scale));
 
-    --text-body: 20px;
+    --text-body: calc(20px * var(--font-scale));
     --text-body-font--weight: 400;
 
-    --text-legendas-pequena: 14px;
+    --text-legendas-pequena: calc(14px * var(--font-scale));
     --text-legendas-pequena--font-weight: 400;
-    --text-legendas: 16px;
+    --text-legendas: calc(16px * var(--font-scale));
     --text-legendas--font-weight: 400;
 
-    --text-botao: 16px;
+    --text-botao: calc(16px * var(--font-scale));
     --text-botao--font-weight: 600;
     
     /*Não foram criados tokens personalizados para espaçamento pois a escala padrão do Tailwind já corresponde ao Design System.*/
@@ -53,4 +53,23 @@
 
 :root[data-font-size="large"] {
     --font-scale: 1.1;
+}
+
+:root[data-contrast="high"] {
+    --color-cor-fundo-principal: #000000;
+    --color-cor-superficies-cards: #000000;
+    --color-cor-detalhes-icones: #ffffff;
+    --color-cor-botao-principal: #ffffff;
+    --color-cor-apoio: #ffffff;
+    --color-cor-titulos: #ffffff;
+    --color-cor-textos: #ffffff;
+    --color-cor-foco-interativos: #ffff00;
+    --color-cor-sucesso: #00ff00;
+    --color-cor-erro: #ff6666;
+}
+
+body {
+    background-color: var(--color-cor-fundo-principal);
+    color: var(--color-cor-textos);
+    font-family: var(--font-sans);
 }
