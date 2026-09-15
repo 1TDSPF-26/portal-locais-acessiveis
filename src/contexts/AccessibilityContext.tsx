@@ -69,6 +69,13 @@ export function AccessibilityProvider({
     );
 
     useEffect(() => {
+        document.documentElement.dataset.fontSize = fontSize;
+        document.documentElement.dataset.contrast = highContrast
+            ? "high"
+            : "normal";
+    }, [fontSize, highContrast]);
+
+    useEffect(() => {
         const preferences: AccessibilityPreferences = {
             fontSize,
             highContrast,
