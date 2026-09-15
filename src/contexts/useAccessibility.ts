@@ -1,6 +1,6 @@
 import { useContext } from "react";
 
-import { AccessibilityContext } from "./AccessibilityContext";
+import { AccessibilityContext } from "./AccessibilityContextValue";
 
 export function useAccessibility() {
     const context = useContext(AccessibilityContext);
