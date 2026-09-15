@@ -38,3 +38,19 @@
     
     /*Não foram criados tokens personalizados para espaçamento pois a escala padrão do Tailwind já corresponde ao Design System.*/
 }
+
+:root {
+    --font-scale: 1;
+}
+
+:root[data-font-size="small"] {
+    --font-scale: 0.9;
+}
+
+:root[data-font-size="default"] {
+    --font-scale: 1;
+}
+
+:root[data-font-size="large"] {
+    --font-scale: 1.1;
+}
