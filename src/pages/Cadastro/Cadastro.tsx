@@ -1,3 +1,4 @@
+import type { FormEvent } from 'react'
 import { useState } from 'react'
 
 function Cadastro() {
@@ -14,6 +15,10 @@ function Cadastro() {
   const [statusAcessibilidade, setStatusAcessibilidade] = useState('nao_informado')
   const [descricaoAcessibilidade, setDescricaoAcessibilidade] = useState('')
 
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  event.preventDefault()
+  }
+
   return (
     <div>
       <header>
@@ -23,7 +28,7 @@ function Cadastro() {
         </p>
       </header>
 
-      <form onSubmit={(event) => event.preventDefault()}>
+      <form onSubmit={handleSubmit}>
         <fieldset>
           <legend>Acessibilidade do local</legend>
 
@@ -150,6 +155,10 @@ function Cadastro() {
               }
             />
           </div>
+          <p id="aviso-envio">O envio ainda não está disponível. Nenhum dado será salvo.</p>
+          <button type="submit" aria-describedby="aviso-envio">
+            Enviar cadastro
+          </button>
         </fieldset>
       </form>
     </div>
