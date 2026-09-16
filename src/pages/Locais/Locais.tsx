@@ -1,8 +1,23 @@
+import { ListagemLocais } from '../../services/ListagemLocais'
+
 function Locais() {
+  async function testarAPI() {
+    try {
+      const resultado = await ListagemLocais()
+
+      console.log('Resultado recebido pela página:', resultado)
+    } catch (erro) {
+      console.error(erro)
+    }
+  }
+
   return (
     <div>
       <h1>Locais</h1>
-      <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Error corrupti itaque consectetur alias eum, consequuntur quos saepe cum odit accusamus commodi, sapiente adipisci dignissimos, modi velit accusantium laborum? Sequi, hic.</p>
+
+      <button type="button" onClick={testarAPI}>
+        Testar API
+      </button>
     </div>
   )
 }
