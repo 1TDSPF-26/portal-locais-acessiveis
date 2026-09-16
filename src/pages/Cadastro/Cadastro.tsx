@@ -1,5 +1,6 @@
 import type { FormEvent } from 'react'
 import { useState } from 'react'
+import './Cadastro.css'
 
 function Cadastro() {
   const [nome, setNome] = useState('')
@@ -12,15 +13,16 @@ function Cadastro() {
     cidade: '',
     estado: '',
   })
+
   const [statusAcessibilidade, setStatusAcessibilidade] = useState('nao_informado')
   const [descricaoAcessibilidade, setDescricaoAcessibilidade] = useState('')
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
-  event.preventDefault()
+    event.preventDefault()
   }
 
   return (
-    <div>
+    <div className="cadastro">
       <header>
         <h1>Cadastro de Locais Acessíveis</h1>
         <p>
@@ -30,44 +32,9 @@ function Cadastro() {
 
       <form onSubmit={handleSubmit}>
         <fieldset>
-          <legend>Acessibilidade do local</legend>
-
-          <div>
-            <label htmlFor="status-acessibilidade">Nível de acessibilidade</label>
-            <select
-              id="status-acessibilidade"
-              name="statusAcessibilidade"
-              value={statusAcessibilidade}
-              onChange={(event) => setStatusAcessibilidade(event.target.value)}
-            >
-              <option value="nao_informado">Não informado</option>
-              <option value="acessivel">Acessível</option>
-              <option value="parcial">Parcialmente acessível</option>
-              <option value="nao_acessivel">Não acessível</option>
-            </select>
-          </div>
-
-          <div>
-            <label htmlFor="descricao-acessibilidade">Recursos e limitações de acessibilidade</label>
-            <p id="ajuda-acessibilidade">
-              Descreva os recursos conhecidos do local, como rampa ou banheiro adaptado,
-              e as limitações que considerar relevantes.
-            </p>
-            <textarea
-              id="descricao-acessibilidade"
-              name="descricaoAcessibilidade"
-              rows={4}
-              aria-describedby="ajuda-acessibilidade"
-              value={descricaoAcessibilidade}
-              onChange={(event) => setDescricaoAcessibilidade(event.target.value)}
-            />
-          </div>
-        </fieldset>
-
-        <fieldset>
           <legend>Informações do local</legend>
 
-          <div>
+          <div className="campo-largo">
             <label htmlFor="nome-local">Nome do local</label>
             <input
               id="nome-local"
@@ -89,7 +56,7 @@ function Cadastro() {
             />
           </div>
 
-          <div>
+          <div className="campo-largo">
             <label htmlFor="descricao-local">Descrição do local</label>
             <textarea
               id="descricao-local"
@@ -104,7 +71,7 @@ function Cadastro() {
         <fieldset>
           <legend>Endereço</legend>
 
-          <div>
+          <div className="campo-largo">
             <label htmlFor="rua-local">Rua</label>
             <input
               id="rua-local"
@@ -155,16 +122,50 @@ function Cadastro() {
               }
             />
           </div>
-          <p id="aviso-envio">O envio ainda não está disponível. Nenhum dado será salvo.</p>
-          <button type="submit" aria-describedby="aviso-envio">
-            Enviar cadastro
-          </button>
         </fieldset>
+
+        <fieldset>
+          <legend>Acessibilidade do local</legend>
+
+          <div>
+            <label htmlFor="status-acessibilidade">Nível de acessibilidade</label>
+            <select
+              id="status-acessibilidade"
+              name="statusAcessibilidade"
+              value={statusAcessibilidade}
+              onChange={(event) => setStatusAcessibilidade(event.target.value)}
+            >
+              <option value="nao_informado">Não informado</option>
+              <option value="acessivel">Acessível</option>
+              <option value="parcial">Parcialmente acessível</option>
+              <option value="nao_acessivel">Não acessível</option>
+            </select>
+          </div>
+
+          <div className="campo-largo">
+            <label htmlFor="descricao-acessibilidade">Recursos e limitações de acessibilidade</label>
+            <p id="ajuda-acessibilidade">
+              Descreva os recursos conhecidos do local, como rampa ou banheiro adaptado,
+              e as limitações que considerar relevantes.
+            </p>
+            <textarea
+              id="descricao-acessibilidade"
+              name="descricaoAcessibilidade"
+              rows={4}
+              aria-describedby="ajuda-acessibilidade"
+              value={descricaoAcessibilidade}
+              onChange={(event) => setDescricaoAcessibilidade(event.target.value)}
+            />
+          </div>
+        </fieldset>
+
+        <p id="aviso-envio">O envio ainda não está disponível. Nenhum dado será salvo.</p>
+        <button type="submit" aria-describedby="aviso-envio">
+          Enviar cadastro
+        </button>
       </form>
     </div>
   )
 }
-
-
 
 export default Cadastro
