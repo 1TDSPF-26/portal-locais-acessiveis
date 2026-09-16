@@ -2,21 +2,20 @@
 @import "tailwindcss";
 
 @theme {
-    /*===== CORES =====*/
-    --color-cor-fundo-principal: #F7F9FA;   
+    --color-cor-fundo-principal: #F7F9FA;
     --color-cor-superficies-cards: #DDEEF2;
     --color-cor-detalhes-icones: #44A0B4;
     --color-cor-botao-principal: #216FCE;
     --color-cor-apoio: #244A5A;
     --color-cor-titulos: #172A3A;
     --color-cor-textos: #465268;
-    --color-cor-foco-interativos:#64CCC5;
+    --color-cor-foco-interativos: #64CCC5;
     --color-cor-sucesso: #087443;
     --color-cor-erro: #B42318;
 
     /*===== TEXTO ====*/
     --font-sans: "Montserrat", sans-serif;
-    
+
     --text-h1: calc(32px * var(--font-scale));
     --text-h1--font-weight: 700;
 
@@ -36,8 +35,27 @@
 
     --text-botao: calc(16px * var(--font-scale));
     --text-botao--font-weight: 600;
-    
-    /*Não foram criados tokens personalizados para espaçamento pois a escala padrão do Tailwind já corresponde ao Design System.*/
+
+    /* Não foram criados tokens personalizados para espaçamento pois a escala padrão do Tailwind já corresponde ao Design System. */
+}
+
+.skip-link {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translateY(-100%);
+    background-color: var(--color-cor-foco-interativos);
+    color: var(--color-cor-titulos);
+    padding: 0.75rem 1rem;
+    z-index: 50;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.skip-link:focus {
+    transform: translateY(0);
+    outline: 2px solid var(--color-cor-titulos);
+    outline-offset: 2px;
 }
 
 :root {
