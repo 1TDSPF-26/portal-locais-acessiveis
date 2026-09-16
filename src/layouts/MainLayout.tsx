@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 import { Header } from "../components/Header/Header";
+
 import { Footer } from "../components/Footer/Footer";
 
 interface MainLayoutProps {
@@ -8,12 +9,10 @@ interface MainLayoutProps {
 }
 
 export function MainLayout({ children }: MainLayoutProps) {
+
   return (
+
     <>
-      <span
-        id="inicio-pagina"
-        tabIndex={-1}
-      />
 
       <a
         href="#conteudo-principal"
@@ -29,6 +28,8 @@ export function MainLayout({ children }: MainLayoutProps) {
       </main>
 
       <Footer />
+
     </>
+
   );
 }
