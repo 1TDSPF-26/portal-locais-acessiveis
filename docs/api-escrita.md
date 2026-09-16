@@ -23,11 +23,13 @@ Optou-se por utilizar um **Mock REST API endpoint dedicado para escrita** (utili
 
 ## 3. Especificações Técnicas da API
 
-* **Endpoint:** `https://api.mockapi.io/v1/locais-acessiveis/locais` *(ou endpoint de mock/backend configurado no ambiente)*
-* **Método HTTP:** `POST`
-* **Content-Type:** `application/json; charset=UTF-8`
-* **Autenticação:** Nenhuma exigida para este ambiente de simulação.
+Endpoint de Cadastro (POST): [https://api.mockapi.io/v1/locais-acessiveis/locais](configurada no ambiente do projeto)
 
+Método HTTP: POST
+
+Content-Type: application/json; charset=UTF-8
+
+Autenticação: Nenhuma exigida para este ambiente de simulação/mock da CP1.
 ---
 
 ## 4. Estrutura do Payload (Requisição)
@@ -52,4 +54,32 @@ O objeto JSON enviado pela interface do formulário deve obedecer estritamente a
   "latitude": -23.550520,
   "longitude": -46.633308,
   "descricao": "Rampas de acesso em todos os andares e banheiros adaptados."
+}
+
+A. Resposta de Sucesso
+Status HTTP: 201 Created
+
+Payload de Retorno:
+
+JSON
+{
+  "id": "1",
+  "createdAt": "2026-09-15T12:00:00.000Z",
+  "nome": "Centro Cultural Inclusivo",
+  "categoria": "Cultura",
+  "endereco": "Rua da Sustentabilidade, 123 - São Paulo/SP",
+  "latitude": -23.550520,
+  "longitude": -46.633308,
+  "descricao": "Rampas de acesso em todos os andares e banheiros adaptados."
+}
+
+B. Resposta de Erro
+Status HTTP: 400 Bad Request / 422 Unprocessable Entity
+
+Payload de Retorno:
+
+JSON
+{
+  "error": "Dados inválidos",
+  "message": "O campo 'nome' é obrigatório."
 }
