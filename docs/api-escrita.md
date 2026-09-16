@@ -84,29 +84,32 @@ JSON
   "message": "O campo 'nome' é obrigatório."
 }
 
-Requisição enviada (Request)
-http
-
+### Requisição enviada (Request)
 
 POST /locais HTTP/1.1
 Host: 6aa9ededff4dd5698b4de9c7.mockapi.io
 Content-Type: application/json
-{
-  "name": "Biblioteca Parque Villa-Lobos",
-  "locais": "Av. Queiroz Filho, 1205",
-  "acessibilidade": "Rampas de acesso, piso tatil e elevadores adaptados"
-}
-
-Resposta recebida (Response)
 
 {
-  "id": "7",
-  "name": "Biblioteca Parque Villa-Lobos",
-  "locais": "Av. Queiroz Filho, 1205",
-  "acessibilidade": "Rampas de acesso, piso tatil e elevadores adaptados",
-  "endereco": "743 Johan Park",
-  "avatar": "https://avatars.githubusercontent.com/u/99074947",
-  "createdAt": "2026-09-16T14:38:37.059Z"
+  "nome": "Museu da Inclusão e Cidadania",
+  "categoria": "Cultura",
+  "endereco": "Av. Paulista, 1000, Bela Vista, São Paulo - SP",
+  "latitude": -23.563099,
+  "longitude": -46.654271,
+  "descricao": "Espaço com total acessibilidade física, rampas de acesso, piso tátil, elevadores adaptados e recursos para deficientes visuais e auditivos."
 }
 
->Evidência de Validação: A requisição foi processada com sucesso retornando código HTTP **201 Created**, persistindo o novo registro com o identificador gerado `id: "7"`. O endpoint de listagem (`GET /locais`) também foi validado com retorno de status **200 OK**.
+### Resposta recebida (Response - 201 Created)
+
+{
+  "id": "8",
+  "nome": "Museu da Inclusão e Cidadania",
+  "categoria": "Cultura",
+  "endereco": "Av. Paulista, 1000, Bela Vista, São Paulo - SP",
+  "latitude": -23.563099,
+  "longitude": -46.654271,
+  "descricao": "Espaço com total acessibilidade física, rampas de acesso, piso tátil, elevadores adaptados e recursos para deficientes visuais e auditivos.",
+  "createdAt": "2026-09-16T09:15:09.125Z"
+}
+
+> **Evidência de Validação:** A requisição foi processada com sucesso retornando código HTTP **201 Created**, persistindo o registro com todos os campos exigidos pela documentação (`nome`, `categoria`, `endereco`, `latitude`, `longitude` e `descricao`) e gerando o identificador `id: "8"`.
