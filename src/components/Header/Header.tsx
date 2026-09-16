@@ -1,13 +1,15 @@
-import {NavLink} from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import "./Header.css";
 
 export function Header() {
   return (
     <header>
-      <h1>Portal de Locais e Serviços Acessíveis</h1>
+      <Link to="/" className="portal-title">
+        <span>Portal de Locais e Serviços Acessíveis</span>
+      </Link>
       <nav className="mainNav" aria-label="Menu Principal">
         <ul>
-          
+
           <li>
             <NavLink to="/" end>
               Home
