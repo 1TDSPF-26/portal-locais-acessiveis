@@ -11,6 +11,8 @@ function Cadastro() {
     cidade: '',
     estado: '',
   })
+  const [statusAcessibilidade, setStatusAcessibilidade] = useState('nao_informado')
+  const [descricaoAcessibilidade, setDescricaoAcessibilidade] = useState('')
 
   return (
     <div>
@@ -22,6 +24,41 @@ function Cadastro() {
       </header>
 
       <form onSubmit={(event) => event.preventDefault()}>
+        <fieldset>
+          <legend>Acessibilidade do local</legend>
+
+          <div>
+            <label htmlFor="status-acessibilidade">Nível de acessibilidade</label>
+            <select
+              id="status-acessibilidade"
+              name="statusAcessibilidade"
+              value={statusAcessibilidade}
+              onChange={(event) => setStatusAcessibilidade(event.target.value)}
+            >
+              <option value="nao_informado">Não informado</option>
+              <option value="acessivel">Acessível</option>
+              <option value="parcial">Parcialmente acessível</option>
+              <option value="nao_acessivel">Não acessível</option>
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="descricao-acessibilidade">Recursos e limitações de acessibilidade</label>
+            <p id="ajuda-acessibilidade">
+              Descreva os recursos conhecidos do local, como rampa ou banheiro adaptado,
+              e as limitações que considerar relevantes.
+            </p>
+            <textarea
+              id="descricao-acessibilidade"
+              name="descricaoAcessibilidade"
+              rows={4}
+              aria-describedby="ajuda-acessibilidade"
+              value={descricaoAcessibilidade}
+              onChange={(event) => setDescricaoAcessibilidade(event.target.value)}
+            />
+          </div>
+        </fieldset>
+
         <fieldset>
           <legend>Informações do local</legend>
 
@@ -118,5 +155,7 @@ function Cadastro() {
     </div>
   )
 }
+
+
 
 export default Cadastro
