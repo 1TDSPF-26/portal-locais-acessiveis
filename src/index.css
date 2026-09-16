@@ -24,9 +24,10 @@
     --text-h2--font-weight: 600;
 
     --text-h3: calc(24px * var(--font-scale));
+    --text-h3--font-weight: 500;
 
     --text-body: calc(20px * var(--font-scale));
-    --text-body-font--weight: 400;
+    --text-body--font-weight: 400;
 
     --text-legendas-pequena: calc(14px * var(--font-scale));
     --text-legendas-pequena--font-weight: 400;
