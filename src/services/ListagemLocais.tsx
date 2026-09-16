@@ -1,52 +1,66 @@
-import type { Local } from "../types/Locais.ts"
+import type { Local } from '../types/Locais.ts'
 
-export async function ListagemLocais(){
-    const query = `
-    [bbox:30.618338,-96.323712,30.591028,-96.330826]
-    [out:json]
-    [timeout:90]
-    ;
-    way(30.626917110746, -96.348809105664, 30.634468750236, -96.339893442898);
-    out geom;
-    `;
-    const result = await fetch(
-    "https://overpass-api.de/api/interpreter",
+export async function ListagemLocais(): Promise<Local[]> {
+  const query = `
+    [out:json][timeout:120];
+    (
+    node["wheelchair"]["amenity"](-23.78,-46.81,-23.40,-46.36);
+    node["wheelchair"]["shop"](-23.78,-46.81,-23.40,-46.36);
+    node["wheelchair"]["tourism"](-23.78,-46.81,-23.40,-46.36);
+    way["wheelchair"]["amenity"](-23.78,-46.81,-23.40,-46.36);
+    way["wheelchair"]["shop"](-23.78,-46.81,-23.40,-46.36);
+    );
+    out center 100 ;
+  `
+  const result = await fetch(
+    'https://overpass-api.de/api/interpreter',
     {
-        method: "POST",
-        body: "data=" + encodeURIComponent(query),
-    }
-    ).then((data) => data.json());
+      method: 'POST',
+      body: 'data=' + encodeURIComponent(query),
+    },
+  ).then((data) => data.json())
 
-    const listaElementos = result.elements
+  const listaElementos = result.elements
 
-    let locais: Local[] = []
+  let locais: Local[] = []
 
-    for(let elemento of listaElementos){
-        let local: Local = {
-            id : elemento.id,
-            nome : elemento.tags?.name,
-            descricao: 'Descricao teste',
-            categoria : elemento.type,
-            endereco: {
-                rua: 'Rua teste',
-                numero: '11',
-                cidade: 'guarulhos',
-                estado: 'sp',
-            },
-            coordenadas : {
-                latitude: elemento.geometry[0].lat,
-                longitude: elemento.geometry[0].lon,
-            },
-            acessibilidade: {
-                status: 'acessivel',
-                descricao: 'Descricao teste',
-            },
-        }
-        locais.push(local)
+  for (let elemento of listaElementos) {
+    let latitude = elemento.lat ?? elemento.center?.lat
+    let longitude = elemento.lon ?? elemento.center?.lon
+
+    if (latitude === undefined || longitude === undefined) {
+      continue
     }
 
-    return locais
+    let local: Local = {
+      id: elemento.id,
+      nome: elemento.tags?.name ?? 'Local sem nome',
+      descricao: elemento.tags?.description,
+      categoria:
+        elemento.tags?.amenity ??
+        elemento.tags?.shop ??
+        elemento.tags?.tourism ??
+        'Categoria não informada',
+      endereco: {
+        rua: elemento.tags?.['addr:street'],
+        numero: elemento.tags?.['addr:housenumber'],
+        cidade: elemento.tags?.['addr:city'],
+        estado: elemento.tags?.['addr:state'],
+      },
+      coordenadas: {
+        latitude: latitude,
+        longitude: longitude,
+      },
+      acessibilidade: {
+        status: 'acessivel',
+        descricao: elemento.tags?.['wheelchair:description'],
+      },
+    }
+
+    locais.push(local)
+  }
+
+  console.log(locais)
+
+  return locais
 }
-
-
- 

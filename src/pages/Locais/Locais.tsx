@@ -1,24 +1,64 @@
-import { ListagemLocais } from '../../services/ListagemLocais'
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+
+import { ListagemLocais} from '../../services/ListagemLocais'
+import { LoadingState } from '../../components/LoadingState/LoadingState'
+import { ErrorState } from '../../components/ErrorState/ErrorState'
+import { EmptyState } from '../../components/EmptyState/EmptyState'
+
+import type { Local } from '../../types/Locais'
 
 function Locais() {
-  async function testarAPI() {
+  const [locais, setLocais] = useState<Local[]>([])
+  const [carregando, setCarregando] = useState(true)
+  const [erro, setErro] = useState(false)
+
+  async function carregarLocais() {
+    setCarregando(true)
+    setErro(false)
+
     try {
       const resultado = await ListagemLocais()
-
-      console.log('Resultado recebido pela página:', resultado)
-    } catch (erro) {
-      console.error(erro)
+      setLocais(resultado)
+    } catch {
+      setErro(true)
+      setLocais([])
+    } finally {
+      setCarregando(false)
     }
   }
 
+  useEffect(() => {
+    carregarLocais()
+  }, [])
+
+  if (carregando) {
+    return <LoadingState message="Carregando locais..."/>
+  }
+
+  if (erro) {
+    return <ErrorState onRetry={carregarLocais}/>
+  }
+
+  if (locais.length === 0){
+    return <EmptyState title="Nenhum local encontrado." message="Teste"/>
+  }
+
   return (
-    <div>
+    <section>
       <h1>Locais</h1>
 
-      <button type="button" onClick={testarAPI}>
-        Testar API
-      </button>
-    </div>
+      <ul>
+        {locais.map((local) => (
+          <li key={local.id}>
+            <Link to={`/locais/${local.id}`}>
+              <h2>{local.nome}</h2>
+              <p>{local.categoria}</p>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </section>
   )
 }
 
