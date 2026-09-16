@@ -3,12 +3,22 @@ import { useState } from 'react'
 function Cadastro() {
   const [nome, setNome] = useState('')
   const [categoria, setCategoria] = useState('')
+  const [descricao, setDescricao] = useState('')
+
+  const [endereco, setEndereco] = useState({
+    rua: '',
+    numero: '',
+    cidade: '',
+    estado: '',
+  })
 
   return (
     <div>
       <header>
         <h1>Cadastro de Locais Acessíveis</h1>
-        <p>Preencha as informações do local. O envio estará disponível em uma etapa futura.</p>
+        <p>
+          Preencha as informações do local. O envio estará disponível em uma etapa futura.
+        </p>
       </header>
 
       <form onSubmit={(event) => event.preventDefault()}>
@@ -34,6 +44,73 @@ function Cadastro() {
               type="text"
               value={categoria}
               onChange={(event) => setCategoria(event.target.value)}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="descricao-local">Descrição do local</label>
+            <textarea
+              id="descricao-local"
+              name="descricao"
+              rows={4}
+              value={descricao}
+              onChange={(event) => setDescricao(event.target.value)}
+            />
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Endereço</legend>
+
+          <div>
+            <label htmlFor="rua-local">Rua</label>
+            <input
+              id="rua-local"
+              name="rua"
+              type="text"
+              value={endereco.rua}
+              onChange={(event) =>
+                setEndereco({ ...endereco, rua: event.target.value })
+              }
+            />
+          </div>
+
+          <div>
+            <label htmlFor="numero-local">Número</label>
+            <input
+              id="numero-local"
+              name="numero"
+              type="text"
+              value={endereco.numero}
+              onChange={(event) =>
+                setEndereco({ ...endereco, numero: event.target.value })
+              }
+            />
+          </div>
+
+          <div>
+            <label htmlFor="cidade-local">Cidade</label>
+            <input
+              id="cidade-local"
+              name="cidade"
+              type="text"
+              value={endereco.cidade}
+              onChange={(event) =>
+                setEndereco({ ...endereco, cidade: event.target.value })
+              }
+            />
+          </div>
+
+          <div>
+            <label htmlFor="estado-local">Estado</label>
+            <input
+              id="estado-local"
+              name="estado"
+              type="text"
+              value={endereco.estado}
+              onChange={(event) =>
+                setEndereco({ ...endereco, estado: event.target.value })
+              }
             />
           </div>
         </fieldset>
