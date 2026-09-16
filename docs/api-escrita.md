@@ -23,7 +23,7 @@ Optou-se por utilizar um **Mock REST API endpoint dedicado para escrita** (utili
 
 ## 3. Especificações Técnicas da API
 
-Endpoint de Cadastro (POST): [https://api.mockapi.io/v1/locais-acessiveis/locais](configurada no ambiente do projeto)
+Endpoint de Cadastro (POST): [https://6aa9ededff4dd5698b4de9c7.mockapi.io/locais](configurada no ambiente do projeto)
 
 Método HTTP: POST
 
@@ -83,3 +83,30 @@ JSON
   "error": "Dados inválidos",
   "message": "O campo 'nome' é obrigatório."
 }
+
+Requisição enviada (Request)
+http
+
+
+POST /locais HTTP/1.1
+Host: 6aa9ededff4dd5698b4de9c7.mockapi.io
+Content-Type: application/json
+{
+  "name": "Biblioteca Parque Villa-Lobos",
+  "locais": "Av. Queiroz Filho, 1205",
+  "acessibilidade": "Rampas de acesso, piso tatil e elevadores adaptados"
+}
+
+Resposta recebida (Response)
+
+{
+  "id": "7",
+  "name": "Biblioteca Parque Villa-Lobos",
+  "locais": "Av. Queiroz Filho, 1205",
+  "acessibilidade": "Rampas de acesso, piso tatil e elevadores adaptados",
+  "endereco": "743 Johan Park",
+  "avatar": "https://avatars.githubusercontent.com/u/99074947",
+  "createdAt": "2026-09-16T14:38:37.059Z"
+}
+
+>Evidência de Validação: A requisição foi processada com sucesso retornando código HTTP **201 Created**, persistindo o novo registro com o identificador gerado `id: "7"`. O endpoint de listagem (`GET /locais`) também foi validado com retorno de status **200 OK**.
