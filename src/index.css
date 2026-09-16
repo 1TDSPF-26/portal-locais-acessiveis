@@ -57,23 +57,23 @@
 }
 
 :root[data-contrast="high"] {
-    --color-cor-fundo-principal: #000000;
-    --color-cor-superficies-cards: #000000;
-    --color-cor-detalhes-icones: #ffffff;
-    --color-cor-botao-principal: #ffffff;
-    --color-cor-apoio: #ffffff;
-    --color-cor-titulos: #ffffff;
-    --color-cor-textos: #ffffff;
-    --color-cor-foco-interativos: #ffff00;
-    --color-cor-sucesso: #00ff00;
-    --color-cor-erro: #ff6666;
+    --color-cor-fundo-principal: #ffffff;
+    --color-cor-superficies-cards:  #DDEEF2;
+    --color-cor-detalhes-icones: #44A0B4;
+    --color-cor-botao-principal: #186dd4;
+    --color-cor-apoio: #244A5A;
+    --color-cor-titulos: #172A3A;
+    --color-cor-textos: #000000;
+    --color-cor-foco-interativos: #64CCC5;
+    --color-cor-sucesso: #068b4f;
+    --color-cor-erro: #bd1a0f;
 }
 
 body {
     background-color: var(--color-cor-fundo-principal);
     color: var(--color-cor-textos);
     font-family: var(--font-sans);
-    font-size: calc(16px * var(--font-scale));
+    font-size: calc(20px * var(--font-scale));
 }
 
 h1 {
