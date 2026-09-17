@@ -2,9 +2,11 @@ import type { Local } from '../types/Locais.ts'
 
 export async function ListagemLocais(): Promise<Local[]> {
 const query = `
-  [out:json][timeout:25];
-  node["wheelchair"="yes"](around:3000,-23.5505,-46.6333);
-  out 10;
+  [out:json][timeout:90];
+  area["wikidata"="Q174"]["admin_level"="8"]->.sp;
+
+  nwr["wheelchair"="yes"][~"^(amenity|shop|tourism)$"~"."](area.sp);
+  out center qt;
 `
   const result = await fetch(
     "https://overpass-api.de/api/interpreter",

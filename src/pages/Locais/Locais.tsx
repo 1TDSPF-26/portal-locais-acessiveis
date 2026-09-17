@@ -53,7 +53,6 @@ function Locais() {
           <li key={local.id}>
             <Link to={`/locais/${local.id}`}>
               <h2>{local.nome}</h2>
-              <p>{local.categoria}</p>
             </Link>
           </li>
         ))}
