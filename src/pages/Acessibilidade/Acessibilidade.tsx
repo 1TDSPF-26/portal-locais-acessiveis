@@ -107,7 +107,11 @@ function Acessibilidade() {
         </ul>
       </section>
 
-
+      <footer>
+        <p>
+          Esta página será atualizada conforme novos recursos forem lançados.
+        </p>
+      </footer>
 
     </div>
   )
