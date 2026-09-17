@@ -1,7 +1,7 @@
 function Acessibilidade() {
   return (
     <div className="min-h-screen bg-cor-fundo-principal font-sans text-cor-textos">
-      <header className="mb-[var(--spacing-acessibilidade-6)]">
+      <div className="mb-[var(--spacing-acessibilidade-6)]">
         <h1 className="text-h1 font-bold leading-[var(--leading-acessibilidade-titulo)] text-cor-titulos">
           Acessibilidade no Portal de Locais e Serviços Acessíveis
         </h1>
@@ -9,9 +9,9 @@ function Acessibilidade() {
           Aqui você encontra os recursos de acessibilidade já disponíveis no
           portal, como utilizá-los e o que ainda está em desenvolvimento.
         </p>
-      </header>
+      </div>
 
-      <main>
+      <div>
         <section className="mb-[var(--spacing-acessibilidade-6)]">
           <h2 className="text-h2 font-semibold text-cor-titulos">
             Nosso compromisso
@@ -122,13 +122,13 @@ function Acessibilidade() {
             </li>
           </ul>
         </section>
-      </main>
+      </div>
 
-      <footer className="mt-[var(--spacing-acessibilidade-8)]">
+      <div className="mt-[var(--spacing-acessibilidade-8)]">
         <p className="text-body leading-[var(--leading-acessibilidade-corpo)]">
           Esta página será atualizada conforme novos recursos forem lançados.
         </p>
-      </footer>
+      </div>
     </div>
   )
 }
