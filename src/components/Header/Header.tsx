@@ -1,5 +1,7 @@
 import { Link, NavLink } from "react-router-dom";
 import "./Header.css";
+import { AccessibilityControls } from "../AccessibilityControls/AccessibilityControls";
+
 
 export function Header() {
   return (
@@ -32,6 +34,9 @@ export function Header() {
           </li>
         </ul>
       </nav>
+
+      <AccessibilityControls />
+
     </header>
   );
 }
