@@ -64,6 +64,24 @@ function Acessibilidade() {
           página em que você está fica destacada no menu.
         </p>
       </section>
+      
+      <section>
+        <h2>Para quem usa teclado ou tecnologias assistivas</h2>
+        <ul>
+          <li>
+           O portal foi feito pra funcionar inteiro pelo teclado, sem precisar
+           de mouse.       
+          </li>
+          <li>
+            O idioma das páginas estão definidos como português do Brasil, o que
+            ajuda leitores de tela a pronunciarem o conteúdo corretamente.
+          </li>
+          <li>
+            O foco segue uma ordem lógica: primeiro o link de pular conteúdo,
+            depois o menu, depois o conteúdo da página. 
+          </li>
+        </ul>
+      </section>
 
 
 
