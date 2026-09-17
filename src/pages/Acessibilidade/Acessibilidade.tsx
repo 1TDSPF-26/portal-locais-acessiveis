@@ -50,6 +50,22 @@ function Acessibilidade() {
         </ul>
       </section>
 
+      <section>
+        <h2>Como usar esses recursos</h2>
+        <p>
+          Para pular direto para o conteúdo, pressione <kbd>Tab</kbd> assim que a
+          página carregar: o link “Pular para o conteúdo principal” vai aparecer
+          primeiro. Pressione <kbd>Enter</kbd> e você vai direto ao conteúdo, sem
+          passar pelo menu.
+        </p>
+        <p>
+          Para navegar pelo menu sem usar o mouse, use <kbd>Tab</kbd> para ir passando
+          pelos links e <kbd>Enter</kbd> para abrir a página desejada. A
+          página em que você está fica destacada no menu.
+        </p>
+      </section>
+
+
 
     </div>
   )
