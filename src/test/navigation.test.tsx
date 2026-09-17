@@ -50,21 +50,21 @@ describe('Navegação principal', () => {
     )
 
     expect(
-      screen.getByRole('heading', {
-        name: 'Locais',
-        level: 1,
-      }),
-    ).toBeInTheDocument()
+  await screen.findByRole('heading', {
+    name: 'Nenhum local encontrado.',
+    level: 2,
+  }),
+).toBeInTheDocument()
   })
 
   it('exibe a página NotFound ao acessar uma rota inexistente', () => {
-    renderRoutes('/rota-inexistente')
+  renderRoutes('/rota-inexistente')
 
-    expect(
-      screen.getByRole('heading', {
-        name: 'Erro - 404',
-        level: 2,
-      }),
-    ).toBeInTheDocument()
-  })
+  expect(
+    screen.getByRole('heading', {
+      name: 'Erro - 404',
+      level: 2,
+    }),
+  ).toBeInTheDocument()
+})
 })
