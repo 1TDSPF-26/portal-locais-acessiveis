@@ -83,6 +83,30 @@ function Acessibilidade() {
         </ul>
       </section>
 
+      <section>
+        <h2>Limitações conhecidas</h2>
+        <p>
+          O portal ainda está em desenvolvimento, e nem todos os recursos de
+          acessibilidade planejados já estão prontos:
+        </p>
+        <ul>
+          <li>
+            Ainda não é possível ajustar o tamanho da fonte ou ativar um modo de
+            alto contraste pela interface.
+          </li>
+          <li>
+            O foco visível já está no menu principal e no link de pular
+            conteúdo; outras partes da aplicação ainda podem não ter esse
+            mesmo destaque.
+          </li>
+          <li>O menu para telas menores (celular) ainda está em desenvolvimento.</li>
+          <li>
+            O rodapé ainda não possui links de navegação para as páginas do
+            portal.
+          </li>
+        </ul>
+      </section>
+
 
 
     </div>
