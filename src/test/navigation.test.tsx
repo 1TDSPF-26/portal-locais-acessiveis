@@ -1,16 +1,27 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import AppRoutes from '../routes/AppRoutes'
+import { AccessibilityProvider } from '../contexts/AccessibilityContext'
+
+function renderRoutes(initialEntry: string) {
+  return render(
+    <AccessibilityProvider>
+      <MemoryRouter initialEntries={[initialEntry]}>
+        <AppRoutes />
+      </MemoryRouter>
+    </AccessibilityProvider>,
+  )
+}
+
+afterEach(() => {
+  vi.restoreAllMocks()
+})
 
 describe('Navegação principal', () => {
   it('exibe a página Home na rota inicial', () => {
-    render(
-      <MemoryRouter initialEntries={['/']}>
-        <AppRoutes />
-      </MemoryRouter>,
-    )
+    renderRoutes('/')
 
     const headings = screen.getAllByRole('heading', {
       name: 'Portal de Locais e Serviços Acessíveis',
@@ -20,14 +31,17 @@ describe('Navegação principal', () => {
     expect(headings.length).toBeGreaterThanOrEqual(1)
   })
 
-  it('navega da Home para a página Locais pelo menu', async () => {
+  it('navega da Home para a página Locais pelo menu sem depender da API externa', async () => {
     const user = userEvent.setup()
 
-    render(
-      <MemoryRouter initialEntries={['/']}>
-        <AppRoutes />
-      </MemoryRouter>,
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+      new Response(JSON.stringify({ elements: [] }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      }),
     )
+
+    renderRoutes('/')
 
     await user.click(
       screen.getByRole('link', {
@@ -44,11 +58,7 @@ describe('Navegação principal', () => {
   })
 
   it('exibe a página NotFound ao acessar uma rota inexistente', () => {
-    render(
-      <MemoryRouter initialEntries={['/rota-inexistente']}>
-        <AppRoutes />
-      </MemoryRouter>,
-    )
+    renderRoutes('/rota-inexistente')
 
     expect(
       screen.getByRole('heading', {
