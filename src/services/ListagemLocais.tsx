@@ -1,4 +1,4 @@
-import type { Local } from '../types/Locais.ts'
+import type { Local } from '../types/Local'
 
 export async function ListagemLocais(): Promise<Local[]> {
 const query = `
@@ -55,8 +55,6 @@ const query = `
 
     locais.push(local)
   }
-
-  console.log(locais)
 
   return locais
 }

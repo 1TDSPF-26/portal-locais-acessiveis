@@ -6,7 +6,7 @@ import { LoadingState } from '../../components/LoadingState/LoadingState'
 import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { EmptyState } from '../../components/EmptyState/EmptyState'
 
-import type { Local } from '../../types/Locais'
+import type { Local } from '../../types/Local'
 
 function Locais() {
   const [locais, setLocais] = useState<Local[]>([])

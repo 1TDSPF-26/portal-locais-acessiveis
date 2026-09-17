@@ -1,0 +1,102 @@
+.cadastro {
+  width: 100%;
+  min-width: 0;
+  color: var(--color-cor-textos);
+  font-family: var(--font-sans);
+}
+
+.cadastro h1 {
+  color: var(--color-cor-titulos);
+  font-size: var(--text-h1);
+  font-weight: var(--text-h1--font-weight);
+}
+
+.cadastro form {
+  display: grid;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.cadastro fieldset {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  min-width: 0;
+  padding: 1rem;
+  border: 1px solid var(--color-cor-apoio);
+  border-radius: 0.5rem;
+}
+
+.cadastro legend {
+  padding-inline: 0.25rem;
+  color: var(--color-cor-titulos);
+  font-weight: 600;
+}
+
+.cadastro fieldset > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.cadastro label {
+  font-weight: 600;
+}
+
+.cadastro input,
+.cadastro select,
+.cadastro textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 0.75rem;
+  border: 1px solid var(--color-cor-apoio);
+  border-radius: 0.5rem;
+  background: var(--color-cor-fundo-principal);
+  color: var(--color-cor-textos);
+  font: inherit;
+}
+
+.cadastro textarea {
+  resize: vertical;
+}
+
+.cadastro button {
+  width: 100%;
+  padding: 0.75rem 1.25rem;
+  border: 2px solid var(--color-cor-botao-principal);
+  border-radius: 0.5rem;
+  background: var(--color-cor-botao-principal);
+  color: var(--color-cor-fundo-principal);
+  font-size: var(--text-botao);
+  font-weight: var(--text-botao--font-weight);
+  cursor: pointer;
+}
+
+.cadastro :is(input, select, textarea, button):focus-visible {
+  outline: 3px solid var(--color-cor-apoio);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px var(--color-cor-foco-interativos);
+}
+
+.cadastro p,
+.cadastro label,
+.cadastro legend {
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 48rem) {
+  .cadastro fieldset {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .cadastro .campo-largo {
+    grid-column: 1 / -1;
+  }
+
+  .cadastro button {
+    width: auto;
+    justify-self: start;
+  }
+}
