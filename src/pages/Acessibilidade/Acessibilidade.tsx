@@ -1,6 +1,6 @@
 function Acessibilidade() {
   return (
-    <div>
+    <div className="min-h-screen bg-cor-fundo-principal font-sans text-cor-textos">
       <header>
         <h1>Acessibilidade no Portal de Locais e Serviços Acessíveis</h1>
         <p>

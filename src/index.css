@@ -36,6 +36,28 @@
     --text-botao--font-weight: 600;
 
     /* Não foram criados tokens personalizados para espaçamento pois a escala padrão do Tailwind já corresponde ao Design System. */
+
+    /* ===== ACESSIBILIDADE ===== */
+    --spacing-acessibilidade-1: 4px;
+    --spacing-acessibilidade-2: 8px;
+    --spacing-acessibilidade-3: 12px;
+    --spacing-acessibilidade-4: 16px;
+    --spacing-acessibilidade-5: 24px;
+    --spacing-acessibilidade-6: 32px;
+    --spacing-acessibilidade-7: 40px;
+    --spacing-acessibilidade-8: 48px;
+
+    /* Altura das linhas para melhorar a legibilidade */
+    --leading-acessibilidade-corpo: 1.5;
+    --leading-acessibilidade-titulo: 1.2;
+
+    /* Foco visível para elementos interativos */
+    --focus-acessibilidade-outline: 2px;
+    --focus-acessibilidade-offset: 2px;
+
+    /* Texto de interface acessível */
+    --text-acessibilidade-interface: 16px;
+
 }
 
 .skip-link {
