@@ -1,19 +1,13 @@
 import type { Local } from '../types/Locais.ts'
 
 export async function ListagemLocais(): Promise<Local[]> {
-  const query = `
-    [out:json][timeout:120];
-    (
-    node["wheelchair"]["amenity"](-23.78,-46.81,-23.40,-46.36);
-    node["wheelchair"]["shop"](-23.78,-46.81,-23.40,-46.36);
-    node["wheelchair"]["tourism"](-23.78,-46.81,-23.40,-46.36);
-    way["wheelchair"]["amenity"](-23.78,-46.81,-23.40,-46.36);
-    way["wheelchair"]["shop"](-23.78,-46.81,-23.40,-46.36);
-    );
-    out center 100 ;
-  `
+const query = `
+  [out:json][timeout:25];
+  node["wheelchair"="yes"](around:3000,-23.5505,-46.6333);
+  out 10;
+`
   const result = await fetch(
-    'https://overpass-api.de/api/interpreter',
+    "https://overpass-api.de/api/interpreter",
     {
       method: 'POST',
       body: 'data=' + encodeURIComponent(query),
@@ -42,10 +36,10 @@ export async function ListagemLocais(): Promise<Local[]> {
         elemento.tags?.tourism ??
         'Categoria não informada',
       endereco: {
-        rua: elemento.tags?.['addr:street'],
-        numero: elemento.tags?.['addr:housenumber'],
-        cidade: elemento.tags?.['addr:city'],
-        estado: elemento.tags?.['addr:state'],
+        rua: elemento.tags?.['addr:street'] ?? 'Rua não informada',
+        numero: elemento.tags?.['addr:housenumber'] ?? 'Numero não informado',
+        cidade: elemento.tags?.['addr:city'] ?? 'Cidade de São Paulo',
+        estado: elemento.tags?.['addr:state']?? 'Estado de São Paulo',
       },
       coordenadas: {
         latitude: latitude,
