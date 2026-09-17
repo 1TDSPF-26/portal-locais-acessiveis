@@ -1,10 +1,21 @@
 import { Link, NavLink } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Header.css";
 
 
 export function Header() {
   const [menuAberto, setMenuAberto] = useState(false);
+
+  useEffect(() => {
+    function fecharComEsc(evento: KeyboardEvent) {
+      if (evento.key === "Escape") {
+        setMenuAberto(false);
+      }
+    }
+
+    document.addEventListener("keydown", fecharComEsc);
+    return () => document.removeEventListener("keydown", fecharComEsc);
+  }, []);
 
   return (
     <header>
