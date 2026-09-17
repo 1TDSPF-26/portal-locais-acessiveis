@@ -36,22 +36,22 @@ export function Header() {
         <ul>
 
           <li>
-            <NavLink to="/" end>
+            <NavLink to="/" end onClick={() => setMenuAberto(false)}>
               Home
             </NavLink>
           </li>
           <li>
-            <NavLink to="/locais">
+            <NavLink to="/locais" onClick={() => setMenuAberto(false)}>
               Locais
             </NavLink>
           </li>
           <li>
-            <NavLink to="/cadastrar">
+            <NavLink to="/cadastrar" onClick={() => setMenuAberto(false)}>
               Cadastro
             </NavLink>
           </li>
           <li>
-            <NavLink to="/sobre">
+            <NavLink to="/sobre" onClick={() => setMenuAberto(false)}>
               Sobre
             </NavLink>
           </li>
