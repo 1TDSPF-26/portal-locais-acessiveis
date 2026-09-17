@@ -41,7 +41,7 @@ function Locais() {
   }
 
   if (locais.length === 0){
-    return <EmptyState title="Nenhum local encontrado." message="Teste"/>
+    return <EmptyState title="Nenhum local encontrado." message="Não encontramos locais acessíveis para exibir no momento"/>
   }
 
   return (
