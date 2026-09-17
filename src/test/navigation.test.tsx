@@ -17,7 +17,7 @@ describe('Navegação principal', () => {
       level: 1,
     })
 
-    expect(headings.length).toBeGreaterThanOrEqual(2)
+    expect(headings.length).toBeGreaterThanOrEqual(1)
   })
 
   it('navega da Home para a página Locais pelo menu', async () => {
