@@ -75,6 +75,16 @@
 
 .skip-link:focus {
     transform: translateY(0);
-    outline: 2px solid var(--color-cor-titulos);
-    outline-offset: 2px;
+    outline: var(--focus-acessibilidade-outline) solid var(--color-cor-foco-interativos);
+    outline-offset: var(--focus-acessibilidade-offset);
 }
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: var(--focus-acessibilidade-outline) solid var(--color-cor-foco-interativos);
+    outline-offset: var(--focus-acessibilidade-offset);
+}
+
