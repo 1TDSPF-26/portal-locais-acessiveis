@@ -1,0 +1,31 @@
+.accessibilityControls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.accessibilityControls button {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0.5rem 0.75rem;
+
+    border: 2px solid currentColor;
+    border-radius: 6px;
+
+    background: transparent;
+    color: inherit;
+
+    font: inherit;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.accessibilityControls button:hover {
+    opacity: 0.8;
+}
+
+.accessibilityControls button:focus-visible {
+    outline: 3px solid var(--color-cor-foco-interativos);
+    outline-offset: 3px;
+}
