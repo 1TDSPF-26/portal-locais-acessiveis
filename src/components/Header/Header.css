@@ -21,3 +21,31 @@
     outline: 2px solid currentColor;
     outline-offset: 2px;
 }
+
+.menuMobileButton {
+    display: none;
+    cursor: pointer;
+}
+
+.menuMobileButton:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+    .menuMobileButton {
+        display: block;
+    }
+
+        .mainNav {
+        display: none;
+    }
+
+    .mainNav.aberto {
+        display: block;
+    }
+
+    .mainNav ul {
+        flex-direction: column;
+    }
+}
