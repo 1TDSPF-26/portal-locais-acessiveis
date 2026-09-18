@@ -1,5 +1,5 @@
 import { Link, NavLink } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Header.css";
 import { AccessibilityControls } from "../AccessibilityControls/AccessibilityControls";
 
@@ -7,6 +7,17 @@ import { AccessibilityControls } from "../AccessibilityControls/AccessibilityCon
 
 export function Header() {
   const [menuAberto, setMenuAberto] = useState(false);
+
+  useEffect(() => {
+    function fecharComEsc(evento: KeyboardEvent) {
+      if (evento.key === "Escape") {
+        setMenuAberto(false);
+      }
+    }
+
+    document.addEventListener("keydown", fecharComEsc);
+    return () => document.removeEventListener("keydown", fecharComEsc);
+  }, []);
 
   return (
     <header>
@@ -27,22 +38,22 @@ export function Header() {
         <ul>
 
           <li>
-            <NavLink to="/" end>
+            <NavLink to="/" end onClick={() => setMenuAberto(false)}>
               Home
             </NavLink>
           </li>
           <li>
-            <NavLink to="/locais">
+            <NavLink to="/locais" onClick={() => setMenuAberto(false)}>
               Locais
             </NavLink>
           </li>
           <li>
-            <NavLink to="/cadastrar">
+            <NavLink to="/cadastrar" onClick={() => setMenuAberto(false)}>
               Cadastro
             </NavLink>
           </li>
           <li>
-            <NavLink to="/sobre">
+            <NavLink to="/sobre" onClick={() => setMenuAberto(false)}>
               Sobre
             </NavLink>
           </li>
