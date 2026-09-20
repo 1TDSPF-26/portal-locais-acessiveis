@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import { afterEach, describe, expect, it, vi } from 'vitest'
@@ -44,7 +44,11 @@ describe('Navegação principal', () => {
     renderRoutes('/')
 
     await user.click(
-      screen.getByRole('link', {
+      within(
+        screen.getByRole('navigation', {
+          name: 'Menu Principal',
+        }),
+      ).getByRole('link', {
         name: 'Locais',
       }),
     )
@@ -67,4 +71,27 @@ describe('Navegação principal', () => {
     }),
   ).toBeInTheDocument()
 })
+
+it('exibe os links internos corretos no Footer', () => {
+  renderRoutes('/')
+
+  const footer = within(
+    screen.getByRole('navigation', {
+      name: 'Navegação do rodapé',
+    }),
+  )
+
+  expect(footer.getByRole('link', { name: 'Home' }))
+    .toHaveAttribute('href', '/')
+
+  expect(footer.getByRole('link', { name: 'Locais' }))
+    .toHaveAttribute('href', '/locais')
+
+  expect(footer.getByRole('link', { name: 'Cadastro' }))
+    .toHaveAttribute('href', '/cadastrar')
+
+  expect(footer.getByRole('link', { name: 'Sobre' }))
+    .toHaveAttribute('href', '/sobre')
+})
+
 })
