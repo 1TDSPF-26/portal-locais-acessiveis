@@ -1,33 +1,169 @@
+import type { FormEvent } from 'react'
+import { useState } from 'react'
+import './Cadastro.css'
+
 function Cadastro() {
+  const [nome, setNome] = useState('')
+  const [categoria, setCategoria] = useState('')
+  const [descricao, setDescricao] = useState('')
+
+  const [endereco, setEndereco] = useState({
+    rua: '',
+    numero: '',
+    cidade: '',
+    estado: '',
+  })
+
+  const [statusAcessibilidade, setStatusAcessibilidade] = useState('nao_informado')
+  const [descricaoAcessibilidade, setDescricaoAcessibilidade] = useState('')
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+  }
+
   return (
-    <div>
+    <div className="cadastro">
       <header>
         <h1>Cadastro de Locais Acessíveis</h1>
         <p>
-          Esta área foi desenvolvida para apresentar a proposta e a estrutura inicial do futuro cadastro de novos locais e serviços acessíveis na plataforma.
+          Preencha as informações do local. O envio estará disponível em uma etapa futura.
         </p>
       </header>
-      <section>
-        <h2>Informações para Futura Implementação</h2>
-        <p>
-          Quando a funcionalidade de cadastro estiver ativa, os usuários
-          poderão enviar os seguintes dados sobre os locais:
-        </p>
-        <ul>
-          <li><strong>Nome do local:</strong> Nome ou identificação principal do estabelecimento</li>
-          <li><strong>Categoria:</strong> Tipo do local (ex: restaurante, parque, hospital, transporte)</li>
-          <li><strong>Endereço ou localização:</strong> Logradouro completo, bairro ou ponto de referência</li>
-          <li><strong>Descrição:</strong> Resumo informativo dos serviços oferecidos no local</li>
-          <li><strong>Informações de acessibilidade:</strong> Detalhes de recursos como rampas, elevadores, piso tátil ou banheiros adaptados</li>
-        </ul>
-      </section>
 
-      <aside>
-        <h2>Status do Desenvolvimento</h2>
-        <p>
-          <strong>Aviso importante:</strong> Esta página é exclusivamente informativa nesta etapa. O formulário funcional de envio, validação de campos e persistência de dados serão implementados em entregas futuras do projeto. Nenhum dado é enviado ou salvo no momento.
-        </p>
-      </aside>
+      <form onSubmit={handleSubmit}>
+        <fieldset>
+          <legend>Informações do local</legend>
+
+          <div className="campo-largo">
+            <label htmlFor="nome-local">Nome do local</label>
+            <input
+              id="nome-local"
+              name="nome"
+              type="text"
+              value={nome}
+              onChange={(event) => setNome(event.target.value)}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="categoria-local">Categoria</label>
+            <input
+              id="categoria-local"
+              name="categoria"
+              type="text"
+              value={categoria}
+              onChange={(event) => setCategoria(event.target.value)}
+            />
+          </div>
+
+          <div className="campo-largo">
+            <label htmlFor="descricao-local">Descrição do local</label>
+            <textarea
+              id="descricao-local"
+              name="descricao"
+              rows={4}
+              value={descricao}
+              onChange={(event) => setDescricao(event.target.value)}
+            />
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Endereço</legend>
+
+          <div className="campo-largo">
+            <label htmlFor="rua-local">Rua</label>
+            <input
+              id="rua-local"
+              name="rua"
+              type="text"
+              value={endereco.rua}
+              onChange={(event) =>
+                setEndereco({ ...endereco, rua: event.target.value })
+              }
+            />
+          </div>
+
+          <div>
+            <label htmlFor="numero-local">Número</label>
+            <input
+              id="numero-local"
+              name="numero"
+              type="text"
+              value={endereco.numero}
+              onChange={(event) =>
+                setEndereco({ ...endereco, numero: event.target.value })
+              }
+            />
+          </div>
+
+          <div>
+            <label htmlFor="cidade-local">Cidade</label>
+            <input
+              id="cidade-local"
+              name="cidade"
+              type="text"
+              value={endereco.cidade}
+              onChange={(event) =>
+                setEndereco({ ...endereco, cidade: event.target.value })
+              }
+            />
+          </div>
+
+          <div>
+            <label htmlFor="estado-local">Estado</label>
+            <input
+              id="estado-local"
+              name="estado"
+              type="text"
+              value={endereco.estado}
+              onChange={(event) =>
+                setEndereco({ ...endereco, estado: event.target.value })
+              }
+            />
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Acessibilidade do local</legend>
+
+          <div>
+            <label htmlFor="status-acessibilidade">Nível de acessibilidade</label>
+            <select
+              id="status-acessibilidade"
+              name="statusAcessibilidade"
+              value={statusAcessibilidade}
+              onChange={(event) => setStatusAcessibilidade(event.target.value)}
+            >
+              <option value="nao_informado">Não informado</option>
+              <option value="acessivel">Acessível</option>
+              <option value="parcial">Parcialmente acessível</option>
+              <option value="nao_acessivel">Não acessível</option>
+            </select>
+          </div>
+
+          <div className="campo-largo">
+            <label htmlFor="descricao-acessibilidade">Recursos e limitações de acessibilidade</label>
+            <p id="ajuda-acessibilidade">
+              Descreva os recursos conhecidos do local, como rampa ou banheiro adaptado,
+              e as limitações que considerar relevantes.
+            </p>
+            <textarea
+              id="descricao-acessibilidade"
+              name="descricaoAcessibilidade"
+              rows={4}
+              aria-describedby="ajuda-acessibilidade"
+              value={descricaoAcessibilidade}
+              onChange={(event) => setDescricaoAcessibilidade(event.target.value)}
+            />
+          </div>
+        </fieldset>
+
+        <p id="aviso-envio">O envio ainda não está disponível. Nenhum dado será salvo.</p>
+        <button type="submit" aria-describedby="aviso-envio">
+          Enviar cadastro
+        </button>
+      </form>
     </div>
   )
 }
