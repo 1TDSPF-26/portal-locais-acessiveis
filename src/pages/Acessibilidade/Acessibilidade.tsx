@@ -55,6 +55,11 @@ function Acessibilidade() {
               principal, e o cabeçalho e o rodapé continuam os mesmos durante
               toda a navegação.
             </li>
+            <li className="text-body leading-[1.5]">
+              Controles de tamanho de fonte e alto contraste: agora é possível ajustar
+              o tamanho do texto e ativar um modo de alto contraste pela interface,
+              facilitando a leitura para quem precisa.
+            </li>
           </ul>
         </section>
 
@@ -104,10 +109,6 @@ function Acessibilidade() {
             acessibilidade planejados já estão prontos:
           </p>
           <ul className="space-y-3">
-            <li className="text-body leading-[1.5]">
-              Ainda não é possível ajustar o tamanho da fonte ou ativar um modo de
-              alto contraste pela interface.
-            </li>
             <li className="text-body leading-[1.5]">
               O foco visível já está no menu principal e no link de pular
               conteúdo; outras partes da aplicação ainda podem não ter esse
