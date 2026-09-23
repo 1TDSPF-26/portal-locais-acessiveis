@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
+import "./Footer.css";
 
 export function Footer() {
   return (
-    <footer>
+    <footer className="footer">
       <p>Portal de Locais e Serviços Acessíveis</p>
 
-      <nav aria-label="Navegação do rodapé">
+      <nav className="footerNav" aria-label="Navegação do rodapé">
         <ul>
           <li>
             <Link to="/">Home</Link>
