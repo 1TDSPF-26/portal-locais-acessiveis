@@ -86,20 +86,8 @@ function Locais() {
           title="Nenhum resultado encontrado."
           message={`Não encontramos nenhum local correspondente a "${termoBusca}".`}
         />
-      )}
-
-
-
-      <ul>
-        {locais.map((local) => (
-          <li key={local.id}>
-            <Link to={`/locais/${local.id}`}>
-              <h2>{local.nome}</h2>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </section>
+      )} 
+      </section>
   )
 }
 
