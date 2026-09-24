@@ -6,8 +6,8 @@ export default function NotFound(){
 
         <div>
             
-            <h2>Erro - 404</h2>
-            <h3>Página não encontrada</h3>
+            <h1>Erro - 404</h1>
+            <h2>Página não encontrada</h2>
 
             <p>O endereço que você tentou acessar não existe.</p>
 
