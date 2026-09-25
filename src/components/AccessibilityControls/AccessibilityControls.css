@@ -2,6 +2,7 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    flex-wrap: wrap;
 }
 
 .accessibilityControls button {
@@ -28,4 +29,10 @@
 .accessibilityControls button:focus-visible {
     outline: 3px solid var(--color-cor-foco-interativos);
     outline-offset: 3px;
+}
+
+@media (max-width: 375px) {
+    .accessibilityControls {
+        width: 100%;
+    }
 }
