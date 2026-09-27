@@ -50,11 +50,12 @@
     z-index: 50;
     text-decoration: none;
     font-weight: 600;
+    transition: transform 0.2s ease;
 }
 
 .skip-link:focus {
-    transform: translateY(0);
-    outline: 2px solid var(--color-cor-titulos);
+    transform: translateY(0%);
+    outline: 3px solid var(--color-cor-foco-interativos);
     outline-offset: 2px;
 }
 
