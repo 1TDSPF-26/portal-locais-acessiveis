@@ -67,7 +67,7 @@ describe('Navegação principal', () => {
   expect(
     screen.getByRole('heading', {
       name: 'Erro - 404',
-      level: 2,
+      level: 1,
     }),
   ).toBeInTheDocument()
 })
