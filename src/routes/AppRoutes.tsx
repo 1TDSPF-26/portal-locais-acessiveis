@@ -14,6 +14,8 @@ import NotFound from '../pages/NotFound/NotFound'
 
 import DetalhesLocal from '../pages/DetalhesLocal/DetalhesLocal'
 
+import Acessibilidade from '../pages/Acessibilidade/Acessibilidade'
+
 function AppRoutes() {
 
   return (
@@ -31,6 +33,8 @@ function AppRoutes() {
         <Route path="/cadastrar" element={<Cadastro />} />
 
         <Route path="/sobre" element={<Sobre />} />
+
+        <Route path="/acessibilidade" element={<Acessibilidade />} />
 
         <Route path="*" element={<NotFound />} />
 
