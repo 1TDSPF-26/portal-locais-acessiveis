@@ -5,15 +5,12 @@ import {
 } from "react";
 import { AccessibilityContext } from "./AccessibilityContextValue";
 
-
 type FontSize = "small" | "default" | "large";
 
 interface AccessibilityPreferences {
     fontSize: FontSize;
     highContrast: boolean;
 }
-
-
 
 const STORAGE_KEY = "accessibility_preferences";
 
@@ -22,30 +19,28 @@ const defaultPreferences: AccessibilityPreferences = {
     highContrast: false,
 };
 
-
-
 interface AccessibilityProviderProps {
     children: ReactNode;
 }
 
 function getSavedPreferences(): AccessibilityPreferences {
-    const savedPreferences = localStorage.getItem(STORAGE_KEY);
-
-    if (!savedPreferences) {
-        return defaultPreferences;
-    }
-
     try {
-        const preferences: AccessibilityPreferences = JSON.parse(savedPreferences);
+        const savedPreferences = localStorage.getItem(STORAGE_KEY);
+
+        if (!savedPreferences) {
+            return defaultPreferences;
+        }
+
+        const preferences: AccessibilityPreferences =
+            JSON.parse(savedPreferences);
 
         return {
             fontSize:
                 preferences.fontSize === "small" ||
-                    preferences.fontSize === "default" ||
-                    preferences.fontSize === "large"
+                preferences.fontSize === "default" ||
+                preferences.fontSize === "large"
                     ? preferences.fontSize
                     : defaultPreferences.fontSize,
-
             highContrast:
                 typeof preferences.highContrast === "boolean"
                     ? preferences.highContrast
@@ -55,7 +50,6 @@ function getSavedPreferences(): AccessibilityPreferences {
         return defaultPreferences;
     }
 }
-
 
 export function AccessibilityProvider({
     children,
@@ -81,7 +75,14 @@ export function AccessibilityProvider({
             highContrast,
         };
 
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(preferences));
+        try {
+            localStorage.setItem(
+                STORAGE_KEY,
+                JSON.stringify(preferences)
+            );
+        } catch {
+            // A aplicação continua funcionando sem persistência.
+        }
     }, [fontSize, highContrast]);
 
     function decreaseFontSize() {
@@ -135,4 +136,3 @@ export function AccessibilityProvider({
         </AccessibilityContext.Provider>
     );
 }
-
