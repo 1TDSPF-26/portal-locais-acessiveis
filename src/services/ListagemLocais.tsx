@@ -1,5 +1,18 @@
 import type { Local } from '../types/Local'
 
+function mapearStatusAcessibilidade(wheelchairTag?: string): 'acessivel' | 'parcial' | 'nao_acessivel' | 'nao_informado' {
+  switch (wheelchairTag) {
+    case 'yes':
+      return 'acessivel';
+    case 'limited':
+      return 'parcial';
+    case 'no':
+      return 'nao_acessivel';
+    default:
+      return 'nao_informado';
+  }
+}
+
 export async function ListagemLocais(): Promise<Local[]> {
 const query = `
   [out:json][timeout:90];
