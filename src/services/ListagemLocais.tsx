@@ -15,13 +15,6 @@ function obterStatusAcessibilidade(wheelchair?: string): Local['acessibilidade']
 }
 
 export async function ListagemLocais(): Promise<Local[]> {
-
-  console.log("Validação dos Status de Acessibilidade:", {
-    yes: obterStatusAcessibilidade('yes'),
-    limited: obterStatusAcessibilidade('limited'),
-    no: obterStatusAcessibilidade('no'),
-    undefined: obterStatusAcessibilidade(undefined)
-  });
   const query = `
   [out:json][timeout:90];
   area["wikidata"="Q174"]["admin_level"="8"]->.sp;
