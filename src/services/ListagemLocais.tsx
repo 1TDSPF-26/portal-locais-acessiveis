@@ -1,20 +1,20 @@
 import type { Local } from '../types/Local'
 
-function mapearStatusAcessibilidade(wheelchairTag?: string): 'acessivel' | 'parcial' | 'nao_acessivel' | 'nao_informado' {
-  switch (wheelchairTag) {
+function obterStatusAcessibilidade(wheelchair?: string): Local['acessibilidade']['status'] {
+  switch (wheelchair) {
     case 'yes':
-      return 'acessivel';
+      return 'acessivel'
     case 'limited':
-      return 'parcial';
+      return 'parcial'
     case 'no':
-      return 'nao_acessivel';
+      return 'nao_acessivel'
     default:
-      return 'nao_informado';
+      return 'nao_informado'
   }
 }
 
 export async function ListagemLocais(): Promise<Local[]> {
-const query = `
+  const query = `
   [out:json][timeout:90];
   area["wikidata"="Q174"]["admin_level"="8"]->.sp;
 
@@ -54,14 +54,14 @@ const query = `
         rua: elemento.tags?.['addr:street'] ?? 'Rua não informada',
         numero: elemento.tags?.['addr:housenumber'] ?? 'Numero não informado',
         cidade: elemento.tags?.['addr:city'] ?? 'Cidade de São Paulo',
-        estado: elemento.tags?.['addr:state']?? 'Estado de São Paulo',
+        estado: elemento.tags?.['addr:state'] ?? 'Estado de São Paulo',
       },
       coordenadas: {
         latitude: latitude,
         longitude: longitude,
       },
       acessibilidade: {
-        status: 'acessivel',
+        status: obterStatusAcessibilidade(elemento.tags?.wheelchair),
         descricao: elemento.tags?.['wheelchair:description'],
       },
     }
