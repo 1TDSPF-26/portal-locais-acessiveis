@@ -1,5 +1,6 @@
 import type { Local } from '../types/Local'
 
+
 function obterStatusAcessibilidade(wheelchair?: string): Local['acessibilidade']['status'] {
   switch (wheelchair) {
     case 'yes':
@@ -14,6 +15,13 @@ function obterStatusAcessibilidade(wheelchair?: string): Local['acessibilidade']
 }
 
 export async function ListagemLocais(): Promise<Local[]> {
+
+  console.log("Validação dos Status de Acessibilidade:", {
+    yes: obterStatusAcessibilidade('yes'),
+    limited: obterStatusAcessibilidade('limited'),
+    no: obterStatusAcessibilidade('no'),
+    undefined: obterStatusAcessibilidade(undefined)
+  });
   const query = `
   [out:json][timeout:90];
   area["wikidata"="Q174"]["admin_level"="8"]->.sp;
@@ -68,6 +76,6 @@ export async function ListagemLocais(): Promise<Local[]> {
 
     locais.push(local)
   }
-
+  console.log("Locais gerados:", locais)
   return locais
 }
