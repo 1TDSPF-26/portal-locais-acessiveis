@@ -18,7 +18,7 @@ const query = `
   [out:json][timeout:90];
   area["wikidata"="Q174"]["admin_level"="8"]->.sp;
 
-  nwr["wheelchair"="yes"][~"^(amenity|shop|tourism)$"~"."](area.sp);
+  nwr[~"^(amenity|shop|tourism)$"~"."](area.sp);
   out center qt;
 `
   const result = await fetch(
