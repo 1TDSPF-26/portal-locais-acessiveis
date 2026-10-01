@@ -89,24 +89,28 @@
     --color-cor-sucesso: #034d2c; 
     --color-cor-erro: #bd1a0f;
 }
-
 body {
     background-color: var(--color-cor-fundo-principal);
     color: var(--color-cor-textos);
     font-family: var(--font-sans);
     font-size: calc(20px * var(--font-scale));
 }
-
 h1 {
-    font-size: calc(32px * var(--font-scale));
+    font-size: var(--text-h1);
+    font-weight: var(--text-h1--font-weight);
+    color: var(--color-cor-titulos);
 }
 
 h2 {
-    font-size: calc(28px * var(--font-scale));
+    font-size: var(--text-h2);
+    font-weight: var(--text-h2--font-weight);
+    color: var(--color-cor-titulos);
 }
 
 h3 {
-    font-size: calc(24px * var(--font-scale));
+    font-size: var(--text-h3);
+    font-weight: var(--text-h3--font-weight);
+    color: var(--color-cor-titulos);
 }
 
 p,

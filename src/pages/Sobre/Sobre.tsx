@@ -18,6 +18,35 @@ function Sobre() {
             Pessoas com deficiência merecem as mesmas oportunidades que qualquer outra pessoa, recebendo a devida inclusão social.
         </p>
       </section>
+
+      <section>
+        <h2>O que é o Portal de Locais e Serviços Acessíveis</h2>
+        <p>
+          O portal reúne informações sobre a acessibilidade de locais e serviços,
+          permitindo que qualquer pessoa consulte esses dados antes de decidir
+          para onde ir. A ideia é facilitar o planejamento e reduzir surpresas
+          causadas por barreiras de acessibilidade.
+        </p>
+      </section>
+
+      <section>
+        <h2>Princípios do projeto</h2>
+        <ul>
+          <li>Toda pessoa tem o direito de acessar os mesmos espaços e serviços, com as adaptações que precisar.</li>
+          <li>Diferentes pessoas têm diferentes necessidades de acessibilidade — não existe uma solução única para todos.</li>
+          <li>Informação clara sobre acessibilidade ajuda a reduzir barreiras antes mesmo de a pessoa chegar ao local.</li>
+        </ul>
+      </section>
+
+      <section aria-label="Aviso importante">
+        <h2>Aviso importante</h2>
+        <p>
+          Este portal tem caráter informativo. As informações sobre acessibilidade
+          exibidas aqui não constituem certificação oficial de que um local ou
+          serviço é acessível. Recomendamos sempre confirmar diretamente com o
+          estabelecimento antes de sua visita.
+        </p>
+      </section>
     </div>
   )
 }
