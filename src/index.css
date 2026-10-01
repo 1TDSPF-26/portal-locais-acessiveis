@@ -93,6 +93,41 @@ body {
     font-family: var(--font-sans);
     font-size: calc(20px * var(--font-scale));
 }
+h1 {
+    font-size: var(--text-h1);
+    font-weight: var(--text-h1--font-weight);
+    color: var(--color-cor-titulos);
+}
+
+h2 {
+    font-size: var(--text-h2);
+    font-weight: var(--text-h2--font-weight);
+    color: var(--color-cor-titulos);
+}
+
+h3 {
+    font-size: var(--text-h3);
+    font-weight: var(--text-h3--font-weight);
+    color: var(--color-cor-titulos);
+}
+
+h1 {
+    font-size: calc(32px * var(--font-scale));
+}
+
+h2 {
+    font-size: calc(28px * var(--font-scale));
+}
+
+h3 {
+    font-size: calc(24px * var(--font-scale));
+}
+
+p,
+li,
+a {
+    font-size: calc(20px * var(--font-scale));
+}
 
 h1 {
     font-size: calc(32px * var(--font-scale));
