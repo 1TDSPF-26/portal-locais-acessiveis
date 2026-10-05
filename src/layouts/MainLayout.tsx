@@ -1,14 +1,22 @@
-import type { ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 
 import { Header } from "../components/Header/Header";
 
 import { Footer } from "../components/Footer/Footer";
+import { useLocation } from "react-router-dom";
 
 interface MainLayoutProps {
   children: ReactNode;
 }
 
 export function MainLayout({ children }: MainLayoutProps) {
+
+  const { pathname } = useLocation();
+  const mainRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    mainRef.current?.focus();
+  }, [pathname]);
 
   return (
 
@@ -23,7 +31,7 @@ export function MainLayout({ children }: MainLayoutProps) {
 
       <Header />
 
-      <main id="conteudo-principal" tabIndex={-1}>
+      <main id="conteudo-principal" tabIndex={-1} ref={mainRef}>
         {children}
       </main>
 
