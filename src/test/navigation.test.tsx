@@ -94,4 +94,23 @@ it('exibe os links internos corretos no Footer', () => {
     .toHaveAttribute('href', '/sobre')
 })
 
+it('move o foco para o conteúdo principal ao navegar entre páginas', async () => {
+  const user = userEvent.setup()
+
+  renderRoutes('/')
+
+  await user.click(
+    within(
+      screen.getByRole('navigation', {
+        name: 'Menu Principal',
+      }),
+    ).getByRole('link', {
+      name: 'Sobre',
+    }),
+  )
+
+  const main = await screen.findByRole('main')
+
+  expect(main).toHaveFocus()
+  })
 })
