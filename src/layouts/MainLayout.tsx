@@ -23,7 +23,7 @@ export function MainLayout({ children }: MainLayoutProps) {
 
       <Header />
 
-      <main id="conteudo-principal" tabIndex={-1}>
+      <main id="conteudo-principal" tabIndex={-1} className="mx-auto w-full max-w-5xl px-4 py-6 break-words sm:px-6 sm:py-8 lg:px-8 lg:py-10">
         {children}
       </main>
 
