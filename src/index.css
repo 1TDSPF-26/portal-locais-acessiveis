@@ -118,3 +118,9 @@ li,
 a {
     font-size: calc(20px * var(--font-scale));
 }
+
+@layer components {
+    .stack {@apply flex flex-col gap-4;}
+
+    .stack-lg {@apply flex flex-col gap-8;}
+}
