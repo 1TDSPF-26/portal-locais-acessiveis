@@ -55,10 +55,10 @@ function Locais() {
   }
 
   return (
-    <section>
+    <section className="stack">
       <h1>Locais</h1>
 
-      <div>
+      <div className="flex flex-col gap-2">
         <label htmlFor="busca-nome">Buscar local por nome:</label>
         <input
           id="busca-nome"
@@ -72,7 +72,7 @@ function Locais() {
 
 
       {locaisFiltrados.length > 0 ? (
-        <ul>
+        <ul className="stack">
           {locaisFiltrados.map((local) => (
             <li key={local.id}>
               <Link to={`/locais/${local.id}`}>

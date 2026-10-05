@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 
 function Home() {
   return (
-    <section>
+    <section className="stack">
       <h1>Portal de Locais e Serviços Acessíveis</h1>
       <p>
         O Portal de Locais e Serviços Acessíveis reúne informações sobre
