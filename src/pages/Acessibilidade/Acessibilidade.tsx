@@ -114,13 +114,6 @@ function Acessibilidade() {
               conteúdo; outras partes da aplicação ainda podem não ter esse
               mesmo destaque.
             </li>
-            <li className="text-body leading-[1.5]">
-              O menu para telas menores (celular) ainda está em desenvolvimento.
-            </li>
-            <li className="text-body leading-[1.5]">
-              O rodapé ainda não possui links de navegação para as páginas do
-              portal.
-            </li>
           </ul>
         </section>
       </div>
