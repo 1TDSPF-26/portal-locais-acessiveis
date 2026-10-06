@@ -2,8 +2,7 @@ import { Link } from 'react-router-dom'
 
 function Home() {
   return (
-    <div className="page-container">
-      <section className="stack">
+      <section className="stack px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10">
         <h1>Portal de Locais e Serviços Acessíveis</h1>
         <p>
           O Portal de Locais e Serviços Acessíveis reúne informações sobre
@@ -18,7 +17,6 @@ function Home() {
           <Link to="/locais">Ver locais cadastrados</Link>
         </p>
       </section>
-    </div>
   )
 }
 

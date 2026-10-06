@@ -28,20 +28,21 @@ function AppRoutes() {
 
         <Route path="/" element={<Home />} />
 
-        <Route element={<PageContainer />}></Route>
+        <Route element={<PageContainer />}>
 
-        <Route path="/locais" element={<Locais />} />
+          <Route path="/locais" element={<Locais />} />
 
-        <Route path="/locais/:id" element={<DetalhesLocal />} />
+          <Route path="/locais/:id" element={<DetalhesLocal />} />
 
-        <Route path="/cadastrar" element={<Cadastro />} />
+          <Route path="/cadastrar" element={<Cadastro />} />
 
-        <Route path="/sobre" element={<Sobre />} />
+          <Route path="/sobre" element={<Sobre />} />
 
-        <Route path="/acessibilidade" element={<Acessibilidade />} />
+          <Route path="/acessibilidade" element={<Acessibilidade />} />
 
-        <Route path="*" element={<NotFound />} />
-        
+          <Route path="*" element={<NotFound />} />
+
+        </Route>
 
       </Routes>
 
