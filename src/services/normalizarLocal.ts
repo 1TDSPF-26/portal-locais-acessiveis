@@ -1,5 +1,5 @@
 import type { Local } from '../types/Local'
-import type { OverpassElement } from '../types/OverPass'
+import type { OverpassElement } from '../types/Overpass'
 
 function obterStatusAcessibilidade(
   wheelchair?: string,

@@ -1,5 +1,5 @@
 import type { Local } from '../types/Local'
-import type { OverpassResponse } from '../types/OverPass'
+import type { OverpassResponse } from '../types/Overpass'
 import { normalizarLocal } from './normalizarLocal'
 
 
