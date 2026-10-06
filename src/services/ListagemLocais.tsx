@@ -12,13 +12,19 @@ export async function ListagemLocais(): Promise<Local[]> {
   nwr["wheelchair"][~"^(amenity|shop|tourism)$"~"."](area.sp);
   out center qt;
 `
-  const result: OverpassResponse = await fetch(
+  const response = await fetch(
   "https://overpass-api.de/api/interpreter",
   {
     method: 'POST',
     body: 'data=' + encodeURIComponent(query),
   },
-).then((data) => data.json())
+)
+
+if (!response.ok) {
+  throw new Error(`Erro ao consultar a Overpass: ${response.status}`)
+}
+
+const result: OverpassResponse = await response.json()
 
 const listaElementos = result.elements ?? []
 
