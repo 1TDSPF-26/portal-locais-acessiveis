@@ -13,8 +13,13 @@ export function MainLayout({ children }: MainLayoutProps) {
 
   const { pathname } = useLocation();
   const mainRef = useRef<HTMLElement>(null);
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
+    if(isFirstRender.current){
+      isFirstRender.current = false;
+      return;
+    }
     mainRef.current?.focus();
   }, [pathname]);
 
