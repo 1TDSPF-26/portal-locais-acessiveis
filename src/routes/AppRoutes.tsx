@@ -2,6 +2,8 @@ import { Routes, Route } from 'react-router-dom'
 
 import { MainLayout } from '../layouts/MainLayout'
 
+import { PageContainer } from '../layouts/PageContainer'
+
 import Home from '../pages/Home/Home'
 
 import Locais from '../pages/Locais/Locais'
@@ -26,17 +28,21 @@ function AppRoutes() {
 
         <Route path="/" element={<Home />} />
 
-        <Route path="/locais" element={<Locais />} />
+        <Route element={<PageContainer />}>
 
-        <Route path="/locais/:id" element={<DetalhesLocal />} />
+          <Route path="/locais" element={<Locais />} />
 
-        <Route path="/cadastrar" element={<Cadastro />} />
+          <Route path="/locais/:id" element={<DetalhesLocal />} />
 
-        <Route path="/sobre" element={<Sobre />} />
+          <Route path="/cadastrar" element={<Cadastro />} />
 
-        <Route path="/acessibilidade" element={<Acessibilidade />} />
+          <Route path="/sobre" element={<Sobre />} />
 
-        <Route path="*" element={<NotFound />} />
+          <Route path="/acessibilidade" element={<Acessibilidade />} />
+
+          <Route path="*" element={<NotFound />} />
+
+        </Route>
 
       </Routes>
 
