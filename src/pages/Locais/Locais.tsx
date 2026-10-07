@@ -5,6 +5,7 @@ import { ListagemLocais } from '../../services/ListagemLocais'
 import { LoadingState } from '../../components/LoadingState/LoadingState'
 import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { EmptyState } from '../../components/EmptyState/EmptyState'
+import { ContagemResultados } from '../../components/ContagemResultados/ContagemResultados'
 import type { Local } from '../../types/Local'
 import {
   CRITERIOS_PADRAO,
@@ -162,9 +163,7 @@ function Locais() {
         </button>
       </form>
 
-      <p aria-live="polite">
-        {locaisFiltrados.length} de {locais.length} locais exibidos
-      </p>
+      <ContagemResultados total={locaisFiltrados.length} />
 
       {locaisFiltrados.length > 0 ? (
         <>
