@@ -36,7 +36,8 @@ export function MainLayout({ children }: MainLayoutProps) {
 
       <Header />
 
-      <main id="conteudo-principal" tabIndex={-1} ref={mainRef}>
+      <main id="conteudo-principal" tabIndex={-1} ref={mainRef} className="w-full">
+
         {children}
       </main>
 

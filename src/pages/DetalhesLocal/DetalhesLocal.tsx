@@ -4,7 +4,7 @@ function DetalhesLocal() {
   const { id } = useParams();
 
   return (
-    <section>
+    <section className="stack">
       <h1>Detalhes do local</h1>
       <p>ID recebido pela URL: {id}</p>
     </section>

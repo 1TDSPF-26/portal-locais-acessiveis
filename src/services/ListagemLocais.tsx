@@ -1,18 +1,8 @@
 import type { Local } from '../types/Local'
+import type { OverpassResponse } from '../types/Overpass'
+import { normalizarLocal } from './normalizarLocal'
 
 
-function obterStatusAcessibilidade(wheelchair?: string): Local['acessibilidade']['status'] {
-  switch (wheelchair) {
-    case 'yes':
-      return 'acessivel'
-    case 'limited':
-      return 'parcial'
-    case 'no':
-      return 'nao_acessivel'
-    default:
-      return 'nao_informado'
-  }
-}
 
 export async function ListagemLocais(): Promise<Local[]> {
   const query = `
@@ -22,53 +12,31 @@ export async function ListagemLocais(): Promise<Local[]> {
   nwr["wheelchair"][~"^(amenity|shop|tourism)$"~"."](area.sp);
   out center qt;
 `
-  const result = await fetch(
-    "https://overpass-api.de/api/interpreter",
-    {
-      method: 'POST',
-      body: 'data=' + encodeURIComponent(query),
-    },
-  ).then((data) => data.json())
+  const response = await fetch(
+  "https://overpass-api.de/api/interpreter",
+  {
+    method: 'POST',
+    body: 'data=' + encodeURIComponent(query),
+  },
+)
 
-  const listaElementos = result.elements
+if (!response.ok) {
+  throw new Error(`Erro ao consultar a Overpass: ${response.status}`)
+}
 
-  let locais: Local[] = []
+const result: OverpassResponse = await response.json()
 
-  for (let elemento of listaElementos) {
-    let latitude = elemento.lat ?? elemento.center?.lat
-    let longitude = elemento.lon ?? elemento.center?.lon
+const listaElementos = result.elements ?? []
 
-    if (latitude === undefined || longitude === undefined) {
-      continue
-    }
+let locais: Local[] = []
 
-    let local: Local = {
-      id: elemento.id,
-      nome: elemento.tags?.name ?? 'Local sem nome',
-      descricao: elemento.tags?.description,
-      categoria:
-        elemento.tags?.amenity ??
-        elemento.tags?.shop ??
-        elemento.tags?.tourism ??
-        'Categoria não informada',
-      endereco: {
-        rua: elemento.tags?.['addr:street'] ?? 'Rua não informada',
-        numero: elemento.tags?.['addr:housenumber'] ?? 'Numero não informado',
-        cidade: elemento.tags?.['addr:city'] ?? 'Cidade de São Paulo',
-        estado: elemento.tags?.['addr:state'] ?? 'Estado de São Paulo',
-      },
-      coordenadas: {
-        latitude: latitude,
-        longitude: longitude,
-      },
-      acessibilidade: {
-        status: obterStatusAcessibilidade(elemento.tags?.wheelchair),
-        descricao: elemento.tags?.['wheelchair:description'],
-      },
-    }
+  for (const elemento of listaElementos) {
+  const local = normalizarLocal(elemento)
 
+  if (local !== null) {
     locais.push(local)
   }
+}
 
   return locais
 }

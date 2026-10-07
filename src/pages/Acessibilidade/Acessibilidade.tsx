@@ -1,7 +1,7 @@
 function Acessibilidade() {
   return (
-    <div className="min-h-screen bg-cor-fundo-principal font-sans text-cor-textos">
-      <div className="mb-8">
+    <div className="stack-lg bg-cor-fundo-principal font-sans text-cor-textos">
+      <div className="stack">
         <h1 className="text-h1 font-bold leading-[1.2] text-cor-titulos">
           Acessibilidade no Portal de Locais e Serviços Acessíveis
         </h1>
@@ -11,8 +11,8 @@ function Acessibilidade() {
         </p>
       </div>
 
-      <div>
-        <section className="mb-8">
+      <div className="stack-lg">
+        <section className="stack">
           <h2 className="text-h2 font-semibold text-cor-titulos">
             Nosso compromisso
           </h2>
@@ -27,11 +27,11 @@ function Acessibilidade() {
           </p>
         </section>
 
-        <section className="mb-8">
+        <section className="stack">
           <h2 className="text-h2 font-semibold text-cor-titulos">
             Recursos disponíveis atualmente
           </h2>
-          <ul className="space-y-3">
+          <ul className="stack">
             <li className="text-body leading-[1.5]">
               Link para pular o conteúdo principal: Ao entrar em qualquer página,
               o primeiro item que recebe foco é um link que leva direto ao
@@ -63,7 +63,7 @@ function Acessibilidade() {
           </ul>
         </section>
 
-        <section className="mb-8">
+        <section className="stack">
           <h2 className="text-h2 font-semibold text-cor-titulos">
             Como usar esses recursos
           </h2>
@@ -80,11 +80,11 @@ function Acessibilidade() {
           </p>
         </section>
 
-        <section className="mb-8">
+        <section className="stack">
           <h2 className="text-h2 font-semibold text-cor-titulos">
             Para quem usa teclado ou tecnologias assistivas
           </h2>
-          <ul className="space-y-3">
+          <ul className="stack">
             <li className="text-body leading-[1.5]">
               O portal foi feito pra funcionar inteiro pelo teclado, sem precisar
               de mouse.
@@ -100,7 +100,7 @@ function Acessibilidade() {
           </ul>
         </section>
 
-        <section className="mb-8">
+        <section className="stack">
           <h2 className="text-h2 font-semibold text-cor-titulos">
             Limitações conhecidas
           </h2>
@@ -108,28 +108,19 @@ function Acessibilidade() {
             O portal ainda está em desenvolvimento, e nem todos os recursos de
             acessibilidade planejados já estão prontos:
           </p>
-          <ul className="space-y-3">
+          <ul className="stack">
             <li className="text-body leading-[1.5]">
               O foco visível já está no menu principal e no link de pular
               conteúdo; outras partes da aplicação ainda podem não ter esse
               mesmo destaque.
             </li>
-            <li className="text-body leading-[1.5]">
-              O menu para telas menores (celular) ainda está em desenvolvimento.
-            </li>
-            <li className="text-body leading-[1.5]">
-              O rodapé ainda não possui links de navegação para as páginas do
-              portal.
-            </li>
           </ul>
         </section>
       </div>
 
-      <div className="mt-12">
-        <p className="text-body leading-[1.5]">
-          Esta página será atualizada conforme novos recursos forem lançados.
-        </p>
-      </div>
+      <p className="text-body leading-[1.5]">
+        Esta página será atualizada conforme novos recursos forem lançados.
+      </p>
     </div>
   )
 }

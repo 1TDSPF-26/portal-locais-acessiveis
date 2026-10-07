@@ -15,7 +15,7 @@ export function EmptyState({
         <div
             role="status"
             aria-live="polite"
-            className="my-4 flex flex-col items-center justify-center rounded-lg border border-[#DDEEF2] bg-[#F7F9FA] p-6 text-center"
+            className="flex flex-col items-center justify-center rounded-lg border border-[#DDEEF2] bg-[#F7F9FA] p-6 text-center"
         >
             <h2 className="mb-2 text-lg font-semibold text-[#172A3A]">
                 {title}
