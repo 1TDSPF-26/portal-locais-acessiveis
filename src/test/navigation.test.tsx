@@ -113,4 +113,12 @@ it('move o foco para o conteúdo principal ao navegar entre páginas', async () 
 
   expect(main).toHaveFocus()
   })
+
+  it('nao move o foco para o conteudo principal no carregamento inicial', () => {
+    renderRoutes('/')
+    
+    const main = screen.getByRole('main')
+
+    expect(main).not.toHaveFocus()
+  })
 })

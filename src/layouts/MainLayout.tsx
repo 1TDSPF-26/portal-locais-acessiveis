@@ -13,14 +13,14 @@ export function MainLayout({ children }: MainLayoutProps) {
 
   const { pathname } = useLocation();
   const mainRef = useRef<HTMLElement>(null);
-  const isFirstRender = useRef(true);
+  const previousPathname = useRef(pathname);
+
 
   useEffect(() => {
-    if(isFirstRender.current){
-      isFirstRender.current = false;
-      return;
+    if(previousPathname.current !== pathname){
+      mainRef.current?.focus();
     }
-    mainRef.current?.focus();
+    previousPathname.current = pathname;
   }, [pathname]);
 
   return (
