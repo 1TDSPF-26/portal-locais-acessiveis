@@ -1,14 +1,6 @@
 .cadastro {
   width: 100%;
   min-width: 0;
-  color: var(--color-cor-textos);
-  font-family: var(--font-sans);
-}
-
-.cadastro h1 {
-  color: var(--color-cor-titulos);
-  font-size: var(--text-h1);
-  font-weight: var(--text-h1--font-weight);
 }
 
 .cadastro form {
@@ -23,6 +15,9 @@
   gap: 1rem;
   min-width: 0;
   padding: 1rem;
+}
+
+.cadastro :is(fieldset, input, select, textarea) {
   border: 1px solid var(--color-cor-apoio);
   border-radius: 0.5rem;
 }
@@ -30,6 +25,9 @@
 .cadastro legend {
   padding-inline: 0.25rem;
   color: var(--color-cor-titulos);
+}
+
+.cadastro :is(legend, label) {
   font-weight: 600;
 }
 
@@ -40,19 +38,11 @@
   min-width: 0;
 }
 
-.cadastro label {
-  font-weight: 600;
-}
-
-.cadastro input,
-.cadastro select,
-.cadastro textarea {
+.cadastro :is(input, select, textarea) {
   box-sizing: border-box;
   width: 100%;
   min-width: 0;
   padding: 0.75rem;
-  border: 1px solid var(--color-cor-apoio);
-  border-radius: 0.5rem;
   background: var(--color-cor-fundo-principal);
   color: var(--color-cor-textos);
   font: inherit;
@@ -80,9 +70,7 @@
   box-shadow: 0 0 0 6px var(--color-cor-foco-interativos);
 }
 
-.cadastro p,
-.cadastro label,
-.cadastro legend {
+.cadastro :is(p, label, legend) {
   overflow-wrap: anywhere;
 }
 
