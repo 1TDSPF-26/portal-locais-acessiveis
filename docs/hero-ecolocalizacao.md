@@ -15,13 +15,25 @@ Referência visual e funcional da Home com efeito de ecolocalização (Issue #92
 
 ## Regra de precedência
 
-Em caso de conflito, prevalecem nesta ordem:
+O resultado esperado da Home é **idêntico ao ZIP aprovado**, em aparência e em funcionamento. A integração deve entregar esse resultado preservando, ao mesmo tempo, os itens abaixo. Nenhum deles autoriza descartar outro.
 
-1. a branch `develop` atual;
-2. o Design System (Issue #21);
-3. os requisitos de acessibilidade (Issue #22).
+| Referência | O que define | O que não pode ser perdido |
+|---|---|---|
+| ZIP aprovado | Resultado visual e funcional da Home | Aparência, conteúdo, comportamento do efeito e estados de interação |
+| Branch `develop` | Estado atual do projeto | Funcionalidades, rotas, Header, Footer e componentes já existentes |
+| Design System (Issue #21) | Identidade visual base | Paleta, tipografia e espaçamentos |
+| Acessibilidade (Issue #22) | Padrões visuais acessíveis | Contraste, foco visível e uso de cor |
 
 Valores do protótipo valem só para a Home e não são regras globais.
+
+### Conflitos técnicos
+
+Se reproduzir o ZIP entrar em conflito com a `develop`, com a #21 ou com a #22, o conflito não deve ser resolvido de forma implícita nem por troca silenciosa de valores. O procedimento é:
+
+1. Implementar o resultado do ZIP sem remover funcionalidade existente nem requisito da #21 e da #22.
+2. Registrar o conflito na Issue da demanda, com o arquivo ou o par de cores envolvido, a evidência, a solução proposta e o efeito visual.
+3. Validar a solução na comparação final da [#106](https://github.com/1TDSPF-26/portal-locais-acessiveis/issues/106), em que o QA e o Tech Lead comparam a entrega com o ZIP.
+4. Não fazer troca de paleta nem melhoria que não tenha sido solicitada.
 
 ## Aparência e comportamento do hero
 
