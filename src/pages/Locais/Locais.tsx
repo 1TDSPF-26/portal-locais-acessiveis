@@ -31,10 +31,16 @@ function Locais() {
   // Resultados derivados da lista original: alterar busca, filtros ou ordem não refaz a requisição.
   const categorias = obterCategorias(locais)
   const locaisFiltrados = filtrarLocais(locais, { termoBusca, categoria, acessibilidade, ordem })
-  const { itensPaginados } = usePaginacao({
-    itens: locaisFiltrados,
-    itensPorPagina: ITENS_POR_PAGINA,
-  })
+  const { itensPaginados, 
+          paginaAtual,
+          totalPaginas,
+          proximaPagina,
+          paginaAnterior,
+          temProxima,
+          temAnterior, } = usePaginacao({
+              itens: locaisFiltrados,
+              itensPorPagina: ITENS_POR_PAGINA,
+            })
 
   function limparFiltros() {
     setTermoBusca(CRITERIOS_PADRAO.termoBusca)
@@ -161,15 +167,39 @@ function Locais() {
       </p>
 
       {locaisFiltrados.length > 0 ? (
-        <ul className="stack">
-          {itensPaginados.map((local) => (
-            <li key={local.id}>
-              <Link to={`/locais/${local.id}`}>
-                <h2>{local.nome}</h2>
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <>
+          <ul className="stack">
+            {itensPaginados.map((local) => (
+              <li key={local.id}>
+                <Link to={`/locais/${local.id}`}>
+                  <h2>{local.nome}</h2>
+                </Link>
+              </li>
+            ))}
+          </ul>
+
+          <nav aria-label="Paginação" className="flex items-center gap-2">
+            <button
+              onClick={paginaAnterior}
+              disabled={!temAnterior}
+              className="rounded-md border border-[#465268] px-3 py-2 text-base disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              Anterior
+            </button>
+
+            <span aria-live="polite">
+              Página {paginaAtual} de {totalPaginas}
+            </span>
+
+            <button
+              onClick={proximaPagina}
+              disabled={!temProxima}
+              className="rounded-md border border-[#465268] px-3 py-2 text-base disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              Próxima
+            </button>
+          </nav>
+        </>
       ) : (
         <EmptyState
           title="Nenhum resultado encontrado."
@@ -177,7 +207,7 @@ function Locais() {
           actionLabel="Limpar filtros"
           onAction={limparFiltros}
         />
-      )}
+      )}   
     </section>
   )
 
