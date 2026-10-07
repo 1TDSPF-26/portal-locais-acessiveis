@@ -1,57 +1,60 @@
-import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
-import { ListagemLocais } from '../../services/ListagemLocais'
-import { LoadingState } from '../../components/LoadingState/LoadingState'
-import { ErrorState } from '../../components/ErrorState/ErrorState'
-import { EmptyState } from '../../components/EmptyState/EmptyState'
+import { ListagemLocais } from "../../services/ListagemLocais";
+import { LoadingState } from "../../components/LoadingState/LoadingState";
+import { ErrorState } from "../../components/ErrorState/ErrorState";
+import { EmptyState } from "../../components/EmptyState/EmptyState";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
-import type { Local } from '../../types/Local'
+import type { Local } from "../../types/Local";
 
 function Locais() {
-  const [locais, setLocais] = useState<Local[]>([])
-  const [carregando, setCarregando] = useState(true)
-  const [erro, setErro] = useState(false)
-  const [termoBusca, setTermoBusca] = useState('')
+  useDocumentTitle("Locais");
 
+  const [locais, setLocais] = useState<Local[]>([]);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState(false);
+  const [termoBusca, setTermoBusca] = useState("");
 
   const locaisFiltrados = locais.filter((local) =>
-    local.nome.toLowerCase().includes(termoBusca.toLowerCase())
-  )
-
-
+    local.nome.toLowerCase().includes(termoBusca.toLowerCase()),
+  );
 
   async function carregarLocais() {
-    setCarregando(true)
-    setErro(false)
+    setCarregando(true);
+    setErro(false);
 
     try {
-      const resultado = await ListagemLocais()
-      setLocais(resultado)
+      const resultado = await ListagemLocais();
+      setLocais(resultado);
     } catch {
-      setErro(true)
-      setLocais([])
+      setErro(true);
+      setLocais([]);
     } finally {
-      setCarregando(false)
+      setCarregando(false);
     }
   }
 
   useEffect(() => {
-    carregarLocais()
-  }, [])
-
-
+    carregarLocais();
+  }, []);
 
   if (carregando) {
-    return <LoadingState message="Carregando locais..." />
+    return <LoadingState message="Carregando locais..." />;
   }
 
   if (erro) {
-    return <ErrorState onRetry={carregarLocais} />
+    return <ErrorState onRetry={carregarLocais} />;
   }
 
   if (locais.length === 0) {
-    return <EmptyState title="Nenhum local encontrado." message="Não encontramos locais acessíveis para exibir no momento" />
+    return (
+      <EmptyState
+        title="Nenhum local encontrado."
+        message="Não encontramos locais acessíveis para exibir no momento"
+      />
+    );
   }
 
   return (
@@ -69,8 +72,6 @@ function Locais() {
         />
       </div>
 
-
-
       {locaisFiltrados.length > 0 ? (
         <ul className="stack">
           {locaisFiltrados.map((local) => (
@@ -86,9 +87,9 @@ function Locais() {
           title="Nenhum resultado encontrado."
           message={`Não encontramos nenhum local correspondente a "${termoBusca}".`}
         />
-      )} 
-      </section>
-  )
+      )}
+    </section>
+  );
 }
 
-export default Locais
+export default Locais;

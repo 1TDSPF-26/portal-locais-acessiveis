@@ -1,6 +1,8 @@
 import { useParams } from "react-router-dom";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
-function DetalhesLocal() {
+export function DetalhesLocal() {
+  useDocumentTitle("Detalhes");
   const { id } = useParams();
 
   return (
