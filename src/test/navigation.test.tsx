@@ -54,44 +54,71 @@ describe('Navegação principal', () => {
     )
 
     expect(
-  await screen.findByRole('heading', {
-    name: 'Nenhum local encontrado.',
-    level: 2,
-  }),
-).toBeInTheDocument()
+      await screen.findByRole('heading', {
+        name: 'Nenhum local encontrado.',
+        level: 2,
+      }),
+    ).toBeInTheDocument()
   })
 
   it('exibe a página NotFound ao acessar uma rota inexistente', () => {
-  renderRoutes('/rota-inexistente')
+    renderRoutes('/rota-inexistente')
 
-  expect(
-    screen.getByRole('heading', {
-      name: 'Erro - 404',
-      level: 1,
-    }),
-  ).toBeInTheDocument()
-})
+    expect(
+      screen.getByRole('heading', {
+        name: 'Erro - 404',
+        level: 1,
+      }),
+    ).toBeInTheDocument()
+  })
 
-it('exibe os links internos corretos no Footer', () => {
+  it('exibe os links internos corretos no Footer', () => {
+    renderRoutes('/')
+
+    const footer = within(
+      screen.getByRole('navigation', {
+        name: 'Navegação do rodapé',
+      }),
+    )
+
+    expect(footer.getByRole('link', { name: 'Home' }))
+      .toHaveAttribute('href', '/')
+
+    expect(footer.getByRole('link', { name: 'Locais' }))
+      .toHaveAttribute('href', '/locais')
+
+    expect(footer.getByRole('link', { name: 'Cadastro' }))
+      .toHaveAttribute('href', '/cadastrar')
+
+    expect(footer.getByRole('link', { name: 'Sobre' }))
+      .toHaveAttribute('href', '/sobre')
+
+    expect(
+      footer.getByRole('link', { name: 'Acessibilidade',}),
+    ).toHaveAttribute('href', '/acessibilidade')
+  })
+
+  it('navega do Footer para a página de acessibilidade', async () => {
+  const user = userEvent.setup()
+
   renderRoutes('/')
 
-  const footer = within(
-    screen.getByRole('navigation', {
-      name: 'Navegação do rodapé',
+  await user.click(
+    within(
+      screen.getByRole('navigation', {
+        name: 'Navegação do rodapé',
+      }),
+    ).getByRole('link', {
+      name: 'Acessibilidade',
     }),
   )
 
-  expect(footer.getByRole('link', { name: 'Home' }))
-    .toHaveAttribute('href', '/')
-
-  expect(footer.getByRole('link', { name: 'Locais' }))
-    .toHaveAttribute('href', '/locais')
-
-  expect(footer.getByRole('link', { name: 'Cadastro' }))
-    .toHaveAttribute('href', '/cadastrar')
-
-  expect(footer.getByRole('link', { name: 'Sobre' }))
-    .toHaveAttribute('href', '/sobre')
+  expect(
+    await screen.findByRole('heading', {
+      name: 'Acessibilidade no Portal de Locais e Serviços Acessíveis',
+      level: 1,
+    }),
+  ).toBeInTheDocument()
 })
 
 })
