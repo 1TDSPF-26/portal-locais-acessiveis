@@ -1,6 +1,6 @@
 import type { Local } from '../types/Local'
 import type { OverpassResponse } from '../types/Overpass'
-import { normalizarLocal } from './NormalizarLocal.ts'
+import { normalizarLocal } from './normalizarLocal.ts'
 import { obterCacheLocais, definirCacheLocais } from './CacheLocais.ts'
 
 export async function ListagemLocais(): Promise<Local[]> {
