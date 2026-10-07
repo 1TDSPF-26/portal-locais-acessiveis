@@ -37,8 +37,6 @@
     --text-botao--font-weight: 600;
 
     /* Não foram criados tokens personalizados para espaçamento pois a escala padrão do Tailwind já corresponde ao Design System. */
-
-
 }
 
 .skip-link {
@@ -79,7 +77,7 @@
 
 :root[data-contrast="high"] {
     --color-cor-fundo-principal: #ffffff;
-    --color-cor-superficies-cards:  #DDEEF2;
+    --color-cor-superficies-cards: #DDEEF2;
     --color-cor-detalhes-icones: #44A0B4;
     --color-cor-botao-principal: #186dd4;
     --color-cor-apoio: #244A5A;
@@ -89,6 +87,7 @@
     --color-cor-sucesso: #034d2c; 
     --color-cor-erro: #bd1a0f;
 }
+
 body {
     background-color: var(--color-cor-fundo-principal);
     color: var(--color-cor-textos);
@@ -96,12 +95,15 @@ body {
     font-size: var(--text-body);
 }
 
+<<<<<<< HEAD
 h1,
 h2,
 h3 {
     color: var(--color-cor-titulos);
 }
 
+=======
+>>>>>>> 85cf8e417e1ffc998e14051b32600b94a2fb30d9
 h1 {
     font-size: var(--text-h1);
     font-weight: var(--text-h1--font-weight);
