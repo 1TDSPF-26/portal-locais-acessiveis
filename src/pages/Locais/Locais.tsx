@@ -7,17 +7,37 @@ import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { EmptyState } from '../../components/EmptyState/EmptyState'
 
 import type { Local } from '../../types/Local'
+import {
+  CRITERIOS_PADRAO,
+  ROTULOS_ACESSIBILIDADE,
+  filtrarLocais,
+  obterCategorias,
+  type OrdemNome,
+  type StatusAcessibilidade,
+} from '../../utils/filtrarLocais'
+
+const classeControle =
+  'rounded-md border border-[#465268] bg-white px-3 py-2 text-base text-[#172A3A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#244A5A] focus-visible:ring-offset-2'
 
 function Locais() {
   const [locais, setLocais] = useState<Local[]>([])
   const [carregando, setCarregando] = useState(true)
   const [erro, setErro] = useState(false)
-  const [termoBusca, setTermoBusca] = useState('')
+  const [termoBusca, setTermoBusca] = useState(CRITERIOS_PADRAO.termoBusca)
+  const [categoria, setCategoria] = useState(CRITERIOS_PADRAO.categoria)
+  const [acessibilidade, setAcessibilidade] = useState(CRITERIOS_PADRAO.acessibilidade)
+  const [ordem, setOrdem] = useState(CRITERIOS_PADRAO.ordem)
 
+  // Resultados derivados da lista original: alterar busca, filtros ou ordem não refaz a requisição.
+  const categorias = obterCategorias(locais)
+  const locaisFiltrados = filtrarLocais(locais, { termoBusca, categoria, acessibilidade, ordem })
 
-  const locaisFiltrados = locais.filter((local) =>
-    local.nome.toLowerCase().includes(termoBusca.toLowerCase())
-  )
+  function limparFiltros() {
+    setTermoBusca(CRITERIOS_PADRAO.termoBusca)
+    setCategoria(CRITERIOS_PADRAO.categoria)
+    setAcessibilidade(CRITERIOS_PADRAO.acessibilidade)
+    setOrdem(CRITERIOS_PADRAO.ordem)
+  }
 
 
 
@@ -58,18 +78,81 @@ function Locais() {
     <section className="stack">
       <h1>Locais</h1>
 
-      <div className="flex flex-col gap-2">
-        <label htmlFor="busca-nome">Buscar local por nome:</label>
-        <input
-          id="busca-nome"
-          type="text"
-          placeholder="Digite o nome do local..."
-          value={termoBusca}
-          onChange={(e) => setTermoBusca(e.target.value)}
-        />
-      </div>
+      <form
+        aria-label="Buscar e filtrar locais"
+        className="flex flex-wrap items-end gap-4"
+        onSubmit={(e) => e.preventDefault()}
+      >
+        <div className="flex flex-col gap-2">
+          <label htmlFor="busca-nome">Buscar local por nome:</label>
+          <input
+            id="busca-nome"
+            type="text"
+            placeholder="Digite o nome do local..."
+            value={termoBusca}
+            onChange={(e) => setTermoBusca(e.target.value)}
+          />
+        </div>
 
+        <div className="flex flex-col gap-2">
+          <label htmlFor="filtro-categoria">Categoria:</label>
+          <select
+            id="filtro-categoria"
+            className={classeControle}
+            value={categoria}
+            onChange={(e) => setCategoria(e.target.value)}
+          >
+            <option value="">Todas as categorias</option>
+            {categorias.map((item) => (
+              <option key={item} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
+        </div>
 
+        <div className="flex flex-col gap-2">
+          <label htmlFor="filtro-acessibilidade">Acessibilidade:</label>
+          <select
+            id="filtro-acessibilidade"
+            className={classeControle}
+            value={acessibilidade}
+            onChange={(e) => setAcessibilidade(e.target.value as StatusAcessibilidade | '')}
+          >
+            <option value="">Todos os níveis</option>
+            {Object.entries(ROTULOS_ACESSIBILIDADE).map(([status, rotulo]) => (
+              <option key={status} value={status}>
+                {rotulo}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <label htmlFor="ordenacao-nome">Ordenar por nome:</label>
+          <select
+            id="ordenacao-nome"
+            className={classeControle}
+            value={ordem}
+            onChange={(e) => setOrdem(e.target.value as OrdemNome)}
+          >
+            <option value="asc">A a Z</option>
+            <option value="desc">Z a A</option>
+          </select>
+        </div>
+
+        <button
+          type="button"
+          onClick={limparFiltros}
+          className="rounded-md bg-[#216FCE] px-4 py-2 text-base font-semibold text-white transition-colors hover:bg-[#244A5A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#244A5A] focus-visible:ring-offset-2"
+        >
+          Limpar filtros
+        </button>
+      </form>
+
+      <p aria-live="polite">
+        {locaisFiltrados.length} de {locais.length} locais exibidos
+      </p>
 
       {locaisFiltrados.length > 0 ? (
         <ul className="stack">
@@ -84,7 +167,9 @@ function Locais() {
       ) : (
         <EmptyState
           title="Nenhum resultado encontrado."
-          message={`Não encontramos nenhum local correspondente a "${termoBusca}".`}
+          message="Não encontramos nenhum local que corresponda à busca e aos filtros selecionados."
+          actionLabel="Limpar filtros"
+          onAction={limparFiltros}
         />
       )} 
       </section>
