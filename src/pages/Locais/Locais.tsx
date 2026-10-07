@@ -16,6 +16,7 @@ import {
   type StatusAcessibilidade,
 } from '../../utils/filtrarLocais'
 import { ITENS_POR_PAGINA, usePaginacao } from './hooks/usePaginacao'
+import { Paginacao } from './hooks/Paginacao'
 
 const classeControle =
   'rounded-md border border-[#465268] bg-white px-3 py-2 text-base text-[#172A3A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#244A5A] focus-visible:ring-offset-2'
@@ -32,16 +33,18 @@ function Locais() {
   // Resultados derivados da lista original: alterar busca, filtros ou ordem não refaz a requisição.
   const categorias = obterCategorias(locais)
   const locaisFiltrados = filtrarLocais(locais, { termoBusca, categoria, acessibilidade, ordem })
-  const { itensPaginados, 
-          paginaAtual,
-          totalPaginas,
-          proximaPagina,
-          paginaAnterior,
-          temProxima,
-          temAnterior, } = usePaginacao({
-              itens: locaisFiltrados,
-              itensPorPagina: ITENS_POR_PAGINA,
-            })
+  const { itensPaginados,
+    paginaAtual,
+    totalPaginas,
+    proximaPagina,
+    paginaAnterior,
+    temProxima,
+    temAnterior,
+    setPaginaAtual,
+  } = usePaginacao({
+    itens: locaisFiltrados,
+    itensPorPagina: ITENS_POR_PAGINA,
+  })
 
   function limparFiltros() {
     setTermoBusca(CRITERIOS_PADRAO.termoBusca)
@@ -176,28 +179,15 @@ function Locais() {
               </li>
             ))}
           </ul>
-
-          <nav aria-label="Paginação" className="flex items-center gap-2">
-            <button
-              onClick={paginaAnterior}
-              disabled={!temAnterior}
-              className="rounded-md border border-[#465268] px-3 py-2 text-base disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              Anterior
-            </button>
-
-            <span aria-live="polite">
-              Página {paginaAtual} de {totalPaginas}
-            </span>
-
-            <button
-              onClick={proximaPagina}
-              disabled={!temProxima}
-              className="rounded-md border border-[#465268] px-3 py-2 text-base disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              Próxima
-            </button>
-          </nav>
+          <Paginacao
+            paginaAtual={paginaAtual}
+            totalPaginas={totalPaginas}
+            temAnterior={temAnterior}
+            temProxima={temProxima}
+            paginaAnterior={paginaAnterior}
+            proximaPagina={proximaPagina}
+            setPaginaAtual={setPaginaAtual}
+          />
         </>
       ) : (
         <EmptyState
@@ -206,7 +196,7 @@ function Locais() {
           actionLabel="Limpar filtros"
           onAction={limparFiltros}
         />
-      )}   
+      )}
     </section>
   )
 
