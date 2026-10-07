@@ -95,15 +95,12 @@ body {
     font-size: var(--text-body);
 }
 
-<<<<<<< HEAD
 h1,
 h2,
 h3 {
     color: var(--color-cor-titulos);
 }
 
-=======
->>>>>>> 85cf8e417e1ffc998e14051b32600b94a2fb30d9
 h1 {
     font-size: var(--text-h1);
     font-weight: var(--text-h1--font-weight);
