@@ -5,7 +5,7 @@ import { ListagemLocais } from '../../services/ListagemLocais'
 import { LoadingState } from '../../components/LoadingState/LoadingState'
 import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { EmptyState } from '../../components/EmptyState/EmptyState'
-
+import { ContagemResultados } from '../../components/ContagemResultados/ContagemResultados'
 import type { Local } from '../../types/Local'
 import {
   CRITERIOS_PADRAO,
@@ -15,6 +15,8 @@ import {
   type OrdemNome,
   type StatusAcessibilidade,
 } from '../../utils/filtrarLocais'
+import { ITENS_POR_PAGINA, usePaginacao } from './hooks/usePaginacao'
+import { Paginacao } from './hooks/Paginacao'
 
 const classeControle =
   'rounded-md border border-[#465268] bg-white px-3 py-2 text-base text-[#172A3A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#244A5A] focus-visible:ring-offset-2'
@@ -31,6 +33,18 @@ function Locais() {
   // Resultados derivados da lista original: alterar busca, filtros ou ordem não refaz a requisição.
   const categorias = obterCategorias(locais)
   const locaisFiltrados = filtrarLocais(locais, { termoBusca, categoria, acessibilidade, ordem })
+  const { itensPaginados,
+    paginaAtual,
+    totalPaginas,
+    proximaPagina,
+    paginaAnterior,
+    temProxima,
+    temAnterior,
+    setPaginaAtual,
+  } = usePaginacao({
+    itens: locaisFiltrados,
+    itensPorPagina: ITENS_POR_PAGINA,
+  })
 
   function limparFiltros() {
     setTermoBusca(CRITERIOS_PADRAO.termoBusca)
@@ -128,6 +142,8 @@ function Locais() {
           </select>
         </div>
 
+
+
         <div className="flex flex-col gap-2">
           <label htmlFor="ordenacao-nome">Ordenar por nome:</label>
           <select
@@ -150,20 +166,29 @@ function Locais() {
         </button>
       </form>
 
-      <p aria-live="polite">
-        {locaisFiltrados.length} de {locais.length} locais exibidos
-      </p>
+      <ContagemResultados total={locaisFiltrados.length} />
 
       {locaisFiltrados.length > 0 ? (
-        <ul className="stack">
-          {locaisFiltrados.map((local) => (
-            <li key={local.id}>
-              <Link to={`/locais/${local.id}`}>
-                <h2>{local.nome}</h2>
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <>
+          <ul className="stack">
+            {itensPaginados.map((local) => (
+              <li key={local.id}>
+                <Link to={`/locais/${local.id}`}>
+                  <h2>{local.nome}</h2>
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <Paginacao
+            paginaAtual={paginaAtual}
+            totalPaginas={totalPaginas}
+            temAnterior={temAnterior}
+            temProxima={temProxima}
+            paginaAnterior={paginaAnterior}
+            proximaPagina={proximaPagina}
+            setPaginaAtual={setPaginaAtual}
+          />
+        </>
       ) : (
         <EmptyState
           title="Nenhum resultado encontrado."
@@ -171,9 +196,11 @@ function Locais() {
           actionLabel="Limpar filtros"
           onAction={limparFiltros}
         />
-      )} 
-      </section>
+      )}
+    </section>
   )
+
+
 }
 
 export default Locais
