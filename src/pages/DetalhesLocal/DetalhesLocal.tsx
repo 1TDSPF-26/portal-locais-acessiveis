@@ -16,8 +16,7 @@ type Estado =
   | { tipo: 'nao-encontrado' }
   | { tipo: 'sucesso'; local: Local }
 
-const classeLink =
-  'inline-block rounded-md font-semibold text-[#216FCE] underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#244A5A] focus-visible:ring-offset-2'
+const classeLink =  'inline-block rounded-md font-semibold text-cor-botao-principal underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2'
 
 function formatarEndereco(endereco?: Endereco): string | null {
   if (!endereco) {
