@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 
 import { ListagemLocais } from '../../services/ListagemLocais'
 import { LoadingState } from '../../components/LoadingState/LoadingState'
 import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { EmptyState } from '../../components/EmptyState/EmptyState'
-import LocalCard from '../components/LocalCard/LocalCard'
+import LocalCard from '../../components/LocalCard/LocalCard'
 
 import type { Local } from '../../types/Local'
 import {

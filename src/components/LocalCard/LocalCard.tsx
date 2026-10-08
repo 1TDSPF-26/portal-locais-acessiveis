@@ -1,5 +1,5 @@
-import type { Local } from '../../types/Local'
 import { Link } from 'react-router-dom'
+import type { Local } from '../../types/Local'
 
 interface LocalCardProps {
   local: Local
@@ -18,10 +18,15 @@ const ROTULOS_ACESSIBILIDADE: Record<
 function LocalCard({ local }: LocalCardProps) {
   return (
     <article className="stack relative rounded-lg bg-cor-superficies-cards p-4">
-      <h2>{local.nome}</h2>
       <h2>
-        <Link to={`/locais/${local.id}`} >{local.nome}</Link>
+        <Link
+          to={`/locais/${local.id}`}
+          className="rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-foco-interativos focus-visible:ring-offset-2"
+        >
+          {local.nome}
+        </Link>
       </h2>
+
       <p>Categoria: {local.categoria}</p>
 
       <p>
