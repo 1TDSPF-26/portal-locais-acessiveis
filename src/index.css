@@ -118,3 +118,11 @@ li,
 a {
     font-size: calc(20px * var(--font-scale));
 }
+
+@layer components {
+    .stack {@apply flex flex-col gap-4;}
+
+    .stack-lg {@apply flex flex-col gap-8;}
+    
+    .page-container {@apply mx-auto w-full max-w-5xl px-4 py-6 break-words sm:px-6 sm:py-8 lg:px-8 lg:py-10;}
+}

@@ -1,13 +1,13 @@
 function Sobre() {
   return (
-    <div>
-      <header>
+    <div className="stack-lg">
+      <header className="stack">
         <h1>Sobre</h1>
         <p>
           Nesta página será explicado mais a fundo o porquê deste projeto existir, suas intenções e importância
         </p>
       </header>
-      <section>
+      <section className="stack">
         <h2>
           A importância social do projeto
         </h2>
@@ -19,7 +19,7 @@ function Sobre() {
         </p>
       </section>
 
-      <section>
+      <section className="stack">
         <h2>O que é o Portal de Locais e Serviços Acessíveis</h2>
         <p>
           O portal reúne informações sobre a acessibilidade de locais e serviços,
@@ -29,7 +29,7 @@ function Sobre() {
         </p>
       </section>
 
-      <section>
+      <section className="stack">
         <h2>Princípios do projeto</h2>
         <ul>
           <li>Toda pessoa tem o direito de acessar os mesmos espaços e serviços, com as adaptações que precisar.</li>
@@ -38,7 +38,7 @@ function Sobre() {
         </ul>
       </section>
 
-      <section aria-label="Aviso importante">
+      <section className="stack" aria-label="Aviso importante">
         <h2>Aviso importante</h2>
         <p>
           Este portal tem caráter informativo. As informações sobre acessibilidade

@@ -23,6 +23,10 @@ export function Footer() {
           <li>
             <Link to="/sobre">Sobre</Link>
           </li>
+
+          <li>
+            <Link to="/acessibilidade">Acessibilidade</Link>
+          </li>
         </ul>
       </nav>
     </footer>
