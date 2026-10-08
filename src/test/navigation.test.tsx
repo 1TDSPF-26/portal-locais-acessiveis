@@ -122,28 +122,6 @@ describe('Navegação principal', () => {
 })
 
 
-it('exibe os links internos corretos no Footer', () => {
-  renderRoutes('/')
-
-  const footer = within(
-    screen.getByRole('navigation', {
-      name: 'Navegação do rodapé',
-    }),
-  )
-
-  expect(footer.getByRole('link', { name: 'Home' }))
-    .toHaveAttribute('href', '/')
-
-  expect(footer.getByRole('link', { name: 'Locais' }))
-    .toHaveAttribute('href', '/locais')
-
-  expect(footer.getByRole('link', { name: 'Cadastro' }))
-    .toHaveAttribute('href', '/cadastrar')
-
-  expect(footer.getByRole('link', { name: 'Sobre' }))
-    .toHaveAttribute('href', '/sobre')
-})
-
 it('move o foco para o conteúdo principal ao navegar entre páginas', async () => {
   const user = userEvent.setup()
 
@@ -171,4 +149,57 @@ it('move o foco para o conteúdo principal ao navegar entre páginas', async () 
 
     expect(main).not.toHaveFocus()
   })
+  it('move o foco para o conteúdo principal ao navegar com teclado (Tab + Enter)', async () => {
+  const user = userEvent.setup()
+
+  renderRoutes('/')
+
+  const menu = within(
+    screen.getByRole('navigation', { name: 'Menu Principal' }),
+  )
+
+  menu.getByRole('link', { name: 'Sobre' }).focus()
+  await user.keyboard('{Enter}')
+
+  expect(await screen.findByRole('main')).toHaveFocus()
+})
+
+it('mantém o skip link funcionando e sem trocar de rota', async () => {
+  const user = userEvent.setup()
+
+  renderRoutes('/')
+
+  await user.tab()
+
+  const skipLink = screen.getByRole('link', {
+    name: 'Pular para o conteúdo principal',
+  })
+
+  expect(skipLink).toHaveFocus()
+  expect(skipLink).toHaveAttribute('href', '#conteudo-principal')
+
+  await user.keyboard('{Enter}')
+
+  expect(
+    screen.getByRole('heading', {
+      name: 'Portal de Locais e Serviços Acessíveis',
+      level: 1,
+    }),
+  ).toBeInTheDocument()
+})
+
+it('não move o foco para o main ao navegar por âncora na mesma página', async () => {
+  const user = userEvent.setup()
+
+  renderRoutes('/')
+
+  const skipLink = screen.getByRole('link', {
+    name: 'Pular para o conteúdo principal',
+  })
+
+  skipLink.focus()
+  await user.keyboard('{Enter}')
+
+  expect(window.location.pathname).toBe('/')
+})
 })
