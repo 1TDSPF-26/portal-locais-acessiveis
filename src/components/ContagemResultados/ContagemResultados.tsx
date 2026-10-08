@@ -21,7 +21,7 @@ export function ContagemResultados({ total }: ContagemResultadosProps) {
         <p
             role="status"
             aria-live="polite"
-            className="text-base text-[#465268]"
+            className="text-base text-cor-textos"
         >
             {montarMensagem(total)}
         </p>

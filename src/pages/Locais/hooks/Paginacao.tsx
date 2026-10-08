@@ -53,9 +53,9 @@ export function Paginacao({
   setPaginaAtual,
 }: PaginacaoProps) {
   const classeBotao =
-    'min-h-11 min-w-11 rounded-md border border-[#465268] px-3 py-2 ' +
+    'min-h-11 min-w-11 rounded-md border border-cor-textos px-3 py-2 ' +
     'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ' +
-    'focus-visible:outline-[#216FCE] disabled:cursor-not-allowed disabled:opacity-40'
+    'focus-visible:outline-cor-foco-interativos disabled:cursor-not-allowed disabled:opacity-40'
 
   const paginasVisiveis = calcularIndicesVisiveis(paginaAtual, totalPaginas)
 
@@ -95,7 +95,7 @@ export function Paginacao({
               <span
                 key={`ellipsis-${index}`}
                 aria-hidden="true"
-                className="flex min-h-11 min-w-11 items-center justify-center text-[#465268]"
+                className="flex min-h-11 min-w-11 items-center justify-center text-cor-textos"
               >
                 …
               </span>
@@ -110,8 +110,8 @@ export function Paginacao({
               aria-current={pagina === paginaAtual ? 'page' : undefined}
               className={`${classeBotao} ${
                 pagina === paginaAtual
-                  ? 'bg-[#216FCE] text-white'
-                  : 'bg-white text-[#172A3A]'
+                  ? 'bg-cor-botao-principal text-white'
+                  : 'bg-cor-fundo-principal text-cor-titulos'
               }`}
             >
               {pagina}
