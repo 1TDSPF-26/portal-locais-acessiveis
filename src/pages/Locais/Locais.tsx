@@ -5,6 +5,7 @@ import { ListagemLocais } from '../../services/ListagemLocais'
 import { LoadingState } from '../../components/LoadingState/LoadingState'
 import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { EmptyState } from '../../components/EmptyState/EmptyState'
+import LocalCard from '../components/LocalCard/LocalCard'
 
 import type { Local } from '../../types/Local'
 import {
@@ -158,12 +159,10 @@ function Locais() {
         <ul className="stack">
           {locaisFiltrados.map((local) => (
             <li key={local.id}>
-              <Link to={`/locais/${local.id}`}>
-                <h2>{local.nome}</h2>
-              </Link>
+              <LocalCard local={local} />
             </li>
-          ))}
-        </ul>
+           ))}
+         </ul>
       ) : (
         <EmptyState
           title="Nenhum resultado encontrado."
