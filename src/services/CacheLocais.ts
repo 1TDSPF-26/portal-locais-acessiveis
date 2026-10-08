@@ -1,37 +1,23 @@
-import type { Local } from '../types/Local';
+let cacheLocais: any = null
+let cacheTimestamp: number = 0
+const TTL = 5 * 60 * 1000
 
-interface CacheItem {
-  dados: Local[];
-  timestamp: number;
-}
-
-const TEMPO_VALIDADE_MS = 5 * 60 * 1000;
-
-let cacheMemoria: CacheItem | null = null;
-
-export function obterCacheLocais(): Local[] | null {
-  if (!cacheMemoria) {
-    return null;
+export function obterCacheLocais() {
+  if (!cacheLocais || !cacheTimestamp) return null
+  const agora = Date.now()
+  if (agora - cacheTimestamp >= TTL) {
+    limparCacheLocais()
+    return null
   }
-
-  const agora = Date.now();
-  const idadeCache = agora - cacheMemoria.timestamp;
-
-  if (idadeCache > TEMPO_VALIDADE_MS) {
-    cacheMemoria = null;
-    return null;
-  }
-
-  return cacheMemoria.dados;
+  return cacheLocais
 }
 
-export function definirCacheLocais(dados: Local[]): void {
-  cacheMemoria = {
-    dados,
-    timestamp: Date.now(),
-  };
+export function definirCacheLocais(dados: any) {
+  cacheLocais = dados
+  cacheTimestamp = Date.now()
 }
 
-export function limparCacheLocais(): void {
-  cacheMemoria = null;
+export function limparCacheLocais() {
+  cacheLocais = null
+  cacheTimestamp = 0
 }
