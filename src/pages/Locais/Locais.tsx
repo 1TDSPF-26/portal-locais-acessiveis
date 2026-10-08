@@ -1,12 +1,13 @@
-import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
-import { ListagemLocais } from '../../services/ListagemLocais'
-import { LoadingState } from '../../components/LoadingState/LoadingState'
-import { ErrorState } from '../../components/ErrorState/ErrorState'
-import { EmptyState } from '../../components/EmptyState/EmptyState'
+import { ListagemLocais } from "../../services/ListagemLocais";
+import { LoadingState } from "../../components/LoadingState/LoadingState";
+import { ErrorState } from "../../components/ErrorState/ErrorState";
+import { EmptyState } from "../../components/EmptyState/EmptyState";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
-import type { Local } from '../../types/Local'
+import type { Local } from "../../types/Local";
 import {
   CRITERIOS_PADRAO,
   ROTULOS_ACESSIBILIDADE,
@@ -14,64 +15,74 @@ import {
   obterCategorias,
   type OrdemNome,
   type StatusAcessibilidade,
-} from '../../utils/filtrarLocais'
+} from "../../utils/filtrarLocais";
 
 const classeControle =
-  'rounded-md border border-[#465268] bg-white px-3 py-2 text-base text-[#172A3A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#244A5A] focus-visible:ring-offset-2'
+  "rounded-md border border-[#465268] bg-white px-3 py-2 text-base text-[#172A3A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#244A5A] focus-visible:ring-offset-2";
 
 function Locais() {
-  const [locais, setLocais] = useState<Local[]>([])
-  const [carregando, setCarregando] = useState(true)
-  const [erro, setErro] = useState(false)
-  const [termoBusca, setTermoBusca] = useState(CRITERIOS_PADRAO.termoBusca)
-  const [categoria, setCategoria] = useState(CRITERIOS_PADRAO.categoria)
-  const [acessibilidade, setAcessibilidade] = useState(CRITERIOS_PADRAO.acessibilidade)
-  const [ordem, setOrdem] = useState(CRITERIOS_PADRAO.ordem)
+  useDocumentTitle("Locais");
+
+  const [locais, setLocais] = useState<Local[]>([]);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState(false);
+  const [termoBusca, setTermoBusca] = useState(CRITERIOS_PADRAO.termoBusca);
+  const [categoria, setCategoria] = useState(CRITERIOS_PADRAO.categoria);
+  const [acessibilidade, setAcessibilidade] = useState(
+    CRITERIOS_PADRAO.acessibilidade,
+  );
+  const [ordem, setOrdem] = useState(CRITERIOS_PADRAO.ordem);
 
   // Resultados derivados da lista original: alterar busca, filtros ou ordem não refaz a requisição.
-  const categorias = obterCategorias(locais)
-  const locaisFiltrados = filtrarLocais(locais, { termoBusca, categoria, acessibilidade, ordem })
+  const categorias = obterCategorias(locais);
+  const locaisFiltrados = filtrarLocais(locais, {
+    termoBusca,
+    categoria,
+    acessibilidade,
+    ordem,
+  });
 
   function limparFiltros() {
-    setTermoBusca(CRITERIOS_PADRAO.termoBusca)
-    setCategoria(CRITERIOS_PADRAO.categoria)
-    setAcessibilidade(CRITERIOS_PADRAO.acessibilidade)
-    setOrdem(CRITERIOS_PADRAO.ordem)
+    setTermoBusca(CRITERIOS_PADRAO.termoBusca);
+    setCategoria(CRITERIOS_PADRAO.categoria);
+    setAcessibilidade(CRITERIOS_PADRAO.acessibilidade);
+    setOrdem(CRITERIOS_PADRAO.ordem);
   }
 
-
-
   async function carregarLocais() {
-    setCarregando(true)
-    setErro(false)
+    setCarregando(true);
+    setErro(false);
 
     try {
-      const resultado = await ListagemLocais()
-      setLocais(resultado)
+      const resultado = await ListagemLocais();
+      setLocais(resultado);
     } catch {
-      setErro(true)
-      setLocais([])
+      setErro(true);
+      setLocais([]);
     } finally {
-      setCarregando(false)
+      setCarregando(false);
     }
   }
 
   useEffect(() => {
-    carregarLocais()
-  }, [])
-
-
+    carregarLocais();
+  }, []);
 
   if (carregando) {
-    return <LoadingState message="Carregando locais..." />
+    return <LoadingState message="Carregando locais..." />;
   }
 
   if (erro) {
-    return <ErrorState onRetry={carregarLocais} />
+    return <ErrorState onRetry={carregarLocais} />;
   }
 
   if (locais.length === 0) {
-    return <EmptyState title="Nenhum local encontrado." message="Não encontramos locais acessíveis para exibir no momento" />
+    return (
+      <EmptyState
+        title="Nenhum local encontrado."
+        message="Não encontramos locais acessíveis para exibir no momento"
+      />
+    );
   }
 
   return (
@@ -117,7 +128,9 @@ function Locais() {
             id="filtro-acessibilidade"
             className={classeControle}
             value={acessibilidade}
-            onChange={(e) => setAcessibilidade(e.target.value as StatusAcessibilidade | '')}
+            onChange={(e) =>
+              setAcessibilidade(e.target.value as StatusAcessibilidade | "")
+            }
           >
             <option value="">Todos os níveis</option>
             {Object.entries(ROTULOS_ACESSIBILIDADE).map(([status, rotulo]) => (
@@ -171,9 +184,9 @@ function Locais() {
           actionLabel="Limpar filtros"
           onAction={limparFiltros}
         />
-      )} 
-      </section>
-  )
+      )}
+    </section>
+  );
 }
 
-export default Locais
+export default Locais;
