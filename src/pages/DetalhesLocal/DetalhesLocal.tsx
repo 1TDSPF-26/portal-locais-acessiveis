@@ -7,7 +7,7 @@ import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { EmptyState } from '../../components/EmptyState/EmptyState'
 
 import type { Endereco, Local } from '../../types/Local'
- 
+
 import { validarIdLocal } from '../../utils/validarIdLocal'
 
 type Estado =
@@ -16,7 +16,14 @@ type Estado =
   | { tipo: 'nao-encontrado' }
   | { tipo: 'sucesso'; local: Local }
 
-const classeLink =  'inline-block rounded-md font-semibold text-cor-botao-principal underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2'
+const rotulosAcessibilidade: Record<Local["acessibilidade"]["status"], string> = {
+  acessivel: "Acessível",
+  parcial: "Parcialmente acessível",
+  nao_acessivel: "Não acessível",
+  nao_informado: "Não informado",
+};
+
+const classeLink = 'inline-block rounded-md font-semibold text-cor-botao-principal underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2'
 
 function formatarEndereco(endereco?: Endereco): string | null {
   if (!endereco) {
@@ -136,6 +143,16 @@ function DetalhesLocal() {
         <div>
           <dt className="font-semibold">Endereço</dt>
           <dd>{endereco ?? 'Endereço não informado.'}</dd>
+        </div>
+
+
+        <div>
+          <dt className="font-semibold">Acessibilidade</dt>
+          <dd>{rotulosAcessibilidade[local.acessibilidade.status]}</dd>
+
+          {local.acessibilidade.descricao && (
+            <dd>{local.acessibilidade.descricao}</dd>
+          )}
         </div>
 
       </dl>
