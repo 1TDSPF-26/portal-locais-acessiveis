@@ -13,19 +13,19 @@ export function ErrorState({
         <div
             role="alert"
             aria-live="assertive"
-            className="flex flex-col items-center justify-center rounded-lg border border-[#DDEEF2] bg-[#F7F9FA] p-6 text-center"
+            className="flex flex-col items-center justify-center rounded-lg border border-cor-superficies-cards bg-cor-fundo-principal p-6 text-center"
         >
-            <h2 className="mb-2 text-lg font-semibold text-[#B42318]">
+            <h2 className="mb-2 text-lg font-semibold text-cor-erro">
                 {title}
             </h2>
-            <p className="max-w-md text-base text-[#B42318]">
+            <p className="max-w-md text-base text-cor-erro">
                 {message}
             </p>
             {onRetry && (
                 <button
                     type="button"
                     onClick={onRetry}
-                    className="mt-4 rounded-md bg-[#B42318] px-4 py-2 text-base font-semibold text-white transition-colors hover:bg-[#244A5A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#244A5A] focus-visible:ring-offset-2"
+                    className="mt-4 rounded-md bg-cor-erro px-4 py-2 text-base font-semibold text-cor-fundo-principal transition-colors hover:bg-cor-botao-secundario focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-foco-interativos focus-visible:ring-offset-2"
                 >
                     Tentar novamente
                 </button>

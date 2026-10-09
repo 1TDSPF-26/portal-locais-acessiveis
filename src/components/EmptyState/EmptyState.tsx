@@ -15,19 +15,19 @@ export function EmptyState({
         <div
             role="status"
             aria-live="polite"
-            className="flex flex-col items-center justify-center rounded-lg border border-[#DDEEF2] bg-[#F7F9FA] p-6 text-center"
+            className="flex flex-col items-center justify-center rounded-lg border border-cor-superficies-cards bg-cor-fundo-principal p-6 text-center"
         >
-            <h2 className="mb-2 text-lg font-semibold text-[#172A3A]">
+            <h2 className="mb-2 text-lg font-semibold text-cor-textos">
                 {title}
             </h2>
-            <p className="max-w-md text-base text-[#465268]">
+            <p className="max-w-md text-base text-cor-textos">
                 {message}
             </p>
             {actionLabel && onAction && (
                 <button
                     type="button"
                     onClick={onAction}
-                    className="mt-4 rounded-md bg-[#216FCE] px-4 py-2 text-base font-semibold text-white transition-colors hover:bg-[#244A5A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#244A5A] focus-visible:ring-offset-2"
+                    className="mt-4 rounded-md bg-cor-botao-principal px-4 py-2 text-base font-semibold text-white transition-colors hover:bg-cor-botao-secundario focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-botao-principal focus-visible:ring-offset-2"
                 >
                     {actionLabel}
                 </button>
