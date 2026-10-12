@@ -1,4 +1,5 @@
 import { render, screen, within } from '@testing-library/react'
+import { limparCacheLocais } from '../../services/CacheLocais'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -19,31 +20,32 @@ const fetchMock = vi.fn(
     }),
 )
 
-beforeEach(() => {
-  fetchMock.mockClear()
-  vi.spyOn(globalThis, 'fetch').mockImplementation(fetchMock)
-})
-
-afterEach(() => {
-  vi.restoreAllMocks()
-})
-
-async function renderLocais() {
-  render(
-    <MemoryRouter>
-      <Locais />
-    </MemoryRouter>,
-  )
-  await screen.findByRole('heading', { name: 'Locais', level: 1 })
-}
-
-function nomesExibidos() {
-  return within(screen.getByRole('list'))
-    .getAllByRole('heading', { level: 2 })
-    .map((heading) => heading.textContent)
-}
-
 describe('Página Locais - filtros e ordenação', () => {
+  beforeEach(() => {
+    limparCacheLocais()
+    fetchMock.mockClear()
+    vi.spyOn(globalThis, 'fetch').mockImplementation(fetchMock)
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  async function renderLocais() {
+    render(
+      <MemoryRouter>
+        <Locais />
+      </MemoryRouter>,
+    )
+    await screen.findByRole('heading', { name: 'Locais', level: 1 })
+  }
+
+  function nomesExibidos() {
+    return within(screen.getByRole('list'))
+      .getAllByRole('heading', { level: 2 })
+      .map((heading) => heading.textContent)
+  }
+
   it('filtra por categoria e acessibilidade e combina com a busca sem nova requisição', async () => {
     const user = userEvent.setup()
     await renderLocais()
