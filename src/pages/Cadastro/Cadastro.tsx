@@ -10,8 +10,11 @@ import {
   type ErrosCadastro,
   type ValoresCadastro,
 } from './validacaoCadastro'
+import { cadastrarLocal } from '../../services/cadastrarLocal'
+import type { CreateLocalPayload } from '../../types/CreateLocalPayload'
 
 type ElementoDeCampo = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+type SituacaoEnvio = 'inativo' | 'enviando' | 'sucesso' | 'erro'
 
 function Cadastro() {
   const [nome, setNome] = useState('')
@@ -30,6 +33,7 @@ function Cadastro() {
 
   const [erros, setErros] = useState<ErrosCadastro>({})
   const [houveTentativaDeEnvio, setHouveTentativaDeEnvio] = useState(false)
+  const [situacaoEnvio, setSituacaoEnvio] = useState<SituacaoEnvio>('inativo')
 
   const camposRef = useRef<Partial<Record<CampoCadastro, ElementoDeCampo | null>>>({})
 
@@ -62,8 +66,12 @@ function Cadastro() {
     })
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
+
+    if (situacaoEnvio === 'enviando') {
+      return
+    }
 
     const errosEncontrados = validarCadastro(valoresCadastro)
     setErros(errosEncontrados)
@@ -74,6 +82,31 @@ function Cadastro() {
     if (camposInvalidos.length > 0) {
       camposRef.current[camposInvalidos[0]]?.focus()
       return
+    }
+
+    const payload: CreateLocalPayload = {
+      nome: nome.trim(),
+      categoria: categoria.trim(),
+      descricao: descricao.trim(),
+      endereco: {
+        rua: endereco.rua.trim(),
+        numero: endereco.numero.trim() || undefined,
+        cidade: endereco.cidade.trim(),
+        estado: endereco.estado.trim(),
+      },
+      acessibilidade: {
+        status: statusAcessibilidade as CreateLocalPayload['acessibilidade']['status'],
+        descricao: descricaoAcessibilidade.trim() || undefined,
+      },
+    }
+
+    setSituacaoEnvio('enviando')
+
+    try {
+      await cadastrarLocal(payload)
+      setSituacaoEnvio('sucesso')
+    } catch {
+      setSituacaoEnvio('erro')
     }
   }
 
@@ -322,9 +355,19 @@ function Cadastro() {
           </div>
         </fieldset>
 
-        <p id="aviso-envio">O envio ainda não está disponível. Nenhum dado será salvo.</p>
-        <button type="submit" aria-describedby="aviso-envio">
-          Enviar cadastro
+        <div aria-live="polite" role="status">
+          {situacaoEnvio === 'enviando' && <p>Enviando cadastro...</p>}
+          {situacaoEnvio === 'sucesso' && <p>Cadastro enviado com sucesso.</p>}
+          {situacaoEnvio === 'erro' && (
+            <p className="cadastro__erro">
+              <span aria-hidden="true">⚠</span> <strong>Erro:</strong> Não foi possível enviar o
+              cadastro. Seus dados foram mantidos, tente novamente.
+            </p>
+          )}
+        </div>
+
+        <button type="submit" disabled={situacaoEnvio === 'enviando'}>
+          {situacaoEnvio === 'enviando' ? 'Enviando...' : 'Enviar cadastro'}
         </button>
       </form>
     </div>
