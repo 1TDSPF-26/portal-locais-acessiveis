@@ -12,4 +12,5 @@ Auditoria de acessibilidade realizada no projeto `portal-locais-acessiveis` para
 - **Lighthouse Desktop:** Pontuação 100/100 em Acessibilidade.
 
 ## 4. Conclusão
-A aplicação cumpre os requisitos de acessibilidade sem violações detetadas nos testes executados.
+A aplicação cumpre os requisitos de acessibilidade sem violações detetadas nos testes executados. Foram feitos também a atulização da branch feature/auditoria-acessibilidade
+com a develop e reavaliação auditorais
