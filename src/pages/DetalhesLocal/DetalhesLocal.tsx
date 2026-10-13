@@ -16,14 +16,20 @@ type Estado =
   | { tipo: 'nao-encontrado' }
   | { tipo: 'sucesso'; local: Local }
 
-const rotulosAcessibilidade: Record<Local["acessibilidade"]["status"], string> = {
-  acessivel: "Acessível",
-  parcial: "Parcialmente acessível",
-  nao_acessivel: "Não acessível",
-  nao_informado: "Não informado",
-};
+type EstadoComChave = {
+  chave: string
+  resultado: Estado
+}
 
-const classeLink = 'inline-block rounded-md font-semibold text-cor-botao-principal underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2'
+const rotulosAcessibilidade: Record<Local['acessibilidade']['status'], string> = {
+  acessivel: 'Acessível',
+  parcial: 'Parcialmente acessível',
+  nao_acessivel: 'Não acessível',
+  nao_informado: 'Não informado',
+}
+
+const classeLink =
+  'inline-block rounded-md font-semibold text-cor-botao-principal underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2'
 
 function formatarEndereco(endereco?: Endereco): string | null {
   if (!endereco) {
@@ -49,36 +55,51 @@ function DetalhesLocal() {
   const { id } = useParams()
   const idNumerico = validarIdLocal(id)
 
-  const [estado, setEstado] = useState<Estado>({ tipo: 'carregando' })
+  const [estado, setEstado] = useState<EstadoComChave>({
+    chave: '',
+    resultado: { tipo: 'carregando' },
+  })
+
   const [tentativa, setTentativa] = useState(0)
+
+  const chaveAtual = `${idNumerico ?? 'invalido'}-${tentativa}`
 
   useEffect(() => {
     if (idNumerico === null) {
       return
     }
 
-    // Evita atualizar o estado com a resposta de uma requisição antiga
-    // caso o id da rota mude ou o componente seja desmontado.
     let ativo = true
-
-    setEstado({ tipo: 'carregando' })
 
     buscarLocalPorId(idNumerico)
       .then((local) => {
         if (ativo) {
-          setEstado(local ? { tipo: 'sucesso', local } : { tipo: 'nao-encontrado' })
+          setEstado({
+            chave: chaveAtual,
+            resultado: local
+              ? { tipo: 'sucesso', local }
+              : { tipo: 'nao-encontrado' },
+          })
         }
       })
       .catch(() => {
         if (ativo) {
-          setEstado({ tipo: 'erro' })
+          setEstado({
+            chave: chaveAtual,
+            resultado: { tipo: 'erro' },
+          })
         }
       })
 
     return () => {
       ativo = false
     }
-  }, [idNumerico, tentativa])
+  }, [idNumerico, tentativa, chaveAtual])
+
+  const estadoAtual: Estado =
+    estado.chave === chaveAtual
+      ? estado.resultado
+      : { tipo: 'carregando' }
 
   if (idNumerico === null) {
     return (
@@ -93,11 +114,11 @@ function DetalhesLocal() {
     )
   }
 
-  if (estado.tipo === 'carregando') {
+  if (estadoAtual.tipo === 'carregando') {
     return <LoadingState message="Carregando detalhes do local..." />
   }
 
-  if (estado.tipo === 'erro') {
+  if (estadoAtual.tipo === 'erro') {
     return (
       <ErrorState
         title="Não foi possível carregar o local"
@@ -107,7 +128,7 @@ function DetalhesLocal() {
     )
   }
 
-  if (estado.tipo === 'nao-encontrado') {
+  if (estadoAtual.tipo === 'nao-encontrado') {
     return (
       <section className="stack">
         <h1>Detalhes do local</h1>
@@ -120,7 +141,7 @@ function DetalhesLocal() {
     )
   }
 
-  const { local } = estado
+  const { local } = estadoAtual
   const endereco = formatarEndereco(local.endereco)
 
   return (
@@ -145,7 +166,6 @@ function DetalhesLocal() {
           <dd>{endereco ?? 'Endereço não informado.'}</dd>
         </div>
 
-
         <div>
           <dt className="font-semibold">Acessibilidade</dt>
           <dd>{rotulosAcessibilidade[local.acessibilidade.status]}</dd>
@@ -154,7 +174,6 @@ function DetalhesLocal() {
             <dd>{local.acessibilidade.descricao}</dd>
           )}
         </div>
-
       </dl>
     </article>
   )

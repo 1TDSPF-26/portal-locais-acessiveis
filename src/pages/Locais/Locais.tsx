@@ -25,12 +25,19 @@ function Locais() {
   const [erro, setErro] = useState(false)
   const [termoBusca, setTermoBusca] = useState(CRITERIOS_PADRAO.termoBusca)
   const [categoria, setCategoria] = useState(CRITERIOS_PADRAO.categoria)
-  const [acessibilidade, setAcessibilidade] = useState(CRITERIOS_PADRAO.acessibilidade)
+  const [acessibilidade, setAcessibilidade] = useState(
+    CRITERIOS_PADRAO.acessibilidade,
+  )
   const [ordem, setOrdem] = useState(CRITERIOS_PADRAO.ordem)
 
   // Resultados derivados da lista original: alterar busca, filtros ou ordem não refaz a requisição.
   const categorias = obterCategorias(locais)
-  const locaisFiltrados = filtrarLocais(locais, { termoBusca, categoria, acessibilidade, ordem })
+  const locaisFiltrados = filtrarLocais(locais, {
+    termoBusca,
+    categoria,
+    acessibilidade,
+    ordem,
+  })
 
   function limparFiltros() {
     setTermoBusca(CRITERIOS_PADRAO.termoBusca)
@@ -39,15 +46,11 @@ function Locais() {
     setOrdem(CRITERIOS_PADRAO.ordem)
   }
 
-
-
   async function carregarLocais() {
-    setCarregando(true)
-    setErro(false)
-
     try {
       const resultado = await ListagemLocais()
       setLocais(resultado)
+      setErro(false)
     } catch {
       setErro(true)
       setLocais([])
@@ -56,22 +59,57 @@ function Locais() {
     }
   }
 
+  function tentarCarregarLocais() {
+    setCarregando(true)
+    setErro(false)
+    void carregarLocais()
+  }
+
   useEffect(() => {
-    carregarLocais()
+    let ativo = true
+
+    async function carregar() {
+      try {
+        const resultado = await ListagemLocais()
+
+        if (ativo) {
+          setLocais(resultado)
+          setErro(false)
+        }
+      } catch {
+        if (ativo) {
+          setErro(true)
+          setLocais([])
+        }
+      } finally {
+        if (ativo) {
+          setCarregando(false)
+        }
+      }
+    }
+
+    void carregar()
+
+    return () => {
+      ativo = false
+    }
   }, [])
-
-
 
   if (carregando) {
     return <LoadingState message="Carregando locais..." />
   }
 
   if (erro) {
-    return <ErrorState onRetry={carregarLocais} />
+    return <ErrorState onRetry={tentarCarregarLocais} />
   }
 
   if (locais.length === 0) {
-    return <EmptyState title="Nenhum local encontrado." message="Não encontramos locais acessíveis para exibir no momento" />
+    return (
+      <EmptyState
+        title="Nenhum local encontrado."
+        message="Não encontramos locais acessíveis para exibir no momento"
+      />
+    )
   }
 
   return (
@@ -117,7 +155,11 @@ function Locais() {
             id="filtro-acessibilidade"
             className={classeControle}
             value={acessibilidade}
-            onChange={(e) => setAcessibilidade(e.target.value as StatusAcessibilidade | '')}
+            onChange={(e) =>
+              setAcessibilidade(
+                e.target.value as StatusAcessibilidade | '',
+              )
+            }
           >
             <option value="">Todos os níveis</option>
             {Object.entries(ROTULOS_ACESSIBILIDADE).map(([status, rotulo]) => (
@@ -160,8 +202,8 @@ function Locais() {
             <li key={local.id}>
               <LocalCard local={local} />
             </li>
-           ))}
-         </ul>
+          ))}
+        </ul>
       ) : (
         <EmptyState
           title="Nenhum resultado encontrado."
@@ -169,8 +211,8 @@ function Locais() {
           actionLabel="Limpar filtros"
           onAction={limparFiltros}
         />
-      )} 
-      </section>
+      )}
+    </section>
   )
 }
 
