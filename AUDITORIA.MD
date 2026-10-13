@@ -15,7 +15,7 @@ Auditoria de acessibilidade realizada no projeto `portal-locais-acessiveis` para
 ## 4. Resultados das Evidências
 - **Lighthouse Mobile**: Pontuação 100/100 em Acessibilidade.
 - **Lighthouse Desktop**: Pontuação 100/100 em Acessibilidade.
-- **Navegação por teclado**: Validada com sucesso em todos os componentes interativos.
+- **Navegação por teclado**: Validada nos principais fluxos e componentes interativos
 
 ## 5. Conclusão
-A aplicação cumpre rigorosamente os requisitos de acessibilidade estipulados na Issue #116, sem violações detetadas nos testes executados e nas auditorias realizadas.
+A aplicação atende aos critérios de acessibilidade estipulados na Issue #116, sem registros de violações nas ferramentas automáticas utilizadas e nos fluxos validos
