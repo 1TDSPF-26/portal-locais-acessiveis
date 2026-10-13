@@ -1,6 +1,6 @@
 import type { FormEvent } from 'react'
 import { useRef, useState } from 'react'
-import './Cadastro.css'
+// import './Cadastro.css'
 import {
   IDS_CAMPOS,
   ROTULOS_CAMPOS,
@@ -138,15 +138,18 @@ function Cadastro() {
   }
 
   return (
-    <div className="cadastro">
-      <header>
-        <h1>Cadastro de Locais Acessíveis</h1>
-        <p>
+    <div className="w-full min-w-0 text-cor-textos font-sans">
+      <header className='min-w-0'>
+        <h1 className='text-(length:--text-h1) font-bold text-cor-titulos'>
+          Cadastro de Locais Acessíveis
+        </h1>
+        <p className='"mt-2 wrap-anywhere'>
           Preencha as informações necessárias para cadastro.
         </p>
       </header>
 
-      <form onSubmit={handleSubmit} noValidate>
+      <form onSubmit={handleSubmit} noValidate
+        className='mt-6 grid min-w-0 gap-6'>
         <div aria-live="assertive" role="alert">
           {camposInvalidos.length > 0 && (
             <section className="cadastro__resumo-erros" aria-labelledby="titulo-resumo-erros">
