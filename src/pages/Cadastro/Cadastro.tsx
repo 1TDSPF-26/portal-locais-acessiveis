@@ -176,10 +176,12 @@ function Cadastro() {
           Os campos marcados com (obrigatório) precisam ser preenchidos.
         </p>
 
-        <fieldset>
-          <legend>Informações do local</legend>
+        <fieldset className='rid min-w-0 grid-cols-1 gap-4 rounded-lg border border-cor-apoio p-4 md:grid-cols-2'>
+          <legend className="px-1 font-semibold text-cor-titulos wrap-anywhere">
+            Informações do local
+          </legend>
 
-          <div className="campo-largo">
+          <div className="flex min-w-0 flex-col gap-2 md:col-span-2">
             <label htmlFor="nome-local">
               Nome do local <span className="cadastro__obrigatorio">(obrigatório)</span>
             </label>
@@ -200,7 +202,7 @@ function Cadastro() {
             {mensagemDeErro('nome')}
           </div>
 
-          <div>
+          <div className="flex min-w-0 flex-col gap-2">
             <label htmlFor="categoria-local">
               Categoria <span className="cadastro__obrigatorio">(obrigatório)</span>
             </label>
@@ -221,7 +223,7 @@ function Cadastro() {
             {mensagemDeErro('categoria')}
           </div>
 
-          <div className="campo-largo">
+          <div className="flex min-w-0 flex-col gap-2 md:col-span-2">
             <label htmlFor="descricao-local">
               Descrição do local <span className="cadastro__obrigatorio">(obrigatório)</span>
             </label>
@@ -243,10 +245,12 @@ function Cadastro() {
           </div>
         </fieldset>
 
-        <fieldset>
-          <legend>Endereço</legend>
+        <fieldset className='rid min-w-0 grid-cols-1 gap-4 rounded-lg border border-cor-apoio p-4 md:grid-cols-2'>
+          <legend className="px-1 font-semibold text-cor-titulos wrap-anywhere">
+            Endereço
+          </legend>
 
-          <div className="campo-largo">
+          <div className="flex min-w-0 flex-col gap-2 md:col-span-2">
             <label htmlFor="rua-local">
               Rua <span className="cadastro__obrigatorio">(obrigatório)</span>
             </label>
@@ -264,7 +268,7 @@ function Cadastro() {
             {mensagemDeErro('rua')}
           </div>
 
-          <div>
+          <div className="flex min-w-0 flex-col gap-2">
             <label htmlFor="numero-local">Número</label>
             <input
               id="numero-local"
@@ -275,7 +279,7 @@ function Cadastro() {
             />
           </div>
 
-          <div>
+          <div className="flex min-w-0 flex-col gap-2">
             <label htmlFor="cidade-local">
               Cidade <span className="cadastro__obrigatorio">(obrigatório)</span>
             </label>
@@ -293,7 +297,7 @@ function Cadastro() {
             {mensagemDeErro('cidade')}
           </div>
 
-          <div>
+          <div className="flex min-w-0 flex-col gap-2">
             <label htmlFor="estado-local">
               Estado <span className="cadastro__obrigatorio">(obrigatório)</span>
             </label>
@@ -312,10 +316,12 @@ function Cadastro() {
           </div>
         </fieldset>
 
-        <fieldset>
-          <legend>Acessibilidade do local</legend>
+        <fieldset className='rid min-w-0 grid-cols-1 gap-4 rounded-lg border border-cor-apoio p-4 md:grid-cols-2'>
+          <legend className="px-1 font-semibold text-cor-titulos wrap-anywhere">
+            Acessibilidade do local
+          </legend>
 
-          <div>
+          <div className="flex min-w-0 flex-col gap-2">
             <label htmlFor="status-acessibilidade">
               Nível de acessibilidade{' '}
               <span className="cadastro__obrigatorio">(obrigatório)</span>
@@ -341,7 +347,7 @@ function Cadastro() {
             {mensagemDeErro('statusAcessibilidade')}
           </div>
 
-          <div className="campo-largo">
+          <div className="flex min-w-0 flex-col gap-2 md:col-span-2">
             <label htmlFor="descricao-acessibilidade">Recursos e limitações de acessibilidade</label>
             <p id="ajuda-acessibilidade">
               Descreva os recursos conhecidos do local, como rampa ou banheiro adaptado,
