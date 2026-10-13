@@ -4,6 +4,7 @@ import { MemoryRouter } from 'react-router-dom'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { OverpassElement } from '../../types/Overpass'
 import Locais from './Locais'
+import { limparCacheLocais } from '../../services/CacheLocais'
 
 // Com 10 itens por página, estes 25 locais formam três páginas: 10, 10 e 5 itens.
 const elementos: OverpassElement[] = []
@@ -25,6 +26,7 @@ const fetchMock = vi.fn()
 beforeEach(() => {
   // Cada teste começa com as chamadas zeradas e uma resposta simulada,
   // sem depender da disponibilidade da API Overpass.
+  limparCacheLocais()
   fetchMock.mockReset()
   fetchMock.mockResolvedValue(
     new Response(JSON.stringify({ elements: elementos }), {
