@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 
 import { ListagemLocais } from '../../services/ListagemLocais'
 import { LoadingState } from '../../components/LoadingState/LoadingState'
 import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { EmptyState } from '../../components/EmptyState/EmptyState'
 import { ContagemResultados } from '../../components/ContagemResultados/ContagemResultados'
+import LocalCard from '../../components/LocalCard/LocalCard'
+
 import type { Local } from '../../types/Local'
 import {
   CRITERIOS_PADRAO,
@@ -169,13 +170,12 @@ function Locais() {
       <ContagemResultados total={locaisFiltrados.length} />
 
       {locaisFiltrados.length > 0 ? (
+
         <>
           <ul className="stack">
             {itensPaginados.map((local) => (
               <li key={local.id}>
-                <Link to={`/locais/${local.id}`}>
-                  <h2>{local.nome}</h2>
-                </Link>
+                <LocalCard local={local} />
               </li>
             ))}
           </ul>
@@ -189,6 +189,7 @@ function Locais() {
             setPaginaAtual={setPaginaAtual}
           />
         </>
+
       ) : (
         <EmptyState
           title="Nenhum resultado encontrado."
