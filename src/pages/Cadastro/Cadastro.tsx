@@ -198,6 +198,7 @@ function Cadastro() {
                 revalidar({ ...valoresCadastro, nome: event.target.value })
               }}
               {...atributosDeErro('nome')}
+              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos'
             />
             {mensagemDeErro('nome')}
           </div>
@@ -219,6 +220,7 @@ function Cadastro() {
                 revalidar({ ...valoresCadastro, categoria: event.target.value })
               }}
               {...atributosDeErro('categoria')}
+              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos'
             />
             {mensagemDeErro('categoria')}
           </div>
@@ -240,6 +242,7 @@ function Cadastro() {
                 revalidar({ ...valoresCadastro, descricao: event.target.value })
               }}
               {...atributosDeErro('descricao')}
+              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos'
             />
             {mensagemDeErro('descricao')}
           </div>
@@ -264,6 +267,7 @@ function Cadastro() {
               }}
               onChange={(event) => atualizarEndereco('rua', event.target.value)}
               {...atributosDeErro('rua')}
+              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos'
             />
             {mensagemDeErro('rua')}
           </div>
@@ -276,6 +280,7 @@ function Cadastro() {
               type="text"
               value={endereco.numero}
               onChange={(event) => atualizarEndereco('numero', event.target.value)}
+              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos'
             />
           </div>
 
@@ -293,6 +298,7 @@ function Cadastro() {
               }}
               onChange={(event) => atualizarEndereco('cidade', event.target.value)}
               {...atributosDeErro('cidade')}
+              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos'
             />
             {mensagemDeErro('cidade')}
           </div>
@@ -311,6 +317,7 @@ function Cadastro() {
               }}
               onChange={(event) => atualizarEndereco('estado', event.target.value)}
               {...atributosDeErro('estado')}
+              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos'
             />
             {mensagemDeErro('estado')}
           </div>
@@ -338,6 +345,7 @@ function Cadastro() {
                 revalidar({ ...valoresCadastro, statusAcessibilidade: event.target.value })
               }}
               {...atributosDeErro('statusAcessibilidade')}
+              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos'
             >
               <option value="nao_informado">Não informado</option>
               <option value="acessivel">Acessível</option>
@@ -360,6 +368,7 @@ function Cadastro() {
               aria-describedby="ajuda-acessibilidade"
               value={descricaoAcessibilidade}
               onChange={(event) => setDescricaoAcessibilidade(event.target.value)}
+              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos'
             />
           </div>
         </fieldset>
@@ -375,7 +384,7 @@ function Cadastro() {
           )}
         </div>
 
-        <button type="submit" disabled={situacaoEnvio === 'enviando'}>
+        <button type="submit" disabled={situacaoEnvio === 'enviando'} className='w-full rounded-lg border-2 border-cor-botao-principal bg-cor-botao-principal px-5 py-3 text-(length:--text-botao) font-semibold text-cor-fundo-principal focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cor-foco-interativos md:w-fit'>
           {situacaoEnvio === 'enviando' ? 'Enviando...' : 'Enviar cadastro'}
         </button>
       </form>
