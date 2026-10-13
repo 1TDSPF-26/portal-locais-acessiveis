@@ -1,6 +1,5 @@
 import type { FormEvent } from 'react'
 import { useRef, useState } from 'react'
-// import './Cadastro.css'
 import {
   IDS_CAMPOS,
   ROTULOS_CAMPOS,
@@ -131,7 +130,7 @@ function Cadastro() {
     }
 
     return (
-      <p className="cadastro__erro" id={idErro(campo)}>
+      <p className="cadastro__erro wrap-anywhere" id={idErro(campo)}>
         <span aria-hidden="true">⚠</span> <strong>Erro:</strong> {erros[campo]}
       </p>
     )
@@ -143,7 +142,7 @@ function Cadastro() {
         <h1 className='text-(length:--text-h1) font-bold text-cor-titulos'>
           Cadastro de Locais Acessíveis
         </h1>
-        <p className='"mt-2 wrap-anywhere'>
+        <p className='mt-2 wrap-anywhere'>
           Preencha as informações necessárias para cadastro.
         </p>
       </header>
@@ -176,13 +175,13 @@ function Cadastro() {
           Os campos marcados com (obrigatório) precisam ser preenchidos.
         </p>
 
-        <fieldset className='rid min-w-0 grid-cols-1 gap-4 rounded-lg border border-cor-apoio p-4 md:grid-cols-2'>
+        <fieldset className='grid min-w-0 grid-cols-1 gap-4 rounded-lg border border-cor-apoio p-4 md:grid-cols-2'>
           <legend className="px-1 font-semibold text-cor-titulos wrap-anywhere">
             Informações do local
           </legend>
 
           <div className="flex min-w-0 flex-col gap-2 md:col-span-2">
-            <label htmlFor="nome-local">
+            <label htmlFor="nome-local" className='font-semibold'>
               Nome do local <span className="cadastro__obrigatorio">(obrigatório)</span>
             </label>
             <input
@@ -198,13 +197,13 @@ function Cadastro() {
                 revalidar({ ...valoresCadastro, nome: event.target.value })
               }}
               {...atributosDeErro('nome')}
-              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos'
+              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cor-apoio'
             />
             {mensagemDeErro('nome')}
           </div>
 
           <div className="flex min-w-0 flex-col gap-2">
-            <label htmlFor="categoria-local">
+            <label htmlFor="categoria-local" className='font-semibold'>
               Categoria <span className="cadastro__obrigatorio">(obrigatório)</span>
             </label>
             <input
@@ -220,13 +219,13 @@ function Cadastro() {
                 revalidar({ ...valoresCadastro, categoria: event.target.value })
               }}
               {...atributosDeErro('categoria')}
-              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos'
+              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cor-apoio'
             />
             {mensagemDeErro('categoria')}
           </div>
 
           <div className="flex min-w-0 flex-col gap-2 md:col-span-2">
-            <label htmlFor="descricao-local">
+            <label htmlFor="descricao-local" className='font-semibold'>
               Descrição do local <span className="cadastro__obrigatorio">(obrigatório)</span>
             </label>
             <textarea
@@ -242,19 +241,19 @@ function Cadastro() {
                 revalidar({ ...valoresCadastro, descricao: event.target.value })
               }}
               {...atributosDeErro('descricao')}
-              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos'
+              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cor-apoio'
             />
             {mensagemDeErro('descricao')}
           </div>
         </fieldset>
 
-        <fieldset className='rid min-w-0 grid-cols-1 gap-4 rounded-lg border border-cor-apoio p-4 md:grid-cols-2'>
+        <fieldset className='grid min-w-0 grid-cols-1 gap-4 rounded-lg border border-cor-apoio p-4 md:grid-cols-2'>
           <legend className="px-1 font-semibold text-cor-titulos wrap-anywhere">
             Endereço
           </legend>
 
           <div className="flex min-w-0 flex-col gap-2 md:col-span-2">
-            <label htmlFor="rua-local">
+            <label htmlFor="rua-local" className='font-semibold'>
               Rua <span className="cadastro__obrigatorio">(obrigatório)</span>
             </label>
             <input
@@ -267,25 +266,25 @@ function Cadastro() {
               }}
               onChange={(event) => atualizarEndereco('rua', event.target.value)}
               {...atributosDeErro('rua')}
-              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos'
+              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cor-apoio'
             />
             {mensagemDeErro('rua')}
           </div>
 
           <div className="flex min-w-0 flex-col gap-2">
-            <label htmlFor="numero-local">Número</label>
+            <label htmlFor="numero-local" className='font-semibold'>Número</label>
             <input
               id="numero-local"
               name="numero"
               type="text"
               value={endereco.numero}
               onChange={(event) => atualizarEndereco('numero', event.target.value)}
-              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos'
+              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cor-apoio'
             />
           </div>
 
           <div className="flex min-w-0 flex-col gap-2">
-            <label htmlFor="cidade-local">
+            <label htmlFor="cidade-local" className='font-semibold'>
               Cidade <span className="cadastro__obrigatorio">(obrigatório)</span>
             </label>
             <input
@@ -298,13 +297,13 @@ function Cadastro() {
               }}
               onChange={(event) => atualizarEndereco('cidade', event.target.value)}
               {...atributosDeErro('cidade')}
-              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos'
+              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cor-apoio'
             />
             {mensagemDeErro('cidade')}
           </div>
 
           <div className="flex min-w-0 flex-col gap-2">
-            <label htmlFor="estado-local">
+            <label htmlFor="estado-local" className='font-semibold'>
               Estado <span className="cadastro__obrigatorio">(obrigatório)</span>
             </label>
             <input
@@ -317,19 +316,19 @@ function Cadastro() {
               }}
               onChange={(event) => atualizarEndereco('estado', event.target.value)}
               {...atributosDeErro('estado')}
-              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos'
+              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cor-apoio'
             />
             {mensagemDeErro('estado')}
           </div>
         </fieldset>
 
-        <fieldset className='rid min-w-0 grid-cols-1 gap-4 rounded-lg border border-cor-apoio p-4 md:grid-cols-2'>
+        <fieldset className='grid min-w-0 grid-cols-1 gap-4 rounded-lg border border-cor-apoio p-4 md:grid-cols-2'>
           <legend className="px-1 font-semibold text-cor-titulos wrap-anywhere">
             Acessibilidade do local
           </legend>
 
           <div className="flex min-w-0 flex-col gap-2">
-            <label htmlFor="status-acessibilidade">
+            <label htmlFor="status-acessibilidade" className='font-semibold'>
               Nível de acessibilidade{' '}
               <span className="cadastro__obrigatorio">(obrigatório)</span>
             </label>
@@ -345,7 +344,7 @@ function Cadastro() {
                 revalidar({ ...valoresCadastro, statusAcessibilidade: event.target.value })
               }}
               {...atributosDeErro('statusAcessibilidade')}
-              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos'
+              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cor-apoio'
             >
               <option value="nao_informado">Não informado</option>
               <option value="acessivel">Acessível</option>
@@ -356,7 +355,7 @@ function Cadastro() {
           </div>
 
           <div className="flex min-w-0 flex-col gap-2 md:col-span-2">
-            <label htmlFor="descricao-acessibilidade">Recursos e limitações de acessibilidade</label>
+            <label htmlFor="descricao-acessibilidade" className='font-semibold'>Recursos e limitações de acessibilidade</label>
             <p id="ajuda-acessibilidade">
               Descreva os recursos conhecidos do local, como rampa ou banheiro adaptado,
               e as limitações que considerar relevantes.
@@ -368,7 +367,7 @@ function Cadastro() {
               aria-describedby="ajuda-acessibilidade"
               value={descricaoAcessibilidade}
               onChange={(event) => setDescricaoAcessibilidade(event.target.value)}
-              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos'
+              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cor-apoio'
             />
           </div>
         </fieldset>
