@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import type { Local } from '../../types/Local'
+import { useFavorito } from './useFavorito'
 
 interface LocalCardProps {
   local: Local
@@ -16,6 +17,8 @@ const ROTULOS_ACESSIBILIDADE: Record<
 }
 
 function LocalCard({ local }: LocalCardProps) {
+  const { favorito, alternarFavorito } = useFavorito(local.id)
+
   return (
     <article className="stack relative rounded-lg bg-cor-superficies-cards p-4">
       <h2>
@@ -32,6 +35,21 @@ function LocalCard({ local }: LocalCardProps) {
       <p>
         Acessibilidade: {ROTULOS_ACESSIBILIDADE[local.acessibilidade.status]}
       </p>
+
+      <button
+        type="button"
+        onClick={alternarFavorito}
+        aria-pressed={favorito}
+        aria-label={`Favoritar ${local.nome}`}
+        className={`inline-flex items-center gap-2 self-start rounded-md border-2 border-cor-botao-principal px-4 py-2 text-botao transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-foco-interativos focus-visible:ring-offset-2 ${
+          favorito
+            ? 'bg-cor-botao-principal text-white hover:bg-cor-apoio'
+            : 'bg-white text-cor-botao-principal hover:bg-cor-fundo-principal'
+        }`}
+      >
+        <span aria-hidden="true">{favorito ? '★' : '☆'}</span>
+        Favoritar
+      </button>
     </article>
   )
 }
