@@ -383,7 +383,7 @@ function Cadastro() {
           )}
         </div>
 
-        <button type="submit" disabled={situacaoEnvio === 'enviando'} className='w-full rounded-lg border-2 border-cor-botao-principal bg-cor-botao-principal px-5 py-3 text-(length:--text-botao) font-semibold text-cor-fundo-principal focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cor-foco-interativos md:w-fit'>
+        <button type="submit" disabled={situacaoEnvio === 'enviando'} className='w-full rounded-lg border-2 border-cor-botao-principal bg-cor-botao-principal px-5 py-3 text-(length:--text-botao) font-semibold text-cor-fundo-principal focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cor-apoio md:w-fit'>
           {situacaoEnvio === 'enviando' ? 'Enviando...' : 'Enviar cadastro'}
         </button>
       </form>
