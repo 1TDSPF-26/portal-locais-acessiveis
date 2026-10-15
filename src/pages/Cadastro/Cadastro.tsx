@@ -241,7 +241,7 @@ function Cadastro() {
                 revalidar({ ...valoresCadastro, descricao: event.target.value })
               }}
               {...atributosDeErro('descricao')}
-              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cor-apoio'
+              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cor-apoio resize-y'
             />
             {mensagemDeErro('descricao')}
           </div>
@@ -367,7 +367,7 @@ function Cadastro() {
               aria-describedby="ajuda-acessibilidade"
               value={descricaoAcessibilidade}
               onChange={(event) => setDescricaoAcessibilidade(event.target.value)}
-              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cor-apoio'
+              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cor-apoio resize-y'
             />
           </div>
         </fieldset>
