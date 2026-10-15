@@ -4,6 +4,7 @@ import { ListagemLocais } from '../../services/ListagemLocais'
 import { LoadingState } from '../../components/LoadingState/LoadingState'
 import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { EmptyState } from '../../components/EmptyState/EmptyState'
+import { ContagemResultados } from '../../components/ContagemResultados/ContagemResultados'
 import LocalCard from '../../components/LocalCard/LocalCard'
 
 import type { Local } from '../../types/Local'
@@ -15,9 +16,11 @@ import {
   type OrdemNome,
   type StatusAcessibilidade,
 } from '../../utils/filtrarLocais'
+import { ITENS_POR_PAGINA, usePaginacao } from './hooks/usePaginacao'
+import { Paginacao } from './hooks/Paginacao'
 
 const classeControle =
-  'rounded-md border border-[#465268] bg-white px-3 py-2 text-base text-[#172A3A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#244A5A] focus-visible:ring-offset-2'
+  'rounded-md border border-cor-textos bg-cor-fundo-principal px-3 py-2 text-legendas text-cor-titulos focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2'
 
 function Locais() {
   const [locais, setLocais] = useState<Local[]>([])
@@ -31,6 +34,18 @@ function Locais() {
   // Resultados derivados da lista original: alterar busca, filtros ou ordem não refaz a requisição.
   const categorias = obterCategorias(locais)
   const locaisFiltrados = filtrarLocais(locais, { termoBusca, categoria, acessibilidade, ordem })
+  const { itensPaginados,
+    paginaAtual,
+    totalPaginas,
+    proximaPagina,
+    paginaAnterior,
+    temProxima,
+    temAnterior,
+    setPaginaAtual,
+  } = usePaginacao({
+    itens: locaisFiltrados,
+    itensPorPagina: ITENS_POR_PAGINA,
+  })
 
   function limparFiltros() {
     setTermoBusca(CRITERIOS_PADRAO.termoBusca)
@@ -38,8 +53,6 @@ function Locais() {
     setAcessibilidade(CRITERIOS_PADRAO.acessibilidade)
     setOrdem(CRITERIOS_PADRAO.ordem)
   }
-
-
 
   async function carregarLocais() {
     setCarregando(true)
@@ -59,8 +72,6 @@ function Locais() {
   useEffect(() => {
     carregarLocais()
   }, [])
-
-
 
   if (carregando) {
     return <LoadingState message="Carregando locais..." />
@@ -91,6 +102,7 @@ function Locais() {
             placeholder="Digite o nome do local..."
             value={termoBusca}
             onChange={(e) => setTermoBusca(e.target.value)}
+            className={classeControle}
           />
         </div>
 
@@ -128,6 +140,8 @@ function Locais() {
           </select>
         </div>
 
+
+
         <div className="flex flex-col gap-2">
           <label htmlFor="ordenacao-nome">Ordenar por nome:</label>
           <select
@@ -144,24 +158,35 @@ function Locais() {
         <button
           type="button"
           onClick={limparFiltros}
-          className="rounded-md bg-[#216FCE] px-4 py-2 text-base font-semibold text-white transition-colors hover:bg-[#244A5A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#244A5A] focus-visible:ring-offset-2"
+          className="rounded-md bg-cor-botao-principal px-4 py-2 text-botao font-semibold text-cor-fundo-principal transition-colors hover:bg-cor-apoio focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2"
         >
           Limpar filtros
         </button>
       </form>
 
-      <p aria-live="polite">
-        {locaisFiltrados.length} de {locais.length} locais exibidos
-      </p>
+      <ContagemResultados total={locaisFiltrados.length} />
 
       {locaisFiltrados.length > 0 ? (
-        <ul className="stack">
-          {locaisFiltrados.map((local) => (
-            <li key={local.id}>
-              <LocalCard local={local} />
-            </li>
-           ))}
-         </ul>
+
+        <>
+          <ul className="stack">
+            {itensPaginados.map((local) => (
+              <li key={local.id}>
+                <LocalCard local={local} />
+              </li>
+            ))}
+          </ul>
+          <Paginacao
+            paginaAtual={paginaAtual}
+            totalPaginas={totalPaginas}
+            temAnterior={temAnterior}
+            temProxima={temProxima}
+            paginaAnterior={paginaAnterior}
+            proximaPagina={proximaPagina}
+            setPaginaAtual={setPaginaAtual}
+          />
+        </>
+
       ) : (
         <EmptyState
           title="Nenhum resultado encontrado."
@@ -169,9 +194,11 @@ function Locais() {
           actionLabel="Limpar filtros"
           onAction={limparFiltros}
         />
-      )} 
-      </section>
+      )}
+    </section>
   )
+
+
 }
 
 export default Locais
