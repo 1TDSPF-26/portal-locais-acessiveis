@@ -116,4 +116,35 @@ describe('Envio do cadastro para a API', () => {
     expect(await screen.findByText('Cadastro enviado com sucesso.')).toBeInTheDocument()
     expect(fetchMock).toHaveBeenCalledTimes(2)
   })
+
+  
+it('preserva os dados e permite nova tentativa após uma falha de rede', async () => {
+  const fetchMock = vi
+    .spyOn(globalThis, 'fetch')
+    .mockRejectedValueOnce(new Error('Falha de conexão'))
+    .mockResolvedValueOnce(new Response(null, { status: 201 }))
+
+  render(<Cadastro />)
+
+  const user = await preencherFormularioValido()
+
+  await user.click(screen.getByRole('button', { name: /enviar cadastro/i }))
+
+  expect(
+    await screen.findByText(/não foi possível enviar o cadastro/i),
+  ).toBeInTheDocument()
+
+  expect(screen.getByLabelText(/^nome/i)).toHaveValue(
+    'Centro Cultural Inclusivo',
+  )
+
+  await user.click(screen.getByRole('button', { name: /enviar cadastro/i }))
+
+  expect(
+    await screen.findByText('Cadastro enviado com sucesso.'),
+  ).toBeInTheDocument()
+
+  expect(fetchMock).toHaveBeenCalledTimes(2)
+})
+
 })
