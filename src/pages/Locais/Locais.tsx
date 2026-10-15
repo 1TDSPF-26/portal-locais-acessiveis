@@ -20,7 +20,7 @@ import { ITENS_POR_PAGINA, usePaginacao } from './hooks/usePaginacao'
 import { Paginacao } from './hooks/Paginacao'
 
 const classeControle =
-  'rounded-md border border-[#465268] bg-white px-3 py-2 text-base text-[#172A3A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#244A5A] focus-visible:ring-offset-2'
+  'rounded-md border border-cor-textos bg-cor-fundo-principal px-3 py-2 text-legendas text-cor-titulos focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2'
 
 function Locais() {
   const [locais, setLocais] = useState<Local[]>([])
@@ -54,8 +54,6 @@ function Locais() {
     setOrdem(CRITERIOS_PADRAO.ordem)
   }
 
-
-
   async function carregarLocais() {
     setCarregando(true)
     setErro(false)
@@ -74,8 +72,6 @@ function Locais() {
   useEffect(() => {
     carregarLocais()
   }, [])
-
-
 
   if (carregando) {
     return <LoadingState message="Carregando locais..." />
@@ -106,6 +102,7 @@ function Locais() {
             placeholder="Digite o nome do local..."
             value={termoBusca}
             onChange={(e) => setTermoBusca(e.target.value)}
+            className={classeControle}
           />
         </div>
 
@@ -161,7 +158,7 @@ function Locais() {
         <button
           type="button"
           onClick={limparFiltros}
-          className="rounded-md bg-[#216FCE] px-4 py-2 text-base font-semibold text-white transition-colors hover:bg-[#244A5A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#244A5A] focus-visible:ring-offset-2"
+          className="rounded-md bg-cor-botao-principal px-4 py-2 text-botao font-semibold text-cor-fundo-principal transition-colors hover:bg-cor-apoio focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2"
         >
           Limpar filtros
         </button>
