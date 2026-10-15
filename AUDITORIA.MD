@@ -1,21 +1,21 @@
 # Relatório de Auditoria de Acessibilidade - Issue #116
 
 ## 1. Visão Geral
-Auditoria de acessibilidade realizada no projeto `portal-locais-acessiveis` para validar a conformidade com as diretrizes da WCAG e garantir a qualidade da aplicação. O trabalho incluiu a sincronização com a branch `develop` mais recente e a revalidação completa dos fluxos de teste.
+Auditoria de acessibilidade revalidada após sincronização com a branch `develop` mais recente.
 
 ## 2. Ferramentas Utilizadas
-- **Google Lighthouse**: Auditoria de acessibilidade para dispositivos Mobile e Desktop.
-- **@axe-core/react**: Integração no ambiente de desenvolvimento (`main.tsx`) para verificação contínua e automática de acessibilidade.
+- **Google Lighthouse**: Auditoria de acessibilidade (Mobile e Desktop).
+- **@axe-core/react**: Integração em ambiente de desenvolvimento (`main.tsx`).
 
 ## 3. Principais Alterações e Metodologia
-- **Integração do @axe-core/react**: Configuração para a execução automática de testes de acessibilidade em ambiente de desenvolvimento.
-- **Revalidação de testes**: Confirmação da execução com sucesso de `npm run lint`, `npm run build` e `npm run test:run` (garantindo 52 testes unitários aprovados) após a sincronização com a branch `develop`.
-- **Relatório de Auditoria (`AUDITORIA.MD`)**: Documentação com metodologia, ferramentas e evidências detalhadas.
+- Revalidação com `npm ci`, `npm run lint`, `npm run build` e `npm run test:run`.
+- Verificação do foco e acessibilidade com os novos componentes integrados da `develop`.
 
 ## 4. Resultados das Evidências
 - **Lighthouse Mobile**: Pontuação 100/100 em Acessibilidade.
 - **Lighthouse Desktop**: Pontuação 100/100 em Acessibilidade.
-- **Navegação por teclado**: Validada nos principais fluxos e componentes interativos
+- **Testes de Código**: 82 testes unitários aprovados no `npm run test:run` (17 arquivos de teste validados).
+- **Navegação por teclado**: Validada nos fluxos principais (Home, Locais, Detalhes de local, Cadastro, Sobre, Acessibilidade, Header, Footer e botões de contraste/fonte), sem identificação de bloqueios de foco.
 
 ## 5. Conclusão
-A aplicação atende aos critérios de acessibilidade estipulados na Issue #116, sem registros de violações nas ferramentas automáticas utilizadas e nos fluxos validos
+A aplicação atende aos critérios de acessibilidade estipulados na Issue #116, sem registo de violações nas ferramentas automáticas e nos fluxos validados.
