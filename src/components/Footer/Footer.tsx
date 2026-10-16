@@ -27,6 +27,10 @@ export function Footer() {
           <li>
             <Link to="/acessibilidade">Acessibilidade</Link>
           </li>
+
+          <li>
+            <Link to="/favoritos">Favoritos</Link>
+          </li>
         </ul>
       </nav>
     </footer>

@@ -18,6 +18,8 @@ import DetalhesLocal from '../pages/DetalhesLocal/DetalhesLocal'
 
 import Acessibilidade from '../pages/Acessibilidade/Acessibilidade'
 
+import Favoritos from '../pages/Favoritos/Favoritos'
+
 function AppRoutes() {
 
   return (
@@ -39,6 +41,8 @@ function AppRoutes() {
           <Route path="/sobre" element={<Sobre />} />
 
           <Route path="/acessibilidade" element={<Acessibilidade />} />
+
+          <Route path="/favoritos" element={<Favoritos/>}/>
 
           <Route path="*" element={<NotFound />} />
 
