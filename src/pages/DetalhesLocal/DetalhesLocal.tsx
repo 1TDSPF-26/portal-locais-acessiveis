@@ -177,8 +177,16 @@ function DetalhesLocal() {
             </dd>
           </div>
 
-          {local.acessibilidade.descricao && (
-            <dd>{local.acessibilidade.descricao}</dd>
+          {local.acessibilidade.descricao?.trim() && (
+            <div className="min-w-0">
+              <dt className="font-semibold text-cor-titulos">
+                Descrição Complementar:
+              </dt>
+
+              <dd className="mt-2 wrap-anywhere text-cor-textos">
+                {local.acessibilidade.descricao.trim()}
+                </dd>
+            </div>
           )}
       </dl>
     </article>
