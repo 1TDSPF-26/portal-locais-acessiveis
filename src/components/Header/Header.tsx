@@ -57,6 +57,11 @@ export function Header() {
               Sobre
             </NavLink>
           </li>
+          <li>
+            <NavLink to="/favoritos" onClick={() => setMenuAberto(false)}>
+              Favoritos
+            </NavLink>
+          </li>
         </ul>
       </nav>
 
