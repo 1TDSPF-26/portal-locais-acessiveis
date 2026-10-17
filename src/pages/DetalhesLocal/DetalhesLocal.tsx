@@ -5,6 +5,7 @@ import { buscarLocalPorId } from '../../services/buscarLocalPorId'
 import { LoadingState } from '../../components/LoadingState/LoadingState'
 import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { EmptyState } from '../../components/EmptyState/EmptyState'
+import { Breadcrumb } from '../../components/Breadcrumb/Breadcrumb'
 
 import type { Endereco, Local } from '../../types/Local'
 
@@ -146,6 +147,15 @@ function DetalhesLocal() {
 
   return (
     <article className="stack" aria-labelledby="titulo-local">
+        
+        <Breadcrumb
+        items={[
+          { label: 'Home', to: '/' },
+          { label: 'Locais', to: '/locais' },
+          { label: local.nome },
+        ]}
+      />
+
       <LinkVoltar />
 
       <h1 id="titulo-local">{local.nome}</h1>
