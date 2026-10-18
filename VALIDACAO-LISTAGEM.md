@@ -1,7 +1,7 @@
 # Validação — Listagem de Locais (Issue #114)
 
 ## Escopo desta validação
-Conforme a #114, o objeto desta validação é o **fluxo da listagem** da página `/locais`: busca, filtros, ordenação, paginação e estado sem resultado. Acessibilidade e responsividade foram verificadas como apoio ("quando aplicável"); achados fora do fluxo da listagem foram registrados como issues próprias (ver seção final) e não fazem parte do escopo desta demanda.
+Conforme a #114, o objeto desta validação é o **fluxo da listagem** da página `/locais`: busca, filtros, ordenação, paginação e estado sem resultado. Acessibilidade e responsividade foram verificadas como apoio ("quando aplicável"); achados fora do fluxo da listagem foram documentados abaixo com severidade, recomendados para abertura como issues pelo time, e não fazem parte do escopo desta demanda.
 
 ## Ambiente
 - Local (`npm run dev`), branch `feature/114-validar-listagem`.
@@ -59,7 +59,7 @@ Durante a validação foram encontrados pontos que são código de produção e 
 ## Decisão de QA
 **Aprovado com ressalva.**
 
-O fluxo que a #114 pede validar — busca, filtros, ordenação, paginação e estado sem resultado — funciona integralmente (cenários 1–11 passaram), com a contagem anunciada de forma acessível e sem novas requisições ao trocar filtros/páginas. As ressalvas (campo de busca sem borda e rolagem horizontal em 375px) são de layout/UX, fora do fluxo da listagem, foram registradas como issues próprias e não bloqueiam esta demanda. Recomenda-se priorizar a issue da rolagem horizontal em 375px por afetar o uso em mobile.
+O fluxo que a #114 pede validar — busca, filtros, ordenação, paginação e estado sem resultado — funciona integralmente (cenários 1–11 passaram), com a contagem anunciada de forma acessível e sem novas requisições ao trocar filtros/páginas. As ressalvas (campo de busca sem borda e rolagem horizontal em 375px) são de layout/UX, fora do fluxo da listagem, estão documentadas e recomendadas para abertura como issues e não bloqueiam esta demanda. Recomenda-se priorizar a issue da rolagem horizontal em 375px por afetar o uso em mobile.
 
 ## Observação
 Validação baseada nos cenários executados acima; não constitui garantia de ausência total de problemas na aplicação.
