@@ -166,14 +166,28 @@ function DetalhesLocal() {
           <dd>{endereco ?? 'Endereço não informado.'}</dd>
         </div>
 
-        <div>
-          <dt className="font-semibold">Acessibilidade</dt>
-          <dd>{rotulosAcessibilidade[local.acessibilidade.status]}</dd>
+        <div className='min-w-0'>
+          <dt className="font-semibold text-cor-titulos">
+            Status de acessibilidade
+            </dt>
 
-          {local.acessibilidade.descricao && (
-            <dd>{local.acessibilidade.descricao}</dd>
+          <dd className="mt-2 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-4 text-cor-textos">
+            <span className="font-semibold">Status:</span>{' '}
+            {rotulosAcessibilidade[local.acessibilidade.status]}
+            </dd>
+          </div>
+
+          {local.acessibilidade.descricao?.trim() && (
+            <div className="min-w-0">
+              <dt className="font-semibold text-cor-titulos">
+                Descrição Complementar:
+              </dt>
+
+              <dd className="mt-2 wrap-anywhere text-cor-textos">
+                {local.acessibilidade.descricao.trim()}
+                </dd>
+            </div>
           )}
-        </div>
       </dl>
     </article>
   )

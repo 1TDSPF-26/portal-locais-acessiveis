@@ -65,6 +65,77 @@ describe('DetalhesLocal', () => {
         expect(screen.getByText('Não informado')).toBeInTheDocument()
     })
 
+    
+    it('exibe o status de acessibilidade com um rótulo textual claro', async () => {
+    const statusEsperados = [
+        { status: 'acessivel', rotulo: 'Acessível' },
+        { status: 'parcial', rotulo: 'Parcialmente acessível' },
+        { status: 'nao_acessivel', rotulo: 'Não acessível' },
+        { status: 'nao_informado', rotulo: 'Não informado' },
+    ] as const
+
+    for (const { status, rotulo } of statusEsperados) {
+        buscarLocalPorIdMock.mockResolvedValue({
+        ...localCompleto,
+        acessibilidade: { status },
+        })
+
+        const { unmount } = renderPagina('/locais/123')
+
+        expect(await screen.findByText(rotulo)).toBeInTheDocument()
+
+        unmount()
+    }
+    })
+
+    it('não confunde acessibilidade não informada com não acessível', async () => {
+    buscarLocalPorIdMock.mockResolvedValue({
+        ...localCompleto,
+        acessibilidade: { status: 'nao_informado' },
+    })
+
+    renderPagina('/locais/123')
+
+    expect(await screen.findByText('Não informado')).toBeInTheDocument()
+    expect(screen.queryByText('Não acessível')).not.toBeInTheDocument()
+    })
+
+    it('exibe a descrição complementar quando disponível', async () => {
+    buscarLocalPorIdMock.mockResolvedValue({
+        ...localCompleto,
+        acessibilidade: {
+        status: 'parcial',
+        descricao: 'Possui rampa, mas não possui banheiro adaptado.',
+        },
+    })
+
+    renderPagina('/locais/123')
+
+    expect(
+        await screen.findByText('Parcialmente acessível'),
+    ).toBeInTheDocument()
+
+    expect(
+        screen.getByText('Possui rampa, mas não possui banheiro adaptado.'),
+    ).toBeInTheDocument()
+    })
+
+    it('não exibe descrição complementar quando estiver vazia', async () => {
+    buscarLocalPorIdMock.mockResolvedValue({
+        ...localCompleto,
+        acessibilidade: {
+        status: 'acessivel',
+        descricao: '   ',
+        },
+    })
+
+    renderPagina('/locais/123')
+
+    expect(await screen.findByText('Acessível')).toBeInTheDocument()
+    expect(screen.queryByText('Descrição complementar')).not.toBeInTheDocument()
+    })
+
+
     it('exibe o carregamento enquanto busca o local', () => {
         buscarLocalPorIdMock.mockReturnValue(new Promise(() => { }))
         renderPagina('/locais/123')
