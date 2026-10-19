@@ -3,10 +3,17 @@ import type { OverpassResponse } from '../types/Overpass'
 import { normalizarLocal } from './normalizarLocal.ts'
 import { obterCacheLocais, definirCacheLocais } from './CacheLocais.ts'
 
-export async function ListagemLocais(): Promise<Local[]> {
-  const cacheValido = obterCacheLocais()
-  if (cacheValido) {
-    return cacheValido
+interface OpcoesListagem {
+  /** Ignora o cache e consulta a fonte externa de novo (ex.: atualização manual). */
+  forcarAtualizacao?: boolean
+}
+
+export async function ListagemLocais({ forcarAtualizacao = false }: OpcoesListagem = {}): Promise<Local[]> {
+  if (!forcarAtualizacao) {
+    const cacheValido = obterCacheLocais()
+    if (cacheValido) {
+      return cacheValido
+    }
   }
 
   const query = `
