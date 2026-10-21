@@ -3,6 +3,8 @@ import type { Local } from '../../types/Local'
 
 interface LocalCardProps {
   local: Local
+  /** Caminho de onde o card foi aberto (ex.: "/locais?busca=cafe"). O detalhe usa para o link "Voltar". */
+  origem?: string
 }
 
 const ROTULOS_ACESSIBILIDADE: Record<
@@ -15,12 +17,13 @@ const ROTULOS_ACESSIBILIDADE: Record<
   nao_informado: 'Não informado',
 }
 
-function LocalCard({ local }: LocalCardProps) {
+function LocalCard({ local, origem }: LocalCardProps) {
   return (
-    <article className="stack relative w-full min-w-0 rounded-lg bg-cor-superficies-cards p-4 [overflow-wrap:anywhere]">
+    <article className="stack relative rounded-lg bg-cor-superficies-cards p-4">
       <h2>
         <Link
           to={`/locais/${local.id}`}
+          state={origem ? { origem } : undefined}
           className="rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-foco-interativos focus-visible:ring-offset-2"
         >
           {local.nome}
