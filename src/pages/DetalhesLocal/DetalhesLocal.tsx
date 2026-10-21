@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 
 import { buscarLocalPorId } from '../../services/buscarLocalPorId'
 import { LoadingState } from '../../components/LoadingState/LoadingState'
@@ -9,6 +9,7 @@ import { EmptyState } from '../../components/EmptyState/EmptyState'
 import type { Endereco, Local } from '../../types/Local'
 
 import { validarIdLocal } from '../../utils/validarIdLocal'
+import { obterCaminhoRetorno } from '../../utils/criteriosListagem'
 
 type Estado =
   | { tipo: 'carregando' }
@@ -44,8 +45,11 @@ function formatarEndereco(endereco?: Endereco): string | null {
 }
 
 function LinkVoltar() {
+  // Acesso direto (sem state) cai em /locais; vindo da listagem, restaura busca, filtros, ordem e página.
+  const { state } = useLocation()
+
   return (
-    <Link to="/locais" className={classeLink}>
+    <Link to={obterCaminhoRetorno(state)} className={classeLink}>
       Voltar para a lista de locais
     </Link>
   )
@@ -166,28 +170,14 @@ function DetalhesLocal() {
           <dd>{endereco ?? 'Endereço não informado.'}</dd>
         </div>
 
-        <div className='min-w-0'>
-          <dt className="font-semibold text-cor-titulos">
-            Status de acessibilidade
-            </dt>
+        <div>
+          <dt className="font-semibold">Acessibilidade</dt>
+          <dd>{rotulosAcessibilidade[local.acessibilidade.status]}</dd>
 
-          <dd className="mt-2 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-4 text-cor-textos">
-            <span className="font-semibold">Status:</span>{' '}
-            {rotulosAcessibilidade[local.acessibilidade.status]}
-            </dd>
-          </div>
-
-          {local.acessibilidade.descricao?.trim() && (
-            <div className="min-w-0">
-              <dt className="font-semibold text-cor-titulos">
-                Descrição Complementar:
-              </dt>
-
-              <dd className="mt-2 wrap-anywhere text-cor-textos">
-                {local.acessibilidade.descricao.trim()}
-                </dd>
-            </div>
+          {local.acessibilidade.descricao && (
+            <dd>{local.acessibilidade.descricao}</dd>
           )}
+        </div>
       </dl>
     </article>
   )
