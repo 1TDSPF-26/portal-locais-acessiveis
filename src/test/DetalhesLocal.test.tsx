@@ -1,7 +1,8 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+
 
 import DetalhesLocal from '../pages/DetalhesLocal/DetalhesLocal'
 vi.mock('../services/buscarLocalPorId')
@@ -49,6 +50,17 @@ describe('DetalhesLocal', () => {
         expect(screen.getByText('Rua Augusta, 100 - São Paulo - SP')).toBeInTheDocument()
         expect(screen.getByText('Acessível')).toBeInTheDocument()
         expect(screen.getByText('Rampa na entrada')).toBeInTheDocument()
+    })
+
+        it('exibe o breadcrumb com a página atual identificada', async () => {
+        buscarLocalPorIdMock.mockResolvedValue(localCompleto)
+        renderPagina('/locais/123')
+
+        const breadcrumb = await screen.findByRole('navigation', { name: 'Trilha de navegação' })
+
+        expect(within(breadcrumb).getByRole('link', { name: 'Home' })).toHaveAttribute('href', '/')
+        expect(within(breadcrumb).getByRole('link', { name: 'Locais' })).toHaveAttribute('href', '/locais')
+        expect(within(breadcrumb).getByText('Café Inclusivo')).toHaveAttribute('aria-current', 'page')
     })
 
     it('trata campos opcionais ausentes sem quebrar a página', async () => {
