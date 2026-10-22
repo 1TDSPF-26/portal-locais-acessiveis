@@ -121,6 +121,10 @@ export function AccessibilityProvider({
         setHighContrast((currentValue) => !currentValue);
     }
 
+function resetPreferences() {
+    setFontSize(defaultPreferences.fontSize);
+    setHighContrast(defaultPreferences.highContrast);
+}
     return (
         <AccessibilityContext.Provider
             value={{
@@ -130,6 +134,7 @@ export function AccessibilityProvider({
                 resetFontSize,
                 increaseFontSize,
                 toggleHighContrast,
+                resetPreferences,
             }}
         >
             {children}
