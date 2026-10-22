@@ -1,0 +1,83 @@
+
+/* ===== Hero ===== */
+.home-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  min-height: max(100svh, 680px);
+  background-color: #02060e;
+  color: #f3f9ff;
+}
+
+.home-hero__cena {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.home-hero__imagem {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.home-hero__conteudo {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  max-width: 64rem;
+  margin-inline: auto;
+  padding: 1.5rem 1rem;
+}
+
+/* Global define h1 com cor escura; no hero o fundo é escuro. */
+.home-hero h1 {
+  color: #f3f9ff;
+}
+
+.home-hero a {
+  color: #86cfff;
+}
+
+.home-hero a:focus-visible {
+  outline: 3px solid #a9e6ff;
+  outline-offset: 2px;
+}
+
+/* ===== Como funciona ===== */
+.home-como-funciona {
+  background-color: #f7f9fc;
+  color: #465268;
+}
+
+.home-como-funciona__conteudo {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 64rem;
+  margin-inline: auto;
+  padding: 1.5rem 1rem;
+}
+
+.home-como-funciona h2 {
+  color: #172a3a;
+}
+
+@media (min-width: 640px) {
+  .home-hero__conteudo,
+  .home-como-funciona__conteudo {
+    padding: 2rem 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .home-hero__conteudo,
+  .home-como-funciona__conteudo {
+    padding: 2.5rem 2rem;
+  }
+}

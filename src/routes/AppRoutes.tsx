@@ -4,7 +4,7 @@ import { MainLayout } from '../layouts/MainLayout'
 
 import { PageContainer } from '../layouts/PageContainer'
 
-import Home from '../pages/Home/Home'
+import  Home  from '../pages/Home/Home';
 
 import Locais from '../pages/Locais/Locais'
 
