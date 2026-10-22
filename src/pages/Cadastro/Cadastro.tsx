@@ -1,6 +1,5 @@
-import type { FormEvent } from "react";
-import { useRef, useState } from "react";
-import "./Cadastro.css";
+import type { FormEvent } from 'react'
+import { useRef, useState } from 'react'
 import {
   IDS_CAMPOS,
   ROTULOS_CAMPOS,
@@ -9,13 +8,13 @@ import {
   type CampoCadastro,
   type ErrosCadastro,
   type ValoresCadastro,
-} from "./validacaoCadastro";
-import { useDocumentTitle } from "../../hooks/useDocumentTitle";
+} from './validacaoCadastro'
+import { cadastrarLocal } from '../../services/cadastrarLocal'
+import type { CreateLocalPayload } from '../../types/CreateLocalPayload'
+import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 
-type ElementoDeCampo =
-  | HTMLInputElement
-  | HTMLTextAreaElement
-  | HTMLSelectElement;
+type ElementoDeCampo = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+type SituacaoEnvio = 'inativo' | 'enviando' | 'sucesso' | 'erro'
 
 function Cadastro() {
   useDocumentTitle("Cadastro");
@@ -35,8 +34,9 @@ function Cadastro() {
     useState("nao_informado");
   const [descricaoAcessibilidade, setDescricaoAcessibilidade] = useState("");
 
-  const [erros, setErros] = useState<ErrosCadastro>({});
-  const [houveTentativaDeEnvio, setHouveTentativaDeEnvio] = useState(false);
+  const [erros, setErros] = useState<ErrosCadastro>({})
+  const [houveTentativaDeEnvio, setHouveTentativaDeEnvio] = useState(false)
+  const [situacaoEnvio, setSituacaoEnvio] = useState<SituacaoEnvio>('inativo')
 
   const camposRef = useRef<
     Partial<Record<CampoCadastro, ElementoDeCampo | null>>
@@ -71,18 +71,47 @@ function Cadastro() {
     });
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
 
-    const errosEncontrados = validarCadastro(valoresCadastro);
-    setErros(errosEncontrados);
-    setHouveTentativaDeEnvio(true);
+    if (situacaoEnvio === 'enviando') {
+      return
+    }
+
+    const errosEncontrados = validarCadastro(valoresCadastro)
+    setErros(errosEncontrados)
+    setHouveTentativaDeEnvio(true)
 
     const camposInvalidos = listarCamposInvalidos(errosEncontrados);
 
     if (camposInvalidos.length > 0) {
       camposRef.current[camposInvalidos[0]]?.focus();
       return;
+    }
+
+    const payload: CreateLocalPayload = {
+      nome: nome.trim(),
+      categoria: categoria.trim(),
+      descricao: descricao.trim(),
+      endereco: {
+        rua: endereco.rua.trim(),
+        numero: endereco.numero.trim() || undefined,
+        cidade: endereco.cidade.trim(),
+        estado: endereco.estado.trim(),
+      },
+      acessibilidade: {
+        status: statusAcessibilidade as CreateLocalPayload['acessibilidade']['status'],
+        descricao: descricaoAcessibilidade.trim() || undefined,
+      },
+    }
+
+    setSituacaoEnvio('enviando')
+
+    try {
+      await cadastrarLocal(payload)
+      setSituacaoEnvio('sucesso')
+    } catch {
+      setSituacaoEnvio('erro')
     }
   }
 
@@ -107,20 +136,25 @@ function Cadastro() {
     }
 
     return (
-      <p className="cadastro__erro" id={idErro(campo)}>
+      <p className="cadastro__erro wrap-anywhere" id={idErro(campo)}>
         <span aria-hidden="true">⚠</span> <strong>Erro:</strong> {erros[campo]}
       </p>
     );
   }
 
   return (
-    <div className="cadastro">
-      <header>
-        <h1>Cadastro de Locais Acessíveis</h1>
-        <p>Preencha as informações necessárias para cadastro.</p>
+    <div className="w-full min-w-0 text-cor-textos font-sans">
+      <header className='min-w-0'>
+        <h1 className='text-(length:--text-h1) font-bold text-cor-titulos'>
+          Cadastro de Locais Acessíveis
+        </h1>
+        <p className='mt-2 wrap-anywhere'>
+          Preencha as informações necessárias para cadastro.
+        </p>
       </header>
 
-      <form onSubmit={handleSubmit} noValidate>
+      <form onSubmit={handleSubmit} noValidate
+        className='mt-6 grid min-w-0 gap-6'>
         <div aria-live="assertive" role="alert">
           {camposInvalidos.length > 0 && (
             <section
@@ -153,13 +187,14 @@ function Cadastro() {
           Os campos marcados com (obrigatório) precisam ser preenchidos.
         </p>
 
-        <fieldset>
-          <legend>Informações do local</legend>
+        <fieldset className='grid min-w-0 grid-cols-1 gap-4 rounded-lg border border-cor-apoio p-4 md:grid-cols-2'>
+          <legend className="px-1 font-semibold text-cor-titulos wrap-anywhere">
+            Informações do local
+          </legend>
 
-          <div className="campo-largo">
-            <label htmlFor="nome-local">
-              Nome do local{" "}
-              <span className="cadastro__obrigatorio">(obrigatório)</span>
+          <div className="flex min-w-0 flex-col gap-2 md:col-span-2">
+            <label htmlFor="nome-local" className='font-semibold'>
+              Nome do local <span className="cadastro__obrigatorio">(obrigatório)</span>
             </label>
             <input
               id="nome-local"
@@ -173,15 +208,15 @@ function Cadastro() {
                 setNome(event.target.value);
                 revalidar({ ...valoresCadastro, nome: event.target.value });
               }}
-              {...atributosDeErro("nome")}
+              {...atributosDeErro('nome')}
+              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cor-apoio'
             />
             {mensagemDeErro("nome")}
           </div>
 
-          <div>
-            <label htmlFor="categoria-local">
-              Categoria{" "}
-              <span className="cadastro__obrigatorio">(obrigatório)</span>
+          <div className="flex min-w-0 flex-col gap-2">
+            <label htmlFor="categoria-local" className='font-semibold'>
+              Categoria <span className="cadastro__obrigatorio">(obrigatório)</span>
             </label>
             <input
               id="categoria-local"
@@ -198,15 +233,15 @@ function Cadastro() {
                   categoria: event.target.value,
                 });
               }}
-              {...atributosDeErro("categoria")}
+              {...atributosDeErro('categoria')}
+              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cor-apoio'
             />
             {mensagemDeErro("categoria")}
           </div>
 
-          <div className="campo-largo">
-            <label htmlFor="descricao-local">
-              Descrição do local{" "}
-              <span className="cadastro__obrigatorio">(obrigatório)</span>
+          <div className="flex min-w-0 flex-col gap-2 md:col-span-2">
+            <label htmlFor="descricao-local" className='font-semibold'>
+              Descrição do local <span className="cadastro__obrigatorio">(obrigatório)</span>
             </label>
             <textarea
               id="descricao-local"
@@ -223,17 +258,20 @@ function Cadastro() {
                   descricao: event.target.value,
                 });
               }}
-              {...atributosDeErro("descricao")}
+              {...atributosDeErro('descricao')}
+              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cor-apoio resize-y'
             />
             {mensagemDeErro("descricao")}
           </div>
         </fieldset>
 
-        <fieldset>
-          <legend>Endereço</legend>
+        <fieldset className='grid min-w-0 grid-cols-1 gap-4 rounded-lg border border-cor-apoio p-4 md:grid-cols-2'>
+          <legend className="px-1 font-semibold text-cor-titulos wrap-anywhere">
+            Endereço
+          </legend>
 
-          <div className="campo-largo">
-            <label htmlFor="rua-local">
+          <div className="flex min-w-0 flex-col gap-2 md:col-span-2">
+            <label htmlFor="rua-local" className='font-semibold'>
               Rua <span className="cadastro__obrigatorio">(obrigatório)</span>
             </label>
             <input
@@ -244,29 +282,28 @@ function Cadastro() {
               ref={(elemento) => {
                 camposRef.current.rua = elemento;
               }}
-              onChange={(event) => atualizarEndereco("rua", event.target.value)}
-              {...atributosDeErro("rua")}
+              onChange={(event) => atualizarEndereco('rua', event.target.value)}
+              {...atributosDeErro('rua')}
+              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cor-apoio'
             />
             {mensagemDeErro("rua")}
           </div>
 
-          <div>
-            <label htmlFor="numero-local">Número</label>
+          <div className="flex min-w-0 flex-col gap-2">
+            <label htmlFor="numero-local" className='font-semibold'>Número</label>
             <input
               id="numero-local"
               name="numero"
               type="text"
               value={endereco.numero}
-              onChange={(event) =>
-                atualizarEndereco("numero", event.target.value)
-              }
+              onChange={(event) => atualizarEndereco('numero', event.target.value)}
+              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cor-apoio'
             />
           </div>
 
-          <div>
-            <label htmlFor="cidade-local">
-              Cidade{" "}
-              <span className="cadastro__obrigatorio">(obrigatório)</span>
+          <div className="flex min-w-0 flex-col gap-2">
+            <label htmlFor="cidade-local" className='font-semibold'>
+              Cidade <span className="cadastro__obrigatorio">(obrigatório)</span>
             </label>
             <input
               id="cidade-local"
@@ -276,18 +313,16 @@ function Cadastro() {
               ref={(elemento) => {
                 camposRef.current.cidade = elemento;
               }}
-              onChange={(event) =>
-                atualizarEndereco("cidade", event.target.value)
-              }
-              {...atributosDeErro("cidade")}
+              onChange={(event) => atualizarEndereco('cidade', event.target.value)}
+              {...atributosDeErro('cidade')}
+              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cor-apoio'
             />
             {mensagemDeErro("cidade")}
           </div>
 
-          <div>
-            <label htmlFor="estado-local">
-              Estado{" "}
-              <span className="cadastro__obrigatorio">(obrigatório)</span>
+          <div className="flex min-w-0 flex-col gap-2">
+            <label htmlFor="estado-local" className='font-semibold'>
+              Estado <span className="cadastro__obrigatorio">(obrigatório)</span>
             </label>
             <input
               id="estado-local"
@@ -297,21 +332,22 @@ function Cadastro() {
               ref={(elemento) => {
                 camposRef.current.estado = elemento;
               }}
-              onChange={(event) =>
-                atualizarEndereco("estado", event.target.value)
-              }
-              {...atributosDeErro("estado")}
+              onChange={(event) => atualizarEndereco('estado', event.target.value)}
+              {...atributosDeErro('estado')}
+              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cor-apoio'
             />
             {mensagemDeErro("estado")}
           </div>
         </fieldset>
 
-        <fieldset>
-          <legend>Acessibilidade do local</legend>
+        <fieldset className='grid min-w-0 grid-cols-1 gap-4 rounded-lg border border-cor-apoio p-4 md:grid-cols-2'>
+          <legend className="px-1 font-semibold text-cor-titulos wrap-anywhere">
+            Acessibilidade do local
+          </legend>
 
-          <div>
-            <label htmlFor="status-acessibilidade">
-              Nível de acessibilidade{" "}
+          <div className="flex min-w-0 flex-col gap-2">
+            <label htmlFor="status-acessibilidade" className='font-semibold'>
+              Nível de acessibilidade{' '}
               <span className="cadastro__obrigatorio">(obrigatório)</span>
             </label>
             <select
@@ -328,7 +364,8 @@ function Cadastro() {
                   statusAcessibilidade: event.target.value,
                 });
               }}
-              {...atributosDeErro("statusAcessibilidade")}
+              {...atributosDeErro('statusAcessibilidade')}
+              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cor-apoio'
             >
               <option value="nao_informado">Não informado</option>
               <option value="acessivel">Acessível</option>
@@ -338,10 +375,8 @@ function Cadastro() {
             {mensagemDeErro("statusAcessibilidade")}
           </div>
 
-          <div className="campo-largo">
-            <label htmlFor="descricao-acessibilidade">
-              Recursos e limitações de acessibilidade
-            </label>
+          <div className="flex min-w-0 flex-col gap-2 md:col-span-2">
+            <label htmlFor="descricao-acessibilidade" className='font-semibold'>Recursos e limitações de acessibilidade</label>
             <p id="ajuda-acessibilidade">
               Descreva os recursos conhecidos do local, como rampa ou banheiro
               adaptado, e as limitações que considerar relevantes.
@@ -352,18 +387,25 @@ function Cadastro() {
               rows={4}
               aria-describedby="ajuda-acessibilidade"
               value={descricaoAcessibilidade}
-              onChange={(event) =>
-                setDescricaoAcessibilidade(event.target.value)
-              }
+              onChange={(event) => setDescricaoAcessibilidade(event.target.value)}
+              className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cor-apoio resize-y'
             />
           </div>
         </fieldset>
 
-        <p id="aviso-envio">
-          O envio ainda não está disponível. Nenhum dado será salvo.
-        </p>
-        <button type="submit" aria-describedby="aviso-envio">
-          Enviar cadastro
+        <div aria-live="polite" role="status">
+          {situacaoEnvio === 'enviando' && <p>Enviando cadastro...</p>}
+          {situacaoEnvio === 'sucesso' && <p>Cadastro enviado com sucesso.</p>}
+          {situacaoEnvio === 'erro' && (
+            <p className="cadastro__erro">
+              <span aria-hidden="true">⚠</span> <strong>Erro:</strong> Não foi possível enviar o
+              cadastro. Seus dados foram mantidos, tente novamente.
+            </p>
+          )}
+        </div>
+
+        <button type="submit" disabled={situacaoEnvio === 'enviando'} className='w-full rounded-lg border-2 border-cor-botao-principal bg-cor-botao-principal px-5 py-3 text-(length:--text-botao) font-semibold text-cor-fundo-principal focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cor-apoio md:w-fit'>
+          {situacaoEnvio === 'enviando' ? 'Enviando...' : 'Enviar cadastro'}
         </button>
       </form>
     </div>
