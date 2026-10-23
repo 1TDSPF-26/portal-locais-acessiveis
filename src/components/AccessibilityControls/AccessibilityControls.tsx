@@ -9,6 +9,7 @@ export function AccessibilityControls() {
         resetFontSize,
         increaseFontSize,
         toggleHighContrast,
+        resetPreferences,
     } = useAccessibility();
 
     return (
