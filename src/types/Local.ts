@@ -29,6 +29,9 @@ export interface Acessibilidade {
  * A propriedade 'imagem' é opcional e pode fornecer um URL para uma imagem representativa do local. 
  * As propriedades 'endereco', 'coordenadas' e 'acessibilidade' são obrigatórias e devem fornecer informações detalhadas sobre o endereço, coordenadas geográficas e acessibilidade do local, respectivamente.*/
 export interface Local {
+  latitude: undefined;
+  latitude(lat: number, lon: number, latitude: any, longitude: never): number | undefined;
+  longitude: undefined;
   id: number;
   nome: string;
   descricao?: string;

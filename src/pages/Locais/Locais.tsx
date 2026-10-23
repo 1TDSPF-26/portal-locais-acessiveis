@@ -16,7 +16,8 @@ import {
   type OrdemNome,
   type StatusAcessibilidade,
 } from '../../utils/filtrarLocais'
-import { calcularDistancia } from '../../utils/geo'
+// @ts-expect-error geo.js has no TypeScript declaration file.
+import { calcularDistancia } from '../../utils/geo.js'
 import { ITENS_POR_PAGINA, usePaginacao } from './hooks/usePaginacao'
 import { Paginacao } from './hooks/Paginacao'
 
@@ -225,7 +226,7 @@ function Locais() {
         </div>
 
         <div className="flex min-w-0 flex-col gap-2">
-          <label htmlFor="ordenacao-nome">Ordenar por:</label>
+          <label htmlFor="ordenacao-nome">Ordenar por nome:</label>
           <select
             id="ordenacao-nome"
             className={classeControle}
