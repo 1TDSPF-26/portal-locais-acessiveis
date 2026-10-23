@@ -74,7 +74,7 @@ function Locais() {
   }, [])
 
   if (carregando) {
-    return <LoadingState message="Carregando locais..." />
+  return <LoadingState message="Carregando locais..." variant="skeleton" />
   }
 
   if (erro) {
