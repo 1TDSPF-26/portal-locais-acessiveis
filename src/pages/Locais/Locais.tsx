@@ -6,6 +6,7 @@ import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { EmptyState } from '../../components/EmptyState/EmptyState'
 import { ContagemResultados } from '../../components/ContagemResultados/ContagemResultados'
 import LocalCard from '../../components/LocalCard/LocalCard'
+import { WarningMessage } from '../../components/WarningMessage/WarningMessage'
 
 import type { Local } from '../../types/Local'
 import {
@@ -188,12 +189,18 @@ function Locais() {
         </>
 
       ) : (
-        <EmptyState
-          title="Nenhum resultado encontrado."
-          message="Não encontramos nenhum local que corresponda à busca e aos filtros selecionados."
-          actionLabel="Limpar filtros"
-          onAction={limparFiltros}
-        />
+        <>
+          <EmptyState
+            title="Nenhum resultado encontrado."
+            message="Não encontramos nenhum local que corresponda à busca e aos filtros selecionados."
+            actionLabel="Limpar filtros"
+            onAction={limparFiltros}
+          />
+          <WarningMessage
+            title="Os resultados podem estar incompletos"
+            message="A fonte de dados do portal pode não conter todos os locais. Revise o termo da busca ou os filtros selecionados. Se o local existe, ele pode ainda não ter sido cadastrado nessa fonte."
+          />
+        </>
       )}
     </section>
   )
