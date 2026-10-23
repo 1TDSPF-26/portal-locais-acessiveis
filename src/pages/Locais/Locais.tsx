@@ -16,8 +16,7 @@ import {
   type OrdemNome,
   type StatusAcessibilidade,
 } from '../../utils/filtrarLocais'
-// @ts-expect-error geo.js has no TypeScript declaration file.
-import { calcularDistancia } from '../../utils/geo.js'
+import { calcularDistancia } from '../../utils/geo'
 import { ITENS_POR_PAGINA, usePaginacao } from './hooks/usePaginacao'
 import { Paginacao } from './hooks/Paginacao'
 
@@ -101,7 +100,6 @@ function Locais() {
       const local = localItem as any
       let distancia: number | undefined = undefined
 
-      // Acede às coordenadas corretamente através da estrutura padrão do projeto (local.coordenadas)
       const lat = local.coordenadas?.latitude
       const lon = local.coordenadas?.longitude
 
@@ -246,7 +244,15 @@ function Locais() {
           </select>
         </div>
 
-        {/* Botão de ação clara para solicitar geolocalização */}
+        <button
+          type="button"
+          onClick={limparFiltros}
+          className="min-h-11 w-full min-w-0 whitespace-normal rounded-md bg-cor-botao-principal px-4 py-2 text-botao font-semibold text-cor-fundo-principal transition-colors hover:bg-cor-apoio focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2 sm:col-span-2 sm:w-auto sm:justify-self-start"
+        >
+          Limpar filtros
+        </button>
+
+        {/* Botão de geolocalização posicionado após o limpar filtros para respeitar a ordem de tabulação dos testes */}
         <div className="flex flex-col gap-2 sm:col-span-2">
           <button
             type="button"
@@ -258,14 +264,6 @@ function Locais() {
           </button>
           {erroGeo && <span className="text-sm text-red-500">{erroGeo}</span>}
         </div>
-
-        <button
-          type="button"
-          onClick={limparFiltros}
-          className="min-h-11 w-full min-w-0 whitespace-normal rounded-md bg-cor-botao-principal px-4 py-2 text-botao font-semibold text-cor-fundo-principal transition-colors hover:bg-cor-apoio focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2 sm:col-span-2 sm:w-auto sm:justify-self-start"
-        >
-          Limpar filtros
-        </button>
       </form>
 
       <ContagemResultados total={locaisProcessados.length} />

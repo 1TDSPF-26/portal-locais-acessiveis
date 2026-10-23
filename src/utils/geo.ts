@@ -1,6 +1,8 @@
-
-export function calcularDistancia(lat1, lon1, lat2, lon2) {
-  const R = 6371; // Raio da Terra em km
+/**
+ * Calcula a distância em quilômetros entre duas coordenadas geográficas usando a fórmula de Haversine.
+ */
+export function calcularDistancia(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 6371; // Raio médio da Terra em km
   const dLat = toRad(lat2 - lat1);
   const dLon = toRad(lon2 - lon1);
 
@@ -15,6 +17,6 @@ export function calcularDistancia(lat1, lon1, lat2, lon2) {
   return R * c;
 }
 
-function toRad(graus) {
+function toRad(graus: number): number {
   return graus * (Math.PI / 180);
 }
