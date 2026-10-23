@@ -97,15 +97,20 @@ function Locais() {
 
   // 2. Adiciona cálculo de distância e ordena por proximidade ou nome preservando filtros
   const locaisProcessados = useMemo(() => {
-    let resultado = locaisFiltradosBase.map((local) => {
+    let resultado = locaisFiltradosBase.map((localItem) => {
+      const local = localItem as any
       let distancia: number | undefined = undefined
 
-      if (userLocation && local.latitude !== undefined && local.longitude !== undefined) {
+      // Acede às coordenadas corretamente através da estrutura padrão do projeto (local.coordenadas)
+      const lat = local.coordenadas?.latitude
+      const lon = local.coordenadas?.longitude
+
+      if (userLocation && lat !== undefined && lon !== undefined) {
         distancia = calcularDistancia(
           userLocation.lat,
           userLocation.lon,
-          local.latitude,
-          local.longitude
+          lat,
+          lon
         )
       }
 
@@ -115,7 +120,7 @@ function Locais() {
       }
     })
 
-    resultado.sort((a, b) => {
+    resultado.sort((a: any, b: any) => {
       if (ordem === 'proximidade' && userLocation) {
         if (a.distancia === undefined) return 1
         if (b.distancia === undefined) return -1
@@ -268,7 +273,7 @@ function Locais() {
       {locaisProcessados.length > 0 ? (
         <>
           <ul className="stack min-w-0">
-            {itensPaginados.map((local) => (
+            {itensPaginados.map((local: any) => (
               <li key={local.id} className="min-w-0">
                 <LocalCard local={local} />
                 {local.distancia !== undefined && (
