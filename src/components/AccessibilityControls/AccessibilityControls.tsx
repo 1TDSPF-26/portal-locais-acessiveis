@@ -46,6 +46,14 @@ export function AccessibilityControls() {
             >
                 Alto contraste
             </button>
+
+            <button
+    type="button"
+    onClick={resetPreferences}
+    aria-label="Redefinir preferências de acessibilidade"
+            >
+    Redefinir preferências
+</button>
         </div>
     );
 }
