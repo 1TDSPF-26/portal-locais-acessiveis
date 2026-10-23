@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 
 import { ListagemLocais } from '../../services/ListagemLocais'
 import { LoadingState } from '../../components/LoadingState/LoadingState'
@@ -16,6 +16,7 @@ import {
   type OrdemNome,
   type StatusAcessibilidade,
 } from '../../utils/filtrarLocais'
+import { calcularDistancia } from '../../utils/geo'
 import { ITENS_POR_PAGINA, usePaginacao } from './hooks/usePaginacao'
 import { Paginacao } from './hooks/Paginacao'
 
@@ -29,29 +30,38 @@ function Locais() {
   const [termoBusca, setTermoBusca] = useState(CRITERIOS_PADRAO.termoBusca)
   const [categoria, setCategoria] = useState(CRITERIOS_PADRAO.categoria)
   const [acessibilidade, setAcessibilidade] = useState(CRITERIOS_PADRAO.acessibilidade)
-  const [ordem, setOrdem] = useState(CRITERIOS_PADRAO.ordem)
+  const [ordem, setOrdem] = useState<OrdemNome | 'proximidade'>(CRITERIOS_PADRAO.ordem)
 
-  // Resultados derivados da lista original: alterar busca, filtros ou ordem não refaz a requisição.
-  const categorias = obterCategorias(locais)
-  const locaisFiltrados = filtrarLocais(locais, { termoBusca, categoria, acessibilidade, ordem })
-  const { itensPaginados,
-    paginaAtual,
-    totalPaginas,
-    proximaPagina,
-    paginaAnterior,
-    temProxima,
-    temAnterior,
-    setPaginaAtual,
-  } = usePaginacao({
-    itens: locaisFiltrados,
-    itensPorPagina: ITENS_POR_PAGINA,
-  })
+  // Estados de Geolocalização (armazenados apenas em memória, sem localStorage)
+  const [userLocation, setUserLocation] = useState<{ lat: number; lon: number } | null>(null)
+  const [carregandoGeo, setCarregandoGeo] = useState(false)
+  const [erroGeo, setErroGeo] = useState<string | null>(null)
 
-  function limparFiltros() {
-    setTermoBusca(CRITERIOS_PADRAO.termoBusca)
-    setCategoria(CRITERIOS_PADRAO.categoria)
-    setAcessibilidade(CRITERIOS_PADRAO.acessibilidade)
-    setOrdem(CRITERIOS_PADRAO.ordem)
+  // Função para solicitar localização após ação clara do usuário (ex: clique no botão)
+  function solicitarLocalizacao() {
+    if (!navigator.geolocation) {
+      setErroGeo('Geolocalização não é suportada pelo seu navegador.')
+      return
+    }
+
+    setCarregandoGeo(true)
+    setErroGeo(null)
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setUserLocation({
+          lat: position.coords.latitude,
+          lon: position.coords.longitude,
+        })
+        setOrdem('proximidade') // Muda automaticamente para proximidade ao obter
+        setCarregandoGeo(false)
+      },
+      () => {
+        setErroGeo('Não foi possível obter sua localização. Verifique as permissões.')
+        setCarregandoGeo(false)
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    )
   }
 
   async function carregarLocais() {
@@ -73,8 +83,82 @@ function Locais() {
     carregarLocais()
   }, [])
 
+  // Categorias obtidas da lista original
+  const categorias = obterCategorias(locais)
+
+  // 1. Aplica busca, filtros e critérios padrão existentes
+  const locaisFiltradosBase = filtrarLocais(locais, {
+    termoBusca,
+    categoria,
+    acessibilidade,
+    ordem: ordem === 'proximidade' ? 'asc' : ordem, // Fallback interno para manter compatibilidade com filtrarLocais
+  })
+
+  // 2. Adiciona cálculo de distância e ordena por proximidade ou nome preservando filtros
+  const locaisProcessados = useMemo(() => {
+    let resultado = locaisFiltradosBase.map((local) => {
+      let distancia: number | undefined = undefined
+
+      if (userLocation && local.latitude !== undefined && local.longitude !== undefined) {
+        distancia = calcularDistancia(
+          userLocation.lat,
+          userLocation.lon,
+          local.latitude,
+          local.longitude
+        )
+      }
+
+      return {
+        ...local,
+        distancia,
+      }
+    })
+
+    resultado.sort((a, b) => {
+      if (ordem === 'proximidade' && userLocation) {
+        if (a.distancia === undefined) return 1
+        if (b.distancia === undefined) return -1
+        return a.distancia - b.distancia // Do mais próximo para o mais distante
+      }
+
+      if (ordem === 'asc') {
+        return a.nome.localeCompare(b.nome)
+      }
+      if (ordem === 'desc') {
+        return b.nome.localeCompare(a.nome)
+      }
+
+      return 0
+    })
+
+    return resultado
+  }, [locaisFiltradosBase, userLocation, ordem])
+
+  const {
+    itensPaginados,
+    paginaAtual,
+    totalPaginas,
+    proximaPagina,
+    paginaAnterior,
+    temProxima,
+    temAnterior,
+    setPaginaAtual,
+  } = usePaginacao({
+    itens: locaisProcessados,
+    itensPorPagina: ITENS_POR_PAGINA,
+  })
+
+  function limparFiltros() {
+    setTermoBusca(CRITERIOS_PADRAO.termoBusca)
+    setCategoria(CRITERIOS_PADRAO.categoria)
+    setAcessibilidade(CRITERIOS_PADRAO.acessibilidade)
+    setOrdem(CRITERIOS_PADRAO.ordem)
+    setUserLocation(null)
+    setErroGeo(null)
+  }
+
   if (carregando) {
-  return <LoadingState message="Carregando locais..." variant="skeleton" />
+    return <LoadingState message="Carregando locais..." variant="skeleton" />
   }
 
   if (erro) {
@@ -140,39 +224,57 @@ function Locais() {
           </select>
         </div>
 
-
-
         <div className="flex min-w-0 flex-col gap-2">
-          <label htmlFor="ordenacao-nome">Ordenar por nome:</label>
+          <label htmlFor="ordenacao-nome">Ordenar por:</label>
           <select
             id="ordenacao-nome"
             className={classeControle}
             value={ordem}
-            onChange={(e) => setOrdem(e.target.value as OrdemNome)}
+            onChange={(e) => setOrdem(e.target.value as OrdemNome | 'proximidade')}
           >
-            <option value="asc">A a Z</option>
-            <option value="desc">Z a A</option>
+            <option value="asc">Nome: A a Z</option>
+            <option value="desc">Nome: Z a A</option>
+            <option value="proximidade" disabled={!userLocation}>
+              Proximidade (Mais próximo)
+            </option>
           </select>
+        </div>
+
+        {/* Botão de ação clara para solicitar geolocalização */}
+        <div className="flex flex-col gap-2 sm:col-span-2">
+          <button
+            type="button"
+            onClick={solicitarLocalizacao}
+            className="min-h-11 w-full min-w-0 rounded-md border border-cor-apoio bg-transparent px-4 py-2 text-botao font-semibold text-cor-titulos transition-colors hover:bg-cor-apoio/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2"
+            aria-label="Obter minha localização atual para habilitar ordenação por proximidade"
+          >
+            {carregandoGeo ? "Obtendo localização..." : "📍 Usar minha localização atual"}
+          </button>
+          {erroGeo && <span className="text-sm text-red-500">{erroGeo}</span>}
         </div>
 
         <button
           type="button"
           onClick={limparFiltros}
-          className="min-h-11 w-full min-w-0 whitespace-normal rounded-md bg-cor-botao-principal px-4 py-2 text-botao font-semibold text-cor-fundo-principal transition-colors hover:bg-cor-apoio focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2 sm:col-span-2 sm:w-auto sm:justify-self-start"        
-          >
+          className="min-h-11 w-full min-w-0 whitespace-normal rounded-md bg-cor-botao-principal px-4 py-2 text-botao font-semibold text-cor-fundo-principal transition-colors hover:bg-cor-apoio focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2 sm:col-span-2 sm:w-auto sm:justify-self-start"
+        >
           Limpar filtros
         </button>
       </form>
 
-      <ContagemResultados total={locaisFiltrados.length} />
+      <ContagemResultados total={locaisProcessados.length} />
 
-      {locaisFiltrados.length > 0 ? (
-
+      {locaisProcessados.length > 0 ? (
         <>
           <ul className="stack min-w-0">
             {itensPaginados.map((local) => (
               <li key={local.id} className="min-w-0">
                 <LocalCard local={local} />
+                {local.distancia !== undefined && (
+                  <span className="text-xs text-cor-textos block mt-1">
+                    📍 {local.distancia.toFixed(2)} km de distância
+                  </span>
+                )}
               </li>
             ))}
           </ul>
@@ -186,7 +288,6 @@ function Locais() {
             setPaginaAtual={setPaginaAtual}
           />
         </>
-
       ) : (
         <EmptyState
           title="Nenhum resultado encontrado."
@@ -197,8 +298,6 @@ function Locais() {
       )}
     </section>
   )
-
-
 }
 
 export default Locais
