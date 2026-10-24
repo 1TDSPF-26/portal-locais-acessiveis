@@ -5,6 +5,7 @@ import { buscarLocalPorId } from '../../services/buscarLocalPorId'
 import { LoadingState } from '../../components/LoadingState/LoadingState'
 import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { EmptyState } from '../../components/EmptyState/EmptyState'
+import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 import { Breadcrumb } from '../../components/Breadcrumb/Breadcrumb'
 
 import type { Endereco, Local } from '../../types/Local'
@@ -53,6 +54,7 @@ function LinkVoltar() {
 }
 
 function DetalhesLocal() {
+  useDocumentTitle('Detalhes')
   const { id } = useParams()
   const idNumerico = validarIdLocal(id)
 

@@ -6,8 +6,9 @@ import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { EmptyState } from '../../components/EmptyState/EmptyState'
 import { ContagemResultados } from '../../components/ContagemResultados/ContagemResultados'
 import LocalCard from '../../components/LocalCard/LocalCard'
+import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 
-import type { Local } from '../../types/Local'
+import type { Local } from "../../types/Local";
 import {
   CRITERIOS_PADRAO,
   ROTULOS_ACESSIBILIDADE,
@@ -23,13 +24,17 @@ const classeControle =
   'min-h-11 w-full min-w-0 max-w-full rounded-md border border-cor-textos bg-cor-fundo-principal px-3 py-2 text-legendas text-cor-titulos focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2'
 
 function Locais() {
-  const [locais, setLocais] = useState<Local[]>([])
-  const [carregando, setCarregando] = useState(true)
-  const [erro, setErro] = useState(false)
-  const [termoBusca, setTermoBusca] = useState(CRITERIOS_PADRAO.termoBusca)
-  const [categoria, setCategoria] = useState(CRITERIOS_PADRAO.categoria)
-  const [acessibilidade, setAcessibilidade] = useState(CRITERIOS_PADRAO.acessibilidade)
-  const [ordem, setOrdem] = useState(CRITERIOS_PADRAO.ordem)
+  useDocumentTitle("Locais");
+
+  const [locais, setLocais] = useState<Local[]>([]);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState(false);
+  const [termoBusca, setTermoBusca] = useState(CRITERIOS_PADRAO.termoBusca);
+  const [categoria, setCategoria] = useState(CRITERIOS_PADRAO.categoria);
+  const [acessibilidade, setAcessibilidade] = useState(
+    CRITERIOS_PADRAO.acessibilidade,
+  );
+  const [ordem, setOrdem] = useState(CRITERIOS_PADRAO.ordem);
 
   // Resultados derivados da lista original: alterar busca, filtros ou ordem não refaz a requisição.
   const categorias = obterCategorias(locais)
@@ -48,24 +53,24 @@ function Locais() {
   })
 
   function limparFiltros() {
-    setTermoBusca(CRITERIOS_PADRAO.termoBusca)
-    setCategoria(CRITERIOS_PADRAO.categoria)
-    setAcessibilidade(CRITERIOS_PADRAO.acessibilidade)
-    setOrdem(CRITERIOS_PADRAO.ordem)
+    setTermoBusca(CRITERIOS_PADRAO.termoBusca);
+    setCategoria(CRITERIOS_PADRAO.categoria);
+    setAcessibilidade(CRITERIOS_PADRAO.acessibilidade);
+    setOrdem(CRITERIOS_PADRAO.ordem);
   }
 
   async function carregarLocais() {
-    setCarregando(true)
-    setErro(false)
+    setCarregando(true);
+    setErro(false);
 
     try {
-      const resultado = await ListagemLocais()
-      setLocais(resultado)
+      const resultado = await ListagemLocais();
+      setLocais(resultado);
     } catch {
-      setErro(true)
-      setLocais([])
+      setErro(true);
+      setLocais([]);
     } finally {
-      setCarregando(false)
+      setCarregando(false);
     }
   }
 
@@ -73,16 +78,23 @@ function Locais() {
     carregarLocais()
   }, [])
 
+
   if (carregando) {
-  return <LoadingState message="Carregando locais..." variant="skeleton" />
+    return <LoadingState message="Carregando locais..." variant="skeleton" />
   }
 
+
   if (erro) {
-    return <ErrorState onRetry={carregarLocais} />
+    return <ErrorState onRetry={carregarLocais} />;
   }
 
   if (locais.length === 0) {
-    return <EmptyState title="Nenhum local encontrado." message="Não encontramos locais acessíveis para exibir no momento" />
+    return (
+      <EmptyState
+        title="Nenhum local encontrado."
+        message="Não encontramos locais acessíveis para exibir no momento"
+      />
+    );
   }
 
   return (
@@ -129,7 +141,9 @@ function Locais() {
             id="filtro-acessibilidade"
             className={classeControle}
             value={acessibilidade}
-            onChange={(e) => setAcessibilidade(e.target.value as StatusAcessibilidade | '')}
+            onChange={(e) =>
+              setAcessibilidade(e.target.value as StatusAcessibilidade | "")
+            }
           >
             <option value="">Todos os níveis</option>
             {Object.entries(ROTULOS_ACESSIBILIDADE).map(([status, rotulo]) => (
