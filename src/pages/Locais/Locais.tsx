@@ -6,6 +6,7 @@ import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { EmptyState } from '../../components/EmptyState/EmptyState'
 import { ContagemResultados } from '../../components/ContagemResultados/ContagemResultados'
 import LocalCard from '../../components/LocalCard/LocalCard'
+import { WarningMessage } from '../../components/WarningMessage/WarningMessage'
 
 import type { Local } from '../../types/Local'
 import {
@@ -26,6 +27,8 @@ function Locais() {
   const [locais, setLocais] = useState<Local[]>([])
   const [carregando, setCarregando] = useState(true)
   const [erro, setErro] = useState(false)
+  // Incrementado no "Tentar novamente" para disparar o efeito de carregamento outra vez.
+  const [tentativa, setTentativa] = useState(0)
   const [termoBusca, setTermoBusca] = useState(CRITERIOS_PADRAO.termoBusca)
   const [categoria, setCategoria] = useState(CRITERIOS_PADRAO.categoria)
   const [acessibilidade, setAcessibilidade] = useState(CRITERIOS_PADRAO.acessibilidade)
@@ -34,7 +37,8 @@ function Locais() {
   // Resultados derivados da lista original: alterar busca, filtros ou ordem não refaz a requisição.
   const categorias = obterCategorias(locais)
   const locaisFiltrados = filtrarLocais(locais, { termoBusca, categoria, acessibilidade, ordem })
-  const { itensPaginados,
+  const {
+    itensPaginados,
     paginaAtual,
     totalPaginas,
     proximaPagina,
@@ -54,31 +58,45 @@ function Locais() {
     setOrdem(CRITERIOS_PADRAO.ordem)
   }
 
-  async function carregarLocais() {
+  // Carrega os locais. Todos os setState acontecem depois do await,
+  // então não há atualização de estado síncrona dentro do efeito.
+  useEffect(() => {
+    let cancelado = false
+
+    async function carregar() {
+      try {
+        const resultado = await ListagemLocais()
+        if (!cancelado) setLocais(resultado)
+      } catch {
+        if (!cancelado) {
+          setErro(true)
+          setLocais([])
+        }
+      } finally {
+        if (!cancelado) setCarregando(false)
+      }
+    }
+
+    carregar()
+
+    return () => {
+      cancelado = true
+    }
+  }, [tentativa])
+
+  // Chamado por um evento do usuário (clique), onde setState é o uso correto.
+  function tentarNovamente() {
     setCarregando(true)
     setErro(false)
-
-    try {
-      const resultado = await ListagemLocais()
-      setLocais(resultado)
-    } catch {
-      setErro(true)
-      setLocais([])
-    } finally {
-      setCarregando(false)
-    }
+    setTentativa((t) => t + 1)
   }
-
-  useEffect(() => {
-    carregarLocais()
-  }, [])
 
   if (carregando) {
   return <LoadingState message="Carregando locais..." variant="skeleton" />
   }
 
   if (erro) {
-    return <ErrorState onRetry={carregarLocais} />
+    return <ErrorState onRetry={tentarNovamente} />
   }
 
   if (locais.length === 0) {
@@ -140,8 +158,6 @@ function Locais() {
           </select>
         </div>
 
-
-
         <div className="flex min-w-0 flex-col gap-2">
           <label htmlFor="ordenacao-nome">Ordenar por nome:</label>
           <select
@@ -158,8 +174,8 @@ function Locais() {
         <button
           type="button"
           onClick={limparFiltros}
-          className="min-h-11 w-full min-w-0 whitespace-normal rounded-md bg-cor-botao-principal px-4 py-2 text-botao font-semibold text-cor-fundo-principal transition-colors hover:bg-cor-apoio focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2 sm:col-span-2 sm:w-auto sm:justify-self-start"        
-          >
+          className="min-h-11 w-full min-w-0 whitespace-normal rounded-md bg-cor-botao-principal px-4 py-2 text-botao font-semibold text-cor-fundo-principal transition-colors hover:bg-cor-apoio focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2 sm:col-span-2 sm:w-auto sm:justify-self-start"
+        >
           Limpar filtros
         </button>
       </form>
@@ -167,7 +183,6 @@ function Locais() {
       <ContagemResultados total={locaisFiltrados.length} />
 
       {locaisFiltrados.length > 0 ? (
-
         <>
           <ul className="stack min-w-0">
             {itensPaginados.map((local) => (
@@ -186,19 +201,22 @@ function Locais() {
             setPaginaAtual={setPaginaAtual}
           />
         </>
-
       ) : (
-        <EmptyState
-          title="Nenhum resultado encontrado."
-          message="Não encontramos nenhum local que corresponda à busca e aos filtros selecionados."
-          actionLabel="Limpar filtros"
-          onAction={limparFiltros}
-        />
+        <>
+          <EmptyState
+            title="Nenhum resultado encontrado."
+            message="Não encontramos nenhum local que corresponda à busca e aos filtros selecionados."
+            actionLabel="Limpar filtros"
+            onAction={limparFiltros}
+          />
+          <WarningMessage
+            title="Os resultados podem estar incompletos"
+            message="A fonte de dados do portal pode não conter todos os locais. Revise o termo da busca ou os filtros selecionados. Se o local existe, ele pode ainda não ter sido cadastrado nessa fonte."
+          />
+        </>
       )}
     </section>
   )
-
-
 }
 
 export default Locais

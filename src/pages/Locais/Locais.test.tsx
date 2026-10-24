@@ -142,4 +142,75 @@ describe('Página Locais - filtros e ordenação', () => {
       expect(controle).toHaveFocus()
     }
   })
+
+  describe('aviso de resultados possivelmente incompletos', () => {
+    const TITULO_AVISO = 'Os resultados podem estar incompletos'
+
+    it('exibe o aviso, com orientação prática, quando a busca não tem correspondência', async () => {
+      const user = userEvent.setup()
+      await renderLocais()
+
+      await user.type(screen.getByLabelText('Buscar local por nome:'), 'local inexistente')
+
+      expect(screen.getByRole('heading', { name: TITULO_AVISO, level: 2 })).toBeInTheDocument()
+      expect(screen.getByText(/pode não conter todos os locais/i)).toBeInTheDocument()
+      expect(screen.getByText(/revise o termo da busca ou os filtros/i)).toBeInTheDocument()
+    })
+
+    it('exibe o aviso quando os filtros combinados não têm correspondência', async () => {
+      const user = userEvent.setup()
+      await renderLocais()
+
+      await user.selectOptions(screen.getByLabelText('Categoria:'), 'museum')
+      await user.selectOptions(screen.getByLabelText('Acessibilidade:'), 'parcial')
+
+      expect(screen.getByRole('heading', { name: TITULO_AVISO })).toBeInTheDocument()
+    })
+
+    it('não apresenta a situação como erro técnico nem afirma indisponibilidade da API', async () => {
+      const user = userEvent.setup()
+      await renderLocais()
+
+      await user.type(screen.getByLabelText('Buscar local por nome:'), 'local inexistente')
+
+      expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+      expect(screen.queryByText(/não foi possível carregar/i)).not.toBeInTheDocument()
+      expect(screen.queryByText(/indispon[ií]vel|fora do ar|falha/i)).not.toBeInTheDocument()
+    })
+
+    it('preserva o EmptyState sem duplicá-lo', async () => {
+      const user = userEvent.setup()
+      await renderLocais()
+
+      await user.type(screen.getByLabelText('Buscar local por nome:'), 'local inexistente')
+
+      expect(screen.getAllByRole('heading', { name: 'Nenhum resultado encontrado.' })).toHaveLength(1)
+      expect(screen.getAllByRole('heading', { name: TITULO_AVISO })).toHaveLength(1)
+    })
+
+    it('não exibe o aviso quando há resultados', async () => {
+      const user = userEvent.setup()
+      await renderLocais()
+
+      expect(screen.queryByRole('heading', { name: TITULO_AVISO })).not.toBeInTheDocument()
+
+      await user.type(screen.getByLabelText('Buscar local por nome:'), 'museu')
+
+      expect(nomesExibidos()).toEqual(['Museu do Ipiranga'])
+      expect(screen.queryByRole('heading', { name: TITULO_AVISO })).not.toBeInTheDocument()
+    })
+
+    it('remove o aviso ao limpar os filtros', async () => {
+      const user = userEvent.setup()
+      await renderLocais()
+
+      await user.type(screen.getByLabelText('Buscar local por nome:'), 'local inexistente')
+      expect(screen.getByRole('heading', { name: TITULO_AVISO })).toBeInTheDocument()
+
+      await user.click(screen.getAllByRole('button', { name: 'Limpar filtros' })[0])
+
+      expect(screen.queryByRole('heading', { name: TITULO_AVISO })).not.toBeInTheDocument()
+      expect(nomesExibidos()).toHaveLength(4)
+    })
+  })
 })
