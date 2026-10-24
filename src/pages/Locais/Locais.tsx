@@ -78,9 +78,11 @@ function Locais() {
     carregarLocais()
   }, [])
 
+
   if (carregando) {
-    return <LoadingState message="Carregando locais..." />;
+    return <LoadingState message="Carregando locais..." variant="skeleton" />
   }
+
 
   if (erro) {
     return <ErrorState onRetry={carregarLocais} />;
