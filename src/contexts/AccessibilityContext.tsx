@@ -103,6 +103,11 @@ export function AccessibilityProvider({
         setFontSize("default");
     }
 
+    function resetPreferences() {
+    setFontSize(defaultPreferences.fontSize);
+    setHighContrast(defaultPreferences.highContrast);
+    }
+
     function increaseFontSize() {
         setFontSize((currentSize) => {
             if (currentSize === "small") {
@@ -130,6 +135,7 @@ export function AccessibilityProvider({
                 resetFontSize,
                 increaseFontSize,
                 toggleHighContrast,
+                resetPreferences,
             }}
         >
             {children}
