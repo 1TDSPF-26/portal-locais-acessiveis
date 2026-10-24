@@ -27,4 +27,5 @@ export interface OverpassElement {
 
 export interface OverpassResponse {
   elements?: OverpassElement[]
+  remark?: string
 }
