@@ -31,17 +31,44 @@ describe('formatarEndereco', () => {
             formatarEndereco({ rua: '', numero: '', cidade: '', estado: '' }),
         ).toBeNull()
     })
+    it('ignora textos genéricos como "não informado"', () => {
+        expect(
+            formatarEndereco({
+                rua: 'Rua não informada',
+                numero: 'Número não informado',
+                cidade: 'São Paulo',
+                estado: 'SP',
+            }),
+        ).toBe('São Paulo - SP')
+    })
+
+    it('retorna null quando todos os campos são genéricos', () => {
+        expect(
+            formatarEndereco({
+                rua: 'Rua não informada',
+                numero: 'Número não informado',
+                cidade: 'NÃO INFORMADA',
+                estado: '-',
+            }),
+        ).toBeNull()
+    })
 })
 
 describe('temEnderecoSuficiente', () => {
-    it('é true com rua ou cidade', () => {
+    it('é true com rua válida', () => {
         expect(temEnderecoSuficiente({ rua: 'Rua A' })).toBe(true)
-        expect(temEnderecoSuficiente({ cidade: 'Santos' })).toBe(true)
     })
 
-    it('é false só com estado, vazio ou undefined', () => {
+    it('é false sem rua válida', () => {
+        expect(temEnderecoSuficiente({ cidade: 'Santos' })).toBe(false)
         expect(temEnderecoSuficiente({ estado: 'SP' })).toBe(false)
         expect(temEnderecoSuficiente({ rua: '  ' })).toBe(false)
         expect(temEnderecoSuficiente(undefined)).toBe(false)
+    })
+
+    it('é false quando a rua é um texto genérico', () => {
+        expect(
+            temEnderecoSuficiente({ rua: 'Rua não informada', cidade: 'São Paulo' }),
+        ).toBe(false)
     })
 })
