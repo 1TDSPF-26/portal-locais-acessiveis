@@ -40,15 +40,17 @@ function LocalCard({ local }: LocalCardProps) {
         type="button"
         onClick={alternarFavorito}
         aria-pressed={favorito}
-        aria-label={`Favoritar ${local.nome}`}
+        aria-label={
+          favorito ? `Remover ${local.nome} dos favoritos` : `Favoritar ${local.nome}`
+        }
         className={`inline-flex items-center gap-2 self-start rounded-md border-2 border-cor-botao-principal px-4 py-2 text-botao transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-foco-interativos focus-visible:ring-offset-2 ${
           favorito
             ? 'bg-cor-botao-principal text-cor-fundo-principal hover:bg-cor-apoio'
             : 'bg-cor-fundo-principal text-cor-botao-principal hover:bg-cor-superficies-cards'
         }`}
       >
-        <span aria-hidden="true">{favorito ? '★' : '☆'}</span>
-        Favoritar
+      <span aria-hidden="true">{favorito ? '★' : '☆'}</span>
+      {favorito ? 'Favoritado' : 'Favoritar'}
       </button>
     </article>
   )
