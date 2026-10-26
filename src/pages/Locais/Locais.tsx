@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { ListagemLocais } from '../../services/ListagemLocais'
 import { LoadingState } from '../../components/LoadingState/LoadingState'
@@ -20,12 +20,15 @@ import { ITENS_POR_PAGINA, usePaginacao } from './hooks/usePaginacao'
 import { Paginacao } from './hooks/Paginacao'
 
 const classeControle =
-  'rounded-md border border-cor-textos bg-cor-fundo-principal px-3 py-2 text-legendas text-cor-titulos focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2'
+  'min-h-11 w-full min-w-0 max-w-full rounded-md border border-cor-textos bg-cor-fundo-principal px-3 py-2 text-legendas text-cor-titulos focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2'
 
 function Locais() {
   const [locais, setLocais] = useState<Local[]>([])
   const [carregando, setCarregando] = useState(true)
   const [erro, setErro] = useState(false)
+  const [atualizando, setAtualizando] = useState(false)
+  const [mensagemStatus, setMensagemStatus] = useState('')
+  const requisicaoEmAndamento = useRef(false)
   const [termoBusca, setTermoBusca] = useState(CRITERIOS_PADRAO.termoBusca)
   const [categoria, setCategoria] = useState(CRITERIOS_PADRAO.categoria)
   const [acessibilidade, setAcessibilidade] = useState(CRITERIOS_PADRAO.acessibilidade)
@@ -54,47 +57,59 @@ function Locais() {
     setOrdem(CRITERIOS_PADRAO.ordem)
   }
 
-  async function carregarLocais() {
-    setCarregando(true)
-    setErro(false)
+  async function carregarLocais(origem: 'inicial' | 'retry' | 'manual' = 'inicial') {
+  if (requisicaoEmAndamento.current) return
+  requisicaoEmAndamento.current = true
 
-    try {
-      const resultado = await ListagemLocais()
-      setLocais(resultado)
-    } catch {
-      setErro(true)
-      setLocais([])
-    } finally {
-      setCarregando(false)
-    }
+  if (origem === 'manual') {
+    setAtualizando(true)
+    setMensagemStatus('Atualizando locais...')
+  } else {
+    setCarregando(true)
   }
+  setErro(false)
+
+  try {
+    const resultado = await ListagemLocais({ forcarAtualizacao: origem !== 'inicial' })
+    setLocais(resultado)
+    setMensagemStatus(origem === 'manual' ? 'Locais atualizados.' : '')
+  } catch {
+    setErro(true)
+    setLocais([])
+    setMensagemStatus('')
+  } finally {
+    requisicaoEmAndamento.current = false
+    setCarregando(false)
+    setAtualizando(false)
+  }
+}
 
   useEffect(() => {
     carregarLocais()
   }, [])
 
   if (carregando) {
-    return <LoadingState message="Carregando locais..." />
+  return <LoadingState message="Carregando locais..." variant="skeleton" />
   }
 
   if (erro) {
-    return <ErrorState onRetry={carregarLocais} />
+    return <ErrorState onRetry={() => carregarLocais('retry')} />
   }
 
   if (locais.length === 0) {
-    return <EmptyState title="Nenhum local encontrado." message="Não encontramos locais acessíveis para exibir no momento" />
+    return (<EmptyState title="Nenhum local encontrado." message="Não encontramos locais acessíveis para exibir no momento" actionLabel="Atualizar locais" onAction={() => carregarLocais('retry')} /> )
   }
 
   return (
-    <section className="stack">
+    <section className="page-container stack min-w-0">
       <h1>Locais</h1>
 
       <form
         aria-label="Buscar e filtrar locais"
-        className="flex flex-wrap items-end gap-4"
+        className="grid min-w-0 grid-cols-1 items-end gap-4 sm:grid-cols-2"
         onSubmit={(e) => e.preventDefault()}
       >
-        <div className="flex flex-col gap-2">
+        <div className="flex min-w-0 flex-col gap-2">
           <label htmlFor="busca-nome">Buscar local por nome:</label>
           <input
             id="busca-nome"
@@ -106,7 +121,7 @@ function Locais() {
           />
         </div>
 
-        <div className="flex flex-col gap-2">
+        <div className="flex min-w-0 flex-col gap-2">
           <label htmlFor="filtro-categoria">Categoria:</label>
           <select
             id="filtro-categoria"
@@ -123,7 +138,7 @@ function Locais() {
           </select>
         </div>
 
-        <div className="flex flex-col gap-2">
+        <div className="flex min-w-0 flex-col gap-2">
           <label htmlFor="filtro-acessibilidade">Acessibilidade:</label>
           <select
             id="filtro-acessibilidade"
@@ -142,7 +157,7 @@ function Locais() {
 
 
 
-        <div className="flex flex-col gap-2">
+        <div className="flex min-w-0 flex-col gap-2">
           <label htmlFor="ordenacao-nome">Ordenar por nome:</label>
           <select
             id="ordenacao-nome"
@@ -158,20 +173,39 @@ function Locais() {
         <button
           type="button"
           onClick={limparFiltros}
-          className="rounded-md bg-cor-botao-principal px-4 py-2 text-botao font-semibold text-cor-fundo-principal transition-colors hover:bg-cor-apoio focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2"
-        >
+          className="min-h-11 w-full min-w-0 whitespace-normal rounded-md bg-cor-botao-principal px-4 py-2 text-botao font-semibold text-cor-fundo-principal transition-colors hover:bg-cor-apoio focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2 sm:col-span-2 sm:w-auto sm:justify-self-start"        
+          >
           Limpar filtros
         </button>
+
+        <button
+          type="button"
+          onClick={() => carregarLocais('manual')}
+          aria-disabled={atualizando}
+          className={`inline-flex items-center gap-2 rounded-md border-2 border-cor-botao-principal bg-cor-fundo-principal px-4 py-2 text-botao font-semibold text-cor-botao-principal transition-colors hover:bg-cor-superficies-cards focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2 ${atualizando ? 'cursor-not-allowed opacity-70' : ''}`}
+        >
+          {atualizando && (
+            <span
+              aria-hidden="true"
+              className="h-4 w-4 animate-spin rounded-full border-2 border-cor-botao-principal border-t-transparent"
+            />
+          )}
+          Atualizar locais
+        </button>
       </form>
+
+      <p aria-live="polite" className="text-legendas text-cor-textos">
+        {mensagemStatus}
+      </p>
 
       <ContagemResultados total={locaisFiltrados.length} />
 
       {locaisFiltrados.length > 0 ? (
 
         <>
-          <ul className="stack">
+          <ul className="stack min-w-0">
             {itensPaginados.map((local) => (
-              <li key={local.id}>
+              <li key={local.id} className="min-w-0">
                 <LocalCard local={local} />
               </li>
             ))}

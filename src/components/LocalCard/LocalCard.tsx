@@ -17,7 +17,7 @@ const ROTULOS_ACESSIBILIDADE: Record<
 
 function LocalCard({ local }: LocalCardProps) {
   return (
-    <article className="stack relative rounded-lg bg-cor-superficies-cards p-4">
+    <article className="stack relative w-full min-w-0 rounded-lg bg-cor-superficies-cards p-4 [overflow-wrap:anywhere]">
       <h2>
         <Link
           to={`/locais/${local.id}`}

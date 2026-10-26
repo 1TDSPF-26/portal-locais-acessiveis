@@ -4,7 +4,7 @@ import { MainLayout } from '../layouts/MainLayout'
 
 import { PageContainer } from '../layouts/PageContainer'
 
-import Home from '../pages/Home/Home'
+import  Home  from '../pages/Home/Home';
 
 import Locais from '../pages/Locais/Locais'
 
@@ -17,6 +17,8 @@ import NotFound from '../pages/NotFound/NotFound'
 import DetalhesLocal from '../pages/DetalhesLocal/DetalhesLocal'
 
 import Acessibilidade from '../pages/Acessibilidade/Acessibilidade'
+
+import Favoritos from '../pages/Favoritos/Favoritos'
 
 function AppRoutes() {
 
@@ -39,6 +41,8 @@ function AppRoutes() {
           <Route path="/sobre" element={<Sobre />} />
 
           <Route path="/acessibilidade" element={<Acessibilidade />} />
+
+          <Route path="/favoritos" element={<Favoritos/>}/>
 
           <Route path="*" element={<NotFound />} />
 

@@ -52,8 +52,9 @@ export function Paginacao({
   proximaPagina,
   setPaginaAtual,
 }: PaginacaoProps) {
+
   const classeBotao =
-    'min-h-11 min-w-11 rounded-md border border-cor-textos px-3 py-2 ' +
+    'min-h-11 min-w-11 max-w-full whitespace-normal break-words rounded-md border border-cor-textos px-3 py-2 ' +
     'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ' +
     'focus-visible:outline-cor-foco-interativos disabled:cursor-not-allowed disabled:opacity-40'
 
@@ -62,13 +63,13 @@ export function Paginacao({
   return (
     <nav
       aria-label="Paginação"
-      className="flex flex-col gap-3"
+      className="flex min-w-0 flex-col gap-3"
     >
       <p>
         Página {paginaAtual} de {totalPaginas}
       </p>
 
-      <div className="flex items-center gap-3">
+      <div className="flex min-w-0 flex-wrap items-center gap-3">
         <button
           type="button"
           onClick={paginaAnterior}
@@ -88,7 +89,7 @@ export function Paginacao({
         </button>
       </div>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex min-w-0 flex-wrap gap-2">
         {paginasVisiveis.map((pagina, index) => {
           if (pagina === 'ellipsis') {
             return (

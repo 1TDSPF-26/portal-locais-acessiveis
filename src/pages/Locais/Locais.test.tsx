@@ -46,6 +46,26 @@ describe('Página Locais - filtros e ordenação', () => {
       .map((heading) => heading.textContent)
   }
 
+  it('exibe o estado de carregamento enquanto busca os locais', async () => {
+    fetchMock.mockImplementationOnce(
+      () => new Promise<Response>(() => {}),
+    )
+
+    render(
+      <MemoryRouter>
+        <Locais />
+      </MemoryRouter>,
+    )
+
+    const status = screen.getByRole('status')
+
+    expect(status).toHaveTextContent('Carregando locais...')
+    expect(status).toHaveAttribute('aria-busy', 'true')
+    expect(
+      status.querySelectorAll('[aria-hidden="true"] article'),
+    ).toHaveLength(3)
+  })
+
   it('filtra por categoria e acessibilidade e combina com a busca sem nova requisição', async () => {
     const user = userEvent.setup()
     await renderLocais()

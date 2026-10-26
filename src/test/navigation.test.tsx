@@ -96,6 +96,9 @@ describe('Navegação principal', () => {
     expect(
       footer.getByRole('link', { name: 'Acessibilidade',}),
     ).toHaveAttribute('href', '/acessibilidade')
+
+    expect(footer.getByRole('link', { name: 'Favoritos' }))
+      .toHaveAttribute('href', '/favoritos')
   })
 
   it('navega do Footer para a página de acessibilidade', async () => {
