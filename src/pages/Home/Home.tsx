@@ -35,6 +35,18 @@ function Home() {
           <p>
             <Link to="/locais">Ver locais cadastrados</Link>
           </p>
+          <p>
+            <Link
+              to="#como-funciona"
+              onClick={(e) => {
+                e.preventDefault()
+                document
+                  .getElementById('como-funciona')
+                  ?.scrollIntoView({ behavior: 'auto' })
+              }}
+            >
+              Veja como funciona</Link>
+          </p>
         </div>
       </section>
 
