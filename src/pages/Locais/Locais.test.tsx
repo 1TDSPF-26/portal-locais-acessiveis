@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import { limparCacheLocais } from '../../services/CacheLocais'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
@@ -12,19 +12,19 @@ const elementos = [
   { id: 4, lat: 0, lon: 0, tags: { name: 'Biblioteca Mário de Andrade', amenity: 'library', wheelchair: 'yes' } },
 ]
 
-const fetchMock = vi.fn(
-  async () =>
-    new Response(JSON.stringify({ elements: elementos }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    }),
-)
+// Uma Response nova a cada chamada: o corpo de uma Response só pode ser lido uma vez.
+function respostaComLocais() {
+  return new Response(JSON.stringify({ elements: elementos }), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json' },
+  })
+}
 
 describe('Página Locais - filtros e ordenação', () => {
   beforeEach(() => {
     limparCacheLocais()
-    fetchMock.mockClear()
-    vi.spyOn(globalThis, 'fetch').mockImplementation(fetchMock)
+    // O mock é criado a cada teste, então nenhum teste depende do estado do anterior.
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async () => respostaComLocais())
   })
 
   afterEach(() => {
@@ -47,8 +47,13 @@ describe('Página Locais - filtros e ordenação', () => {
   }
 
   it('exibe o estado de carregamento enquanto busca os locais', async () => {
-    fetchMock.mockImplementationOnce(
-      () => new Promise<Response>(() => {}),
+    let liberarRequisicao: () => void = () => {}
+
+    vi.mocked(globalThis.fetch).mockImplementationOnce(
+      () =>
+        new Promise<Response>((resolve) => {
+          liberarRequisicao = () => resolve(respostaComLocais())
+        }),
     )
 
     render(
@@ -64,6 +69,12 @@ describe('Página Locais - filtros e ordenação', () => {
     expect(
       status.querySelectorAll('[aria-hidden="true"] article'),
     ).toHaveLength(3)
+
+    // Não deixa a requisição pendente para sempre: isso poderia travar os próximos testes
+    // (por exemplo, se o service reaproveitar uma requisição em andamento).
+    await waitFor(() => expect(globalThis.fetch).toHaveBeenCalled())
+    liberarRequisicao()
+    await screen.findByRole('heading', { name: 'Locais', level: 1 })
   })
 
   it('filtra por categoria e acessibilidade e combina com a busca sem nova requisição', async () => {
@@ -81,7 +92,7 @@ describe('Página Locais - filtros e ordenação', () => {
     await user.type(screen.getByLabelText('Buscar local por nome:'), 'museu')
     expect(nomesExibidos()).toEqual(['Museu do Ipiranga'])
 
-    expect(fetchMock).toHaveBeenCalledTimes(1)
+    expect(globalThis.fetch).toHaveBeenCalledTimes(1)
   })
 
   it('ordena os resultados por nome', async () => {
@@ -103,7 +114,7 @@ describe('Página Locais - filtros e ordenação', () => {
       'Biblioteca Mário de Andrade',
     ])
 
-    expect(fetchMock).toHaveBeenCalledTimes(1)
+    expect(globalThis.fetch).toHaveBeenCalledTimes(1)
   })
 
   it('exibe o estado vazio e permite limpar os filtros pelo teclado', async () => {
@@ -122,7 +133,7 @@ describe('Página Locais - filtros e ordenação', () => {
     expect(screen.getByLabelText('Categoria:')).toHaveValue('')
     expect(screen.getByLabelText('Acessibilidade:')).toHaveValue('')
     expect(nomesExibidos()).toHaveLength(4)
-    expect(fetchMock).toHaveBeenCalledTimes(1)
+    expect(globalThis.fetch).toHaveBeenCalledTimes(1)
   })
 
   it('permite alcançar todos os controles com Tab', async () => {
@@ -135,6 +146,7 @@ describe('Página Locais - filtros e ordenação', () => {
       screen.getByLabelText('Acessibilidade:'),
       screen.getByLabelText('Ordenar por nome:'),
       screen.getByRole('button', { name: 'Limpar filtros' }),
+      screen.getByRole('button', { name: 'Atualizar locais' }),
     ]
 
     for (const controle of ordemEsperada) {
