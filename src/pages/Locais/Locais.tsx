@@ -27,8 +27,6 @@ function Locais() {
   const [locais, setLocais] = useState<Local[]>([])
   const [carregando, setCarregando] = useState(true)
   const [erro, setErro] = useState(false)
-
-  // Estados de UI vindos da develop
   const [atualizando, setAtualizando] = useState(false)
   const [mensagemStatus, setMensagemStatus] = useState('')
   const requisicaoEmAndamento = useRef(false)
@@ -43,7 +41,8 @@ function Locais() {
   // Resultados derivados da lista original: alterar busca, filtros ou ordem não refaz a requisição.
   const categorias = obterCategorias(locais)
   const locaisFiltrados = filtrarLocais(locais, { termoBusca, categoria, acessibilidade, ordem })
-  const { itensPaginados,
+  const {
+    itensPaginados,
     paginaAtual,
     totalPaginas,
     proximaPagina,
@@ -60,12 +59,12 @@ function Locais() {
     sincronizar: !carregando && !erro,
   })
 
-  // Parâmetro renomeado para tipoCarga para não conflitar com a const 'origem' declarada acima
-  async function carregarLocais(tipoCarga: 'inicial' | 'retry' | 'manual' = 'inicial') {
+  // O parâmetro se chama "modo" (e não "origem") para não sombrear a constante "origem" da URL acima.
+  async function carregarLocais(modo: 'inicial' | 'retry' | 'manual' = 'inicial') {
     if (requisicaoEmAndamento.current) return
     requisicaoEmAndamento.current = true
 
-    if (tipoCarga === 'manual') {
+    if (modo === 'manual') {
       setAtualizando(true)
       setMensagemStatus('Atualizando locais...')
     } else {
@@ -74,9 +73,9 @@ function Locais() {
     setErro(false)
 
     try {
-      const resultado = await ListagemLocais({ forcarAtualizacao: tipoCarga !== 'inicial' })
+      const resultado = await ListagemLocais({ forcarAtualizacao: modo !== 'inicial' })
       setLocais(resultado)
-      setMensagemStatus(tipoCarga === 'manual' ? 'Locais atualizados.' : '')
+      setMensagemStatus(modo === 'manual' ? 'Locais atualizados.' : '')
     } catch {
       setErro(true)
       setLocais([])
@@ -101,7 +100,14 @@ function Locais() {
   }
 
   if (locais.length === 0) {
-    return (<EmptyState title="Nenhum local encontrado." message="Não encontramos locais acessíveis para exibir no momento" actionLabel="Atualizar locais" onAction={() => carregarLocais('retry')} /> )
+    return (
+      <EmptyState
+        title="Nenhum local encontrado."
+        message="Não encontramos locais acessíveis para exibir no momento"
+        actionLabel="Atualizar locais"
+        onAction={() => carregarLocais('retry')}
+      />
+    )
   }
 
   return (
@@ -159,8 +165,6 @@ function Locais() {
           </select>
         </div>
 
-
-
         <div className="flex flex-col gap-2">
           <label htmlFor="ordenacao-nome">Ordenar por nome:</label>
           <select
@@ -205,7 +209,6 @@ function Locais() {
       <ContagemResultados total={locaisFiltrados.length} />
 
       {locaisFiltrados.length > 0 ? (
-
         <>
           <ul className="stack">
             {itensPaginados.map((local) => (
@@ -224,7 +227,6 @@ function Locais() {
             setPaginaAtual={setPaginaAtual}
           />
         </>
-
       ) : (
         <EmptyState
           title="Nenhum resultado encontrado."
