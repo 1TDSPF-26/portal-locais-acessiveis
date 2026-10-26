@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 
 import { ListagemLocais } from '../../services/ListagemLocais'
@@ -27,6 +27,12 @@ function Locais() {
   const [locais, setLocais] = useState<Local[]>([])
   const [carregando, setCarregando] = useState(true)
   const [erro, setErro] = useState(false)
+
+  // Estados de UI vindos da develop
+  const [atualizando, setAtualizando] = useState(false)
+  const [mensagemStatus, setMensagemStatus] = useState('')
+  const requisicaoEmAndamento = useRef(false)
+
   const location = useLocation()
   // Busca, filtros, ordem e página vêm da URL (/locais?busca=...&pagina=2), não de estado local.
   const { contexto, atualizar, limpar: limparFiltros } = useContextoListagem()
@@ -54,18 +60,31 @@ function Locais() {
     sincronizar: !carregando && !erro,
   })
 
-  async function carregarLocais() {
-    setCarregando(true)
+  // Parâmetro renomeado para tipoCarga para não conflitar com a const 'origem' declarada acima
+  async function carregarLocais(tipoCarga: 'inicial' | 'retry' | 'manual' = 'inicial') {
+    if (requisicaoEmAndamento.current) return
+    requisicaoEmAndamento.current = true
+
+    if (tipoCarga === 'manual') {
+      setAtualizando(true)
+      setMensagemStatus('Atualizando locais...')
+    } else {
+      setCarregando(true)
+    }
     setErro(false)
 
     try {
-      const resultado = await ListagemLocais()
+      const resultado = await ListagemLocais({ forcarAtualizacao: tipoCarga !== 'inicial' })
       setLocais(resultado)
+      setMensagemStatus(tipoCarga === 'manual' ? 'Locais atualizados.' : '')
     } catch {
       setErro(true)
       setLocais([])
+      setMensagemStatus('')
     } finally {
+      requisicaoEmAndamento.current = false
       setCarregando(false)
+      setAtualizando(false)
     }
   }
 
@@ -74,15 +93,15 @@ function Locais() {
   }, [])
 
   if (carregando) {
-    return <LoadingState message="Carregando locais..." />
+    return <LoadingState message="Carregando locais..." variant="skeleton" />
   }
 
   if (erro) {
-    return <ErrorState onRetry={carregarLocais} />
+    return <ErrorState onRetry={() => carregarLocais('retry')} />
   }
 
   if (locais.length === 0) {
-    return <EmptyState title="Nenhum local encontrado." message="Não encontramos locais acessíveis para exibir no momento" />
+    return (<EmptyState title="Nenhum local encontrado." message="Não encontramos locais acessíveis para exibir no momento" actionLabel="Atualizar locais" onAction={() => carregarLocais('retry')} /> )
   }
 
   return (
@@ -162,7 +181,26 @@ function Locais() {
         >
           Limpar filtros
         </button>
+
+        <button
+          type="button"
+          onClick={() => carregarLocais('manual')}
+          aria-disabled={atualizando}
+          className={`inline-flex items-center gap-2 rounded-md border-2 border-cor-botao-principal bg-cor-fundo-principal px-4 py-2 text-botao font-semibold text-cor-botao-principal transition-colors hover:bg-cor-superficies-cards focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2 ${atualizando ? 'cursor-not-allowed opacity-70' : ''}`}
+        >
+          {atualizando && (
+            <span
+              aria-hidden="true"
+              className="h-4 w-4 animate-spin rounded-full border-2 border-cor-botao-principal border-t-transparent"
+            />
+          )}
+          Atualizar locais
+        </button>
       </form>
+
+      <p aria-live="polite" className="text-legendas text-cor-textos">
+        {mensagemStatus}
+      </p>
 
       <ContagemResultados total={locaisFiltrados.length} />
 
@@ -197,8 +235,6 @@ function Locais() {
       )}
     </section>
   )
-
-
 }
 
 export default Locais
