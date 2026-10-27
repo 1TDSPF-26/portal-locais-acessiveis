@@ -32,12 +32,10 @@ function Locais() {
   const [acessibilidade, setAcessibilidade] = useState(CRITERIOS_PADRAO.acessibilidade)
   const [ordem, setOrdem] = useState<OrdemNome | 'proximidade'>(CRITERIOS_PADRAO.ordem)
 
-  // Estados de Geolocalização (armazenados apenas em memória, sem localStorage)
   const [userLocation, setUserLocation] = useState<{ lat: number; lon: number } | null>(null)
   const [carregandoGeo, setCarregandoGeo] = useState(false)
   const [erroGeo, setErroGeo] = useState<string | null>(null)
 
-  // Função para solicitar localização após ação clara do usuário (ex: clique no botão)
   function solicitarLocalizacao() {
     if (!navigator.geolocation) {
       setErroGeo('Geolocalização não é suportada pelo seu navegador.')
@@ -53,7 +51,7 @@ function Locais() {
           lat: position.coords.latitude,
           lon: position.coords.longitude,
         })
-        setOrdem('proximidade') // Muda automaticamente para proximidade ao obter
+        setOrdem('proximidade')
         setCarregandoGeo(false)
       },
       () => {
@@ -83,18 +81,15 @@ function Locais() {
     carregarLocais()
   }, [])
 
-  // Categorias obtidas da lista original
   const categorias = obterCategorias(locais)
 
-  // 1. Aplica busca, filtros e critérios padrão existentes
   const locaisFiltradosBase = filtrarLocais(locais, {
     termoBusca,
     categoria,
     acessibilidade,
-    ordem: ordem === 'proximidade' ? 'asc' : ordem, // Fallback interno para manter compatibilidade com filtrarLocais
+    ordem: ordem === 'proximidade' ? 'asc' : ordem,
   })
 
-  // 2. Adiciona cálculo de distância e ordena por proximidade ou nome preservando filtros
   const locaisProcessados = useMemo(() => {
     let resultado = locaisFiltradosBase.map((localItem) => {
       const local = localItem as any
@@ -122,7 +117,7 @@ function Locais() {
       if (ordem === 'proximidade' && userLocation) {
         if (a.distancia === undefined) return 1
         if (b.distancia === undefined) return -1
-        return a.distancia - b.distancia // Do mais próximo para o mais distante
+        return a.distancia - b.distancia
       }
 
       if (ordem === 'asc') {
@@ -252,7 +247,6 @@ function Locais() {
           Limpar filtros
         </button>
 
-        {/* Botão de geolocalização posicionado após o limpar filtros para respeitar a ordem de tabulação dos testes */}
         <div className="flex flex-col gap-2 sm:col-span-2">
           <button
             type="button"
@@ -274,11 +268,6 @@ function Locais() {
             {itensPaginados.map((local: any) => (
               <li key={local.id} className="min-w-0">
                 <LocalCard local={local} />
-                {local.distancia !== undefined && (
-                  <span className="text-xs text-cor-textos block mt-1">
-                    📍 {local.distancia.toFixed(2)} km de distância
-                  </span>
-                )}
               </li>
             ))}
           </ul>
