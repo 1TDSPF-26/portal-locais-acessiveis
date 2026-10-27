@@ -94,21 +94,27 @@ describe('LocalCard - favoritos', () => {
     )
   }
 
+  
   function botaoFavorito() {
-    return screen.getByRole('button', { name: 'Favoritar Museu do Ipiranga' })
+    return screen.getByRole('button', {
+      name: /favoritar Museu do Ipiranga|remover Museu do Ipiranga dos favoritos/i,
+    })
   }
 
   it('favorita e desfavorita o local', async () => {
     const user = userEvent.setup()
     renderizarCard()
 
+    expect(botaoFavorito()).toHaveTextContent('Favoritar')
     expect(botaoFavorito()).toHaveAttribute('aria-pressed', 'false')
 
     await user.click(botaoFavorito())
+    expect(botaoFavorito()).toHaveTextContent('Favoritado')
     expect(botaoFavorito()).toHaveAttribute('aria-pressed', 'true')
     expect(localStorage.getItem('locais_favoritos')).toBe('[1]')
 
     await user.click(botaoFavorito())
+    expect(botaoFavorito()).toHaveTextContent('Favoritar')
     expect(botaoFavorito()).toHaveAttribute('aria-pressed', 'false')
     expect(localStorage.getItem('locais_favoritos')).toBe('[]')
   })
