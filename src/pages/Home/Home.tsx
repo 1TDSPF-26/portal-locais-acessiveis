@@ -33,19 +33,10 @@ function Home() {
             diferentes locais cadastrados na plataforma.
           </p>
           <p>
-            <Link to="/locais">Ver locais cadastrados</Link>
+            <Link to="/locais">Explorar locais</Link>
           </p>
           <p>
-            <Link
-              to="#como-funciona"
-              onClick={(e) => {
-                e.preventDefault()
-                document
-                  .getElementById('como-funciona')
-                  ?.scrollIntoView({ behavior: 'auto' })
-              }}
-            >
-              Veja como funciona</Link>
+            <a href="#como-funciona">Como funciona</a>
           </p>
         </div>
       </section>
