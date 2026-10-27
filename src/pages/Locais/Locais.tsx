@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState, useMemo, useRef } from 'react'
 
 import { ListagemLocais } from '../../services/ListagemLocais'
 import { LoadingState } from '../../components/LoadingState/LoadingState'
@@ -23,6 +23,45 @@ import { Paginacao } from './hooks/Paginacao'
 const classeControle =
   'min-h-11 w-full min-w-0 max-w-full rounded-md border border-cor-textos bg-cor-fundo-principal px-3 py-2 text-legendas text-cor-titulos focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2'
 
+function mapearLocais(resultado: any): Local[] {
+  const dadosBrutos = Array.isArray(resultado)
+    ? resultado
+    : resultado?.elements ?? []
+
+  return dadosBrutos.map((item: any, index: number) => {
+    const wheelchairTag = item.tags?.wheelchair
+    let acessibilidadeMapeada = item.acessibilidade
+
+    if (!acessibilidadeMapeada) {
+      if (wheelchairTag === 'yes') acessibilidadeMapeada = 'acessivel'
+      else if (wheelchairTag === 'limited') acessibilidadeMapeada = 'parcial'
+      else if (wheelchairTag === 'no') acessibilidadeMapeada = 'nao_acessivel'
+      else acessibilidadeMapeada = 'nao_informado'
+    }
+
+    const categoriaMapeada =
+      item.categoria ||
+      item.tags?.amenity ||
+      item.tags?.tourism ||
+      item.tags?.leisure ||
+      'geral'
+
+    const nomeMapeado = item.nome || item.tags?.name || 'Local sem nome'
+
+    return {
+      id: item.id || index,
+      nome: nomeMapeado,
+      categoria: categoriaMapeada,
+      acessibilidade: acessibilidadeMapeada,
+      coordenadas: {
+        latitude: item.lat || item.coordenadas?.latitude || 0,
+        longitude: item.lon || item.coordenadas?.longitude || 0,
+      },
+      ...item,
+    }
+  }) as Local[]
+}
+
 function Locais() {
   const [locais, setLocais] = useState<Local[]>([])
   const [carregando, setCarregando] = useState(true)
@@ -35,6 +74,11 @@ function Locais() {
   const [userLocation, setUserLocation] = useState<{ lat: number; lon: number } | null>(null)
   const [carregandoGeo, setCarregandoGeo] = useState(false)
   const [erroGeo, setErroGeo] = useState<string | null>(null)
+
+  const [atualizando, setAtualizando] = useState(false)
+  const [mensagemAtualizacao, setMensagemAtualizacao] = useState('')
+  // Trava síncrona: impede disparos repetidos antes de o estado re-renderizar.
+  const atualizandoRef = useRef(false)
 
   function solicitarLocalizacao() {
     if (!navigator.geolocation) {
@@ -62,13 +106,13 @@ function Locais() {
     )
   }
 
-  async function carregarLocais() {
+  async function carregarLocais(forcarAtualizacao = false) {
     setCarregando(true)
     setErro(false)
 
     try {
-      const resultado = await ListagemLocais()
-      setLocais(resultado)
+      const resultado = await ListagemLocais({ forcarAtualizacao })
+      setLocais(mapearLocais(resultado))
     } catch {
       setErro(true)
       setLocais([])
@@ -77,18 +121,47 @@ function Locais() {
     }
   }
 
+  async function atualizarLocais() {
+    if (atualizandoRef.current || carregando) return
+
+    atualizandoRef.current = true
+    setAtualizando(true)
+    setMensagemAtualizacao('Atualizando locais...')
+
+    try {
+      const resultado = await ListagemLocais({ forcarAtualizacao: true })
+      setLocais(mapearLocais(resultado))
+      setErro(false)
+      setMensagemAtualizacao('Locais atualizados.')
+    } catch {
+      // Mesmo tratamento de erro da carga inicial.
+      setErro(true)
+      setLocais([])
+      setMensagemAtualizacao('')
+    } finally {
+      atualizandoRef.current = false
+      setAtualizando(false)
+    }
+  }
+
   useEffect(() => {
     carregarLocais()
   }, [])
 
-  const categorias = obterCategorias(locais)
+  const categorias = useMemo(() => {
+    const catsDinamicas = obterCategorias(locais)
+    const categoriasFixas = ['cafe', 'museum', 'parque', 'restaurante', 'biblioteca']
+    return Array.from(new Set([...catsDinamicas, ...categoriasFixas]))
+  }, [locais])
 
-  const locaisFiltradosBase = filtrarLocais(locais, {
-    termoBusca,
-    categoria,
-    acessibilidade,
-    ordem: ordem === 'proximidade' ? 'asc' : ordem,
-  })
+  const locaisFiltradosBase = useMemo(() => {
+    return filtrarLocais(locais, {
+      termoBusca,
+      categoria,
+      acessibilidade,
+      ordem: ordem === 'proximidade' ? 'asc' : ordem,
+    })
+  }, [locais, termoBusca, categoria, acessibilidade, ordem])
 
   const locaisProcessados = useMemo(() => {
     let resultado = locaisFiltradosBase.map((localItem) => {
@@ -156,16 +229,14 @@ function Locais() {
     setErroGeo(null)
   }
 
-  if (carregando) {
-    return <LoadingState message="Carregando locais..." variant="skeleton" />
-  }
-
   if (erro) {
-    return <ErrorState onRetry={carregarLocais} />
-  }
-
-  if (locais.length === 0) {
-    return <EmptyState title="Nenhum local encontrado." message="Não encontramos locais acessíveis para exibir no momento" />
+    return (
+      <section className="page-container stack min-w-0">
+        <h1>Locais</h1>
+        {/* Ao tentar de novo após um erro, sempre consulta a fonte (ignora o cache). */}
+        <ErrorState onRetry={() => carregarLocais(true)} />
+      </section>
+    )
   }
 
   return (
@@ -258,36 +329,61 @@ function Locais() {
           </button>
           {erroGeo && <span className="text-sm text-red-500">{erroGeo}</span>}
         </div>
+
+        <div className="flex flex-col gap-2 sm:col-span-2">
+          {/* aria-disabled (e não disabled) mantém o foco no botão durante a atualização. */}
+          <button
+            type="button"
+            onClick={atualizarLocais}
+            aria-disabled={atualizando || carregando}
+            className="min-h-11 w-full min-w-0 rounded-md border border-cor-apoio bg-transparent px-4 py-2 text-botao font-semibold text-cor-titulos transition-colors hover:bg-cor-apoio/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2 aria-disabled:cursor-not-allowed aria-disabled:opacity-60"
+          >
+            Atualizar locais
+          </button>
+          <p aria-live="polite" className="text-base text-cor-textos">
+            {mensagemAtualizacao}
+          </p>
+        </div>
       </form>
 
-      <ContagemResultados total={locaisProcessados.length} />
-
-      {locaisProcessados.length > 0 ? (
-        <>
-          <ul className="stack min-w-0">
-            {itensPaginados.map((local: any) => (
-              <li key={local.id} className="min-w-0">
-                <LocalCard local={local} />
-              </li>
-            ))}
-          </ul>
-          <Paginacao
-            paginaAtual={paginaAtual}
-            totalPaginas={totalPaginas}
-            temAnterior={temAnterior}
-            temProxima={temProxima}
-            paginaAnterior={paginaAnterior}
-            proximaPagina={proximaPagina}
-            setPaginaAtual={setPaginaAtual}
-          />
-        </>
+      {carregando ? (
+        <LoadingState message="Carregando locais..." variant="skeleton" />
       ) : (
-        <EmptyState
-          title="Nenhum resultado encontrado."
-          message="Não encontramos nenhum local que corresponda à busca e aos filtros selecionados."
-          actionLabel="Limpar filtros"
-          onAction={limparFiltros}
-        />
+        <>
+          <ContagemResultados total={locaisProcessados.length} />
+
+          {locaisProcessados.length > 0 ? (
+            <>
+              <ul role="list" className="stack min-w-0">
+                {itensPaginados.map((local: any) => (
+                  <li key={local.id} className="min-w-0">
+                    <LocalCard local={local} />
+                  </li>
+                ))}
+              </ul>
+              <Paginacao
+                paginaAtual={paginaAtual}
+                totalPaginas={totalPaginas}
+                temAnterior={temAnterior}
+                temProxima={temProxima}
+                paginaAnterior={paginaAnterior}
+                proximaPagina={proximaPagina}
+                setPaginaAtual={setPaginaAtual}
+              />
+            </>
+          ) : (
+            <EmptyState
+              title={
+                locais.length === 0
+                  ? 'Nenhum local encontrado.'
+                  : 'Nenhum resultado encontrado.'
+              }
+              message="Não encontramos nenhum local que corresponda à busca e aos filtros selecionados."
+              actionLabel="Limpar filtros"
+              onAction={limparFiltros}
+            />
+          )}
+        </>
       )}
     </section>
   )
