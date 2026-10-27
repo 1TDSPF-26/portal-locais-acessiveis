@@ -21,7 +21,7 @@ import { Paginacao } from './hooks/Paginacao'
 import { useContextoListagem } from './hooks/useContextoListagem'
 
 const classeControle =
-  'rounded-md border border-cor-textos bg-cor-fundo-principal px-3 py-2 text-legendas text-cor-titulos focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2'
+  'min-h-11 w-full min-w-0 max-w-full rounded-md border border-cor-textos bg-cor-fundo-principal px-3 py-2 text-legendas text-cor-titulos focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2'
 
 function Locais() {
   const [locais, setLocais] = useState<Local[]>([])
@@ -30,13 +30,12 @@ function Locais() {
   const [atualizando, setAtualizando] = useState(false)
   const [mensagemStatus, setMensagemStatus] = useState('')
   const requisicaoEmAndamento = useRef(false)
-
   const location = useLocation()
   // Busca, filtros, ordem e página vêm da URL (/locais?busca=...&pagina=2), não de estado local.
   const { contexto, atualizar, limpar: limparFiltros } = useContextoListagem()
   const { termoBusca, categoria, acessibilidade, ordem, pagina } = contexto
   // Enviado ao detalhe para que o link "Voltar" restaure exatamente esta listagem.
-  const origem = `${location.pathname}${location.search}`
+  const caminhoListagem = `${location.pathname}${location.search}`
 
   // Resultados derivados da lista original: alterar busca, filtros ou ordem não refaz a requisição.
   const categorias = obterCategorias(locais)
@@ -59,12 +58,11 @@ function Locais() {
     sincronizar: !carregando && !erro,
   })
 
-  // O parâmetro se chama "modo" (e não "origem") para não sombrear a constante "origem" da URL acima.
-  async function carregarLocais(modo: 'inicial' | 'retry' | 'manual' = 'inicial') {
+  async function carregarLocais(origem: 'inicial' | 'retry' | 'manual' = 'inicial') {
     if (requisicaoEmAndamento.current) return
     requisicaoEmAndamento.current = true
 
-    if (modo === 'manual') {
+    if (origem === 'manual') {
       setAtualizando(true)
       setMensagemStatus('Atualizando locais...')
     } else {
@@ -73,9 +71,9 @@ function Locais() {
     setErro(false)
 
     try {
-      const resultado = await ListagemLocais({ forcarAtualizacao: modo !== 'inicial' })
+      const resultado = await ListagemLocais({ forcarAtualizacao: origem !== 'inicial' })
       setLocais(resultado)
-      setMensagemStatus(modo === 'manual' ? 'Locais atualizados.' : '')
+      setMensagemStatus(origem === 'manual' ? 'Locais atualizados.' : '')
     } catch {
       setErro(true)
       setLocais([])
@@ -100,26 +98,19 @@ function Locais() {
   }
 
   if (locais.length === 0) {
-    return (
-      <EmptyState
-        title="Nenhum local encontrado."
-        message="Não encontramos locais acessíveis para exibir no momento"
-        actionLabel="Atualizar locais"
-        onAction={() => carregarLocais('retry')}
-      />
-    )
+    return (<EmptyState title="Nenhum local encontrado." message="Não encontramos locais acessíveis para exibir no momento" actionLabel="Atualizar locais" onAction={() => carregarLocais('retry')} />)
   }
 
   return (
-    <section className="stack">
+    <section className="page-container stack min-w-0">
       <h1>Locais</h1>
 
       <form
         aria-label="Buscar e filtrar locais"
-        className="flex flex-wrap items-end gap-4"
+        className="grid min-w-0 grid-cols-1 items-end gap-4 sm:grid-cols-2"
         onSubmit={(e) => e.preventDefault()}
       >
-        <div className="flex flex-col gap-2">
+        <div className="flex min-w-0 flex-col gap-2">
           <label htmlFor="busca-nome">Buscar local por nome:</label>
           <input
             id="busca-nome"
@@ -131,7 +122,7 @@ function Locais() {
           />
         </div>
 
-        <div className="flex flex-col gap-2">
+        <div className="flex min-w-0 flex-col gap-2">
           <label htmlFor="filtro-categoria">Categoria:</label>
           <select
             id="filtro-categoria"
@@ -148,7 +139,7 @@ function Locais() {
           </select>
         </div>
 
-        <div className="flex flex-col gap-2">
+        <div className="flex min-w-0 flex-col gap-2">
           <label htmlFor="filtro-acessibilidade">Acessibilidade:</label>
           <select
             id="filtro-acessibilidade"
@@ -165,7 +156,9 @@ function Locais() {
           </select>
         </div>
 
-        <div className="flex flex-col gap-2">
+
+
+        <div className="flex min-w-0 flex-col gap-2">
           <label htmlFor="ordenacao-nome">Ordenar por nome:</label>
           <select
             id="ordenacao-nome"
@@ -181,7 +174,7 @@ function Locais() {
         <button
           type="button"
           onClick={limparFiltros}
-          className="rounded-md bg-cor-botao-principal px-4 py-2 text-botao font-semibold text-cor-fundo-principal transition-colors hover:bg-cor-apoio focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2"
+          className="min-h-11 w-full min-w-0 whitespace-normal rounded-md bg-cor-botao-principal px-4 py-2 text-botao font-semibold text-cor-fundo-principal transition-colors hover:bg-cor-apoio focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2 sm:col-span-2 sm:w-auto sm:justify-self-start"
         >
           Limpar filtros
         </button>
@@ -209,11 +202,12 @@ function Locais() {
       <ContagemResultados total={locaisFiltrados.length} />
 
       {locaisFiltrados.length > 0 ? (
+
         <>
-          <ul className="stack">
+          <ul className="stack min-w-0">
             {itensPaginados.map((local) => (
-              <li key={local.id}>
-                <LocalCard local={local} origem={origem} />
+              <li key={local.id} className="min-w-0">
+                <LocalCard local={local} origem={caminhoListagem} />
               </li>
             ))}
           </ul>
@@ -227,6 +221,7 @@ function Locais() {
             setPaginaAtual={setPaginaAtual}
           />
         </>
+
       ) : (
         <EmptyState
           title="Nenhum resultado encontrado."
@@ -237,6 +232,8 @@ function Locais() {
       )}
     </section>
   )
+
+
 }
 
 export default Locais
