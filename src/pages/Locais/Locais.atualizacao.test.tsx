@@ -99,7 +99,7 @@ describe('Página Locais - atualização manual', () => {
     expect(botao).toHaveFocus()
   })
 
-  it('mantém o tratamento de erro existente quando a atualização falha', async () => {
+  it('preserva os locais e o horário da última carga quando a atualização falha', async () => {
     const user = userEvent.setup()
     vi.spyOn(globalThis, 'fetch')
       .mockImplementationOnce(async () => resposta(versao1))
@@ -107,11 +107,17 @@ describe('Página Locais - atualização manual', () => {
       .mockImplementation(async () => resposta(versao2))
 
     await renderLocais()
+    const indicacaoInicial = screen.getByText(/Última carga dos dados no portal:/).textContent
+
     await user.click(screen.getByRole('button', { name: 'Atualizar locais' }))
 
-    expect(await screen.findByRole('alert')).toBeInTheDocument()
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Não foi possível atualizar os locais. Os dados da última carga continuam exibidos.',
+    )
+    expect(screen.getByText('Café Central')).toBeInTheDocument()
+    expect(screen.getByText(/Última carga dos dados no portal:/).textContent).toBe(indicacaoInicial)
 
-    await user.click(screen.getByRole('button', { name: 'Tentar novamente' }))
+    await user.click(screen.getByRole('button', { name: 'Atualizar locais' }))
     expect(await screen.findByText('Café Novo')).toBeInTheDocument()
   })
 })

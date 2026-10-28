@@ -66,32 +66,37 @@ function Locais() {
   }
 
   async function carregarLocais(origem: 'inicial' | 'retry' | 'manual' = 'inicial') {
-  if (requisicaoEmAndamento.current) return
-  requisicaoEmAndamento.current = true
+    if (requisicaoEmAndamento.current) return
+    requisicaoEmAndamento.current = true
 
-  if (origem === 'manual') {
-    setAtualizando(true)
-    setMensagemStatus('Atualizando locais...')
-  } else {
-    setCarregando(true)
-  }
-  setErro(false)
+    if (origem === 'manual') {
+      setAtualizando(true)
+      setMensagemStatus('Atualizando locais...')
+    } else {
+      setCarregando(true)
+      setMensagemStatus('')
+    }
+    setErro(false)
 
-  try {
-    const resultado = await ListagemLocaisComOrigem({ forcarAtualizacao: origem !== 'inicial' })
-    setLocais(resultado.locais)
-    setUltimaCarga({ carregadoEm: resultado.carregadoEm, origem: resultado.origem })
-    setMensagemStatus(origem === 'manual' ? 'Locais atualizados.' : '')
-  } catch {
-    setErro(true)
-    setLocais([])
-    setMensagemStatus('')
-  } finally {
-    requisicaoEmAndamento.current = false
-    setCarregando(false)
-    setAtualizando(false)
+    try {
+      const resultado = await ListagemLocaisComOrigem({ forcarAtualizacao: origem !== 'inicial' })
+      setLocais(resultado.locais)
+      setUltimaCarga({ carregadoEm: resultado.carregadoEm, origem: resultado.origem })
+      setMensagemStatus(origem === 'manual' ? 'Locais atualizados.' : '')
+    } catch {
+      setErro(true)
+      if (origem === 'manual' && locais.length > 0) {
+        setMensagemStatus('Não foi possível atualizar os locais. Os dados da última carga continuam exibidos.')
+      } else {
+        setLocais([])
+        setMensagemStatus('')
+      }
+    } finally {
+      requisicaoEmAndamento.current = false
+      setCarregando(false)
+      setAtualizando(false)
+    }
   }
-}
 
   useEffect(() => {
     carregarLocais()
@@ -101,7 +106,7 @@ function Locais() {
   return <LoadingState message="Carregando locais..." variant="skeleton" />
   }
 
-  if (erro) {
+  if (erro && locais.length === 0) {
     return <ErrorState onRetry={() => carregarLocais('retry')} />
   }
 
@@ -225,9 +230,15 @@ function Locais() {
         </button>
       </form>
 
-      <p aria-live="polite" className="text-legendas text-cor-textos">
-        {mensagemStatus}
-      </p>
+      {mensagemStatus && (
+        <p
+          aria-live={erro ? 'assertive' : 'polite'}
+          role={erro ? 'alert' : 'status'}
+          className="text-legendas text-cor-textos"
+        >
+          {mensagemStatus}
+        </p>
+      )}
 
       <ContagemResultados total={locaisFiltrados.length} />
 
