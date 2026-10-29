@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { afterEach, describe, expect, it, vi } from 'vitest'
@@ -190,4 +190,35 @@ describe('DetalhesLocal', () => {
             await screen.findByRole('heading', { name: 'Café Inclusivo', level: 1 }),
         ).toBeInTheDocument()
     })
+    it('exibe a imagem do local quando disponível e sem imagem quando ausente', async () => {
+        buscarLocalPorIdMock.mockResolvedValue({
+            ...localCompleto,
+            imagem: 'https://exemplo.com/cafe.jpg',
+        })
+        const { unmount } = renderPagina('/locais/123')
+
+        expect(
+            await screen.findByRole('img', { name: 'Foto do local Café Inclusivo' }),
+        ).toHaveAttribute('loading', 'lazy')
+        unmount()
+
+        buscarLocalPorIdMock.mockResolvedValue(localCompleto)
+        renderPagina('/locais/123')
+
+        await screen.findByRole('heading', { name: 'Café Inclusivo', level: 1 })
+        expect(screen.queryByRole('img')).not.toBeInTheDocument()
+    })
+
+    it('mantém os detalhes quando a imagem falha ao carregar', async () => {
+        buscarLocalPorIdMock.mockResolvedValue({
+            ...localCompleto,
+            imagem: 'https://exemplo.com/quebrada.jpg',
+        })
+        renderPagina('/locais/123')
+
+        fireEvent.error(await screen.findByRole('img'))
+
+        expect(screen.queryByRole('img')).not.toBeInTheDocument()
+        expect(screen.getByText('Café com cardápio em braille.')).toBeInTheDocument()
+    })    
 })
