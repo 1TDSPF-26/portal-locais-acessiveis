@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 
 import { ListagemLocais } from '../../services/ListagemLocais'
 import { LoadingState } from '../../components/LoadingState/LoadingState'
@@ -9,7 +10,6 @@ import LocalCard from '../../components/LocalCard/LocalCard'
 
 import type { Local } from '../../types/Local'
 import {
-  CRITERIOS_PADRAO,
   ROTULOS_ACESSIBILIDADE,
   filtrarLocais,
   obterCategorias,
@@ -18,6 +18,7 @@ import {
 } from '../../utils/filtrarLocais'
 import { ITENS_POR_PAGINA, usePaginacao } from './hooks/usePaginacao'
 import { Paginacao } from './hooks/Paginacao'
+import { useContextoListagem } from './hooks/useContextoListagem'
 
 const classeControle =
   'min-h-11 w-full min-w-0 max-w-full rounded-md border border-cor-textos bg-cor-fundo-principal px-3 py-2 text-legendas text-cor-titulos focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2'
@@ -29,15 +30,18 @@ function Locais() {
   const [atualizando, setAtualizando] = useState(false)
   const [mensagemStatus, setMensagemStatus] = useState('')
   const requisicaoEmAndamento = useRef(false)
-  const [termoBusca, setTermoBusca] = useState(CRITERIOS_PADRAO.termoBusca)
-  const [categoria, setCategoria] = useState(CRITERIOS_PADRAO.categoria)
-  const [acessibilidade, setAcessibilidade] = useState(CRITERIOS_PADRAO.acessibilidade)
-  const [ordem, setOrdem] = useState(CRITERIOS_PADRAO.ordem)
+  const location = useLocation()
+  // Busca, filtros, ordem e página vêm da URL (/locais?busca=...&pagina=2), não de estado local.
+  const { contexto, atualizar, limpar: limparFiltros } = useContextoListagem()
+  const { termoBusca, categoria, acessibilidade, ordem, pagina } = contexto
+  // Enviado ao detalhe para que o link "Voltar" restaure exatamente esta listagem.
+  const caminhoListagem = `${location.pathname}${location.search}`
 
   // Resultados derivados da lista original: alterar busca, filtros ou ordem não refaz a requisição.
   const categorias = obterCategorias(locais)
   const locaisFiltrados = filtrarLocais(locais, { termoBusca, categoria, acessibilidade, ordem })
-  const { itensPaginados,
+  const {
+    itensPaginados,
     paginaAtual,
     totalPaginas,
     proximaPagina,
@@ -48,48 +52,45 @@ function Locais() {
   } = usePaginacao({
     itens: locaisFiltrados,
     itensPorPagina: ITENS_POR_PAGINA,
+    pagina,
+    onPaginaChange: (novaPagina) => atualizar({ pagina: novaPagina }),
+    // Enquanto a lista não carrega ela está vazia; não deve "corrigir" a página da URL para 1.
+    sincronizar: !carregando && !erro,
   })
 
-  function limparFiltros() {
-    setTermoBusca(CRITERIOS_PADRAO.termoBusca)
-    setCategoria(CRITERIOS_PADRAO.categoria)
-    setAcessibilidade(CRITERIOS_PADRAO.acessibilidade)
-    setOrdem(CRITERIOS_PADRAO.ordem)
-  }
-
   async function carregarLocais(origem: 'inicial' | 'retry' | 'manual' = 'inicial') {
-  if (requisicaoEmAndamento.current) return
-  requisicaoEmAndamento.current = true
+    if (requisicaoEmAndamento.current) return
+    requisicaoEmAndamento.current = true
 
-  if (origem === 'manual') {
-    setAtualizando(true)
-    setMensagemStatus('Atualizando locais...')
-  } else {
-    setCarregando(true)
-  }
-  setErro(false)
+    if (origem === 'manual') {
+      setAtualizando(true)
+      setMensagemStatus('Atualizando locais...')
+    } else {
+      setCarregando(true)
+    }
+    setErro(false)
 
-  try {
-    const resultado = await ListagemLocais({ forcarAtualizacao: origem !== 'inicial' })
-    setLocais(resultado)
-    setMensagemStatus(origem === 'manual' ? 'Locais atualizados.' : '')
-  } catch {
-    setErro(true)
-    setLocais([])
-    setMensagemStatus('')
-  } finally {
-    requisicaoEmAndamento.current = false
-    setCarregando(false)
-    setAtualizando(false)
+    try {
+      const resultado = await ListagemLocais({ forcarAtualizacao: origem !== 'inicial' })
+      setLocais(resultado)
+      setMensagemStatus(origem === 'manual' ? 'Locais atualizados.' : '')
+    } catch {
+      setErro(true)
+      setLocais([])
+      setMensagemStatus('')
+    } finally {
+      requisicaoEmAndamento.current = false
+      setCarregando(false)
+      setAtualizando(false)
+    }
   }
-}
 
   useEffect(() => {
     carregarLocais()
   }, [])
 
   if (carregando) {
-  return <LoadingState message="Carregando locais..." variant="skeleton" />
+    return <LoadingState message="Carregando locais..." variant="skeleton" />
   }
 
   if (erro) {
@@ -97,7 +98,7 @@ function Locais() {
   }
 
   if (locais.length === 0) {
-    return (<EmptyState title="Nenhum local encontrado." message="Não encontramos locais acessíveis para exibir no momento" actionLabel="Atualizar locais" onAction={() => carregarLocais('retry')} /> )
+    return (<EmptyState title="Nenhum local encontrado." message="Não encontramos locais acessíveis para exibir no momento" actionLabel="Atualizar locais" onAction={() => carregarLocais('retry')} />)
   }
 
   return (
@@ -116,7 +117,7 @@ function Locais() {
             type="text"
             placeholder="Digite o nome do local..."
             value={termoBusca}
-            onChange={(e) => setTermoBusca(e.target.value)}
+            onChange={(e) => atualizar({ termoBusca: e.target.value })}
             className={classeControle}
           />
         </div>
@@ -127,7 +128,7 @@ function Locais() {
             id="filtro-categoria"
             className={classeControle}
             value={categoria}
-            onChange={(e) => setCategoria(e.target.value)}
+            onChange={(e) => atualizar({ categoria: e.target.value })}
           >
             <option value="">Todas as categorias</option>
             {categorias.map((item) => (
@@ -144,7 +145,7 @@ function Locais() {
             id="filtro-acessibilidade"
             className={classeControle}
             value={acessibilidade}
-            onChange={(e) => setAcessibilidade(e.target.value as StatusAcessibilidade | '')}
+            onChange={(e) => atualizar({ acessibilidade: e.target.value as StatusAcessibilidade | '' })}
           >
             <option value="">Todos os níveis</option>
             {Object.entries(ROTULOS_ACESSIBILIDADE).map(([status, rotulo]) => (
@@ -163,7 +164,7 @@ function Locais() {
             id="ordenacao-nome"
             className={classeControle}
             value={ordem}
-            onChange={(e) => setOrdem(e.target.value as OrdemNome)}
+            onChange={(e) => atualizar({ ordem: e.target.value as OrdemNome })}
           >
             <option value="asc">A a Z</option>
             <option value="desc">Z a A</option>
@@ -173,8 +174,8 @@ function Locais() {
         <button
           type="button"
           onClick={limparFiltros}
-          className="min-h-11 w-full min-w-0 whitespace-normal rounded-md bg-cor-botao-principal px-4 py-2 text-botao font-semibold text-cor-fundo-principal transition-colors hover:bg-cor-apoio focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2 sm:col-span-2 sm:w-auto sm:justify-self-start"        
-          >
+          className="min-h-11 w-full min-w-0 whitespace-normal rounded-md bg-cor-botao-principal px-4 py-2 text-botao font-semibold text-cor-fundo-principal transition-colors hover:bg-cor-apoio focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2 sm:col-span-2 sm:w-auto sm:justify-self-start"
+        >
           Limpar filtros
         </button>
 
@@ -206,7 +207,7 @@ function Locais() {
           <ul className="stack min-w-0">
             {itensPaginados.map((local) => (
               <li key={local.id} className="min-w-0">
-                <LocalCard local={local} />
+                <LocalCard local={local} origem={caminhoListagem} />
               </li>
             ))}
           </ul>

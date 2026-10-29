@@ -5,25 +5,40 @@ export const ITENS_POR_PAGINA = 10;
 interface UsePaginacaoOptions<T> {
   itens: T[];
   itensPorPagina?: number;
+  /** Página controlada por quem chama (ex.: URL). Sem ela, o hook guarda a página em estado próprio. */
+  pagina?: number;
+  /** Chamado quando a página controlada muda. Obrigatório junto com `pagina`. */
+  onPaginaChange?: (pagina: number) => void;
+  /** Se false, não corrige a página enquanto os itens ainda não carregaram. Padrão: true. */
+  sincronizar?: boolean;
 }
 
 export function usePaginacao<T>({
   itens,
   itensPorPagina = ITENS_POR_PAGINA,
+  pagina,
+  onPaginaChange,
+  sincronizar = true,
 }: UsePaginacaoOptions<T>) {
-  const [paginaAtual, setPaginaAtual] = useState(1);
+  const [paginaInterna, setPaginaInterna] = useState(1);
+  const controlada = pagina !== undefined && onPaginaChange !== undefined;
+  const paginaSolicitada = controlada ? pagina : paginaInterna;
+  const setPaginaAtual = controlada ? onPaginaChange : setPaginaInterna;
 
   // Calcula o total de páginas (mínimo de 1 página)
   const totalPaginas = useMemo(() => {
     return Math.ceil(itens.length / itensPorPagina) || 1;
   }, [itens.length, itensPorPagina]);
 
-  // Ajusta a página atual se os resultados forem reduzidos por busca/filtros
+  // Página exibida: nunca ultrapassa o total (ex.: URL com ?pagina=99 ou filtro que reduziu os resultados)
+  const paginaAtual = Math.min(paginaSolicitada, totalPaginas);
+
+  // Persiste o ajuste na origem do estado (estado interno ou URL)
   useEffect(() => {
-    if (paginaAtual > totalPaginas) {
+    if (sincronizar && paginaSolicitada > totalPaginas) {
       setPaginaAtual(totalPaginas);
     }
-  }, [totalPaginas, paginaAtual]);
+  }, [sincronizar, totalPaginas, paginaSolicitada, setPaginaAtual]);
 
   // Fatia o array original para obter apenas os itens da página atual
   const itensPaginados = useMemo(() => {
