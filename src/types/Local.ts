@@ -1,3 +1,5 @@
+import type { OrigemDados } from '../constants/fontesDados';
+
 /**Endereço de um local, incluindo rua, número, cidade e estado.
  * Todas as propriedades são opcionais, permitindo que apenas algumas informações sejam fornecidas.*/
 export interface Endereco {
@@ -28,8 +30,10 @@ export interface Acessibilidade {
  * A propriedade 'categoria' é obrigatória e deve ser uma string representando a categoria do local. 
  * A propriedade 'imagem' é opcional e pode fornecer um URL para uma imagem representativa do local. 
  * As propriedades 'endereco', 'coordenadas' e 'acessibilidade' são obrigatórias e devem fornecer informações detalhadas sobre o endereço, coordenadas geográficas e acessibilidade do local, respectivamente.*/
+
 export interface Local {
   id: number;
+  origem?: OrigemDados;
   nome: string;
   descricao?: string;
   categoria: string;
@@ -38,5 +42,3 @@ export interface Local {
   coordenadas: Coordenadas;
   acessibilidade: Acessibilidade;
 }
-
-

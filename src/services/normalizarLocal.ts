@@ -43,6 +43,7 @@ export function normalizarLocal(
 
   return {
     id: elemento.id,
+    origem: 'openstreetmap',
     nome: tags?.name ?? 'Local sem nome',
     descricao: tags?.description,
     categoria,

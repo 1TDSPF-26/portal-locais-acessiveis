@@ -6,6 +6,7 @@ import { LoadingState } from '../../components/LoadingState/LoadingState'
 import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { EmptyState } from '../../components/EmptyState/EmptyState'
 import { Breadcrumb } from '../../components/Breadcrumb/Breadcrumb'
+import { OrigemLocal } from '../../components/OrigemLocal'
 
 import type { Endereco, Local } from '../../types/Local'
 
@@ -199,6 +200,8 @@ function DetalhesLocal() {
             </div>
           )}
       </dl>
+
+      <OrigemLocal origem={local.origem} />
     </article>
   )
 }
