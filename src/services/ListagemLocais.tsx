@@ -1,7 +1,7 @@
 import type { Local } from '../types/Local'
 import type { OverpassResponse } from '../types/Overpass'
 import { normalizarLocal } from './normalizarLocal.ts'
-import { obterCacheLocais, definirCacheLocais } from './CacheLocais.ts'
+import { obterCacheLocaisComData, definirCacheLocais } from './CacheLocais.ts'
 
 interface OpcoesListagem {
   /** Ignora o cache e consulta a fonte externa de novo (ex.: atualização manual). */
@@ -10,14 +10,28 @@ interface OpcoesListagem {
 
 const TEMPO_LIMITE_MS = 100_000
 
+export interface ResultadoListagemLocais {
+  locais: Local[]
+  origem: 'fonte' | 'cache'
+  carregadoEm: number
+}
+
 // Requisição em andamento, compartilhada por todos que chamarem enquanto ela não terminar.
-let requisicaoEmAndamento: Promise<Local[]> | null = null
+let requisicaoEmAndamento: Promise<ResultadoListagemLocais> | null = null
 
 export function ListagemLocais({ forcarAtualizacao = false }: OpcoesListagem = {}): Promise<Local[]> {
+  return ListagemLocaisComOrigem({ forcarAtualizacao }).then((resultado) => resultado.locais)
+}
+
+export function ListagemLocaisComOrigem({ forcarAtualizacao = false }: OpcoesListagem = {}): Promise<ResultadoListagemLocais> {
   if (!forcarAtualizacao) {
-    const cacheValido = obterCacheLocais()
+    const cacheValido = obterCacheLocaisComData()
     if (cacheValido) {
-      return Promise.resolve(cacheValido)
+      return Promise.resolve({
+        locais: cacheValido.dados,
+        origem: 'cache',
+        carregadoEm: cacheValido.carregadoEm,
+      })
     }
   }
 
@@ -32,7 +46,7 @@ export function ListagemLocais({ forcarAtualizacao = false }: OpcoesListagem = {
   return requisicaoEmAndamento
 }
 
-async function consultarOverpass(): Promise<Local[]> {
+async function consultarOverpass(): Promise<ResultadoListagemLocais> {
   const query = `
   [out:json][timeout:90];
   area["wikidata"="Q174"]["admin_level"="8"]->.sp;
@@ -86,5 +100,9 @@ async function consultarOverpass(): Promise<Local[]> {
     definirCacheLocais(locais)
   }
 
-  return locais
+  return {
+    locais,
+    origem: 'fonte',
+    carregadoEm: Date.now(),
+  }
 }

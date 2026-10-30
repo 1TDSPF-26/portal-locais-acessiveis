@@ -46,25 +46,42 @@ describe('Página Locais - filtros e ordenação', () => {
       .map((heading) => heading.textContent)
   }
 
-  it('exibe o estado de carregamento enquanto busca os locais', async () => {
-    fetchMock.mockImplementationOnce(
-      () => new Promise<Response>(() => {}),
-    )
+    it('exibe o estado de carregamento enquanto busca os locais', async () => {
+    let liberarResposta: (response: Response) => void = () => {}
 
-    render(
-      <MemoryRouter>
-        <Locais />
-      </MemoryRouter>,
-    )
+  fetchMock.mockImplementationOnce(
+    () =>
+      new Promise<Response>((resolve) => {
+        liberarResposta = resolve
+      }),
+  )
 
-    const status = screen.getByRole('status')
+  render(
+    <MemoryRouter>
+      <Locais />
+    </MemoryRouter>,
+  )
 
-    expect(status).toHaveTextContent('Carregando locais...')
-    expect(status).toHaveAttribute('aria-busy', 'true')
-    expect(
-      status.querySelectorAll('[aria-hidden="true"] article'),
-    ).toHaveLength(3)
+  const status = screen.getByRole('status')
+
+  expect(status).toHaveTextContent('Carregando locais...')
+  expect(status).toHaveAttribute('aria-busy', 'true')
+  expect(
+    status.querySelectorAll('[aria-hidden="true"] article'),
+  ).toHaveLength(3)
+
+  liberarResposta(
+    new Response(JSON.stringify({ elements: elementos }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    }),
+  )
+
+  await screen.findByRole('heading', {
+    name: 'Locais',
+    level: 1,
   })
+})
 
   it('filtra por categoria e acessibilidade e combina com a busca sem nova requisição', async () => {
     const user = userEvent.setup()

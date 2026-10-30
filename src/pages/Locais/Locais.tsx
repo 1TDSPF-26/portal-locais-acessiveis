@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { ListagemLocais } from '../../services/ListagemLocais'
+import { ListagemLocaisComOrigem } from '../../services/ListagemLocais'
 import { LoadingState } from '../../components/LoadingState/LoadingState'
 import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { EmptyState } from '../../components/EmptyState/EmptyState'
@@ -22,12 +22,20 @@ import { Paginacao } from './hooks/Paginacao'
 const classeControle =
   'min-h-11 w-full min-w-0 max-w-full rounded-md border border-cor-textos bg-cor-fundo-principal px-3 py-2 text-legendas text-cor-titulos focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2'
 
+function formatarDataHora(timestamp: number) {
+  return new Intl.DateTimeFormat('pt-BR', {
+    dateStyle: 'short',
+    timeStyle: 'short',
+  }).format(new Date(timestamp))
+}
+
 function Locais() {
   const [locais, setLocais] = useState<Local[]>([])
   const [carregando, setCarregando] = useState(true)
   const [erro, setErro] = useState(false)
   const [atualizando, setAtualizando] = useState(false)
   const [mensagemStatus, setMensagemStatus] = useState('')
+  const [ultimaCarga, setUltimaCarga] = useState<{ carregadoEm: number; origem: 'fonte' | 'cache' } | null>(null)
   const requisicaoEmAndamento = useRef(false)
   const [termoBusca, setTermoBusca] = useState(CRITERIOS_PADRAO.termoBusca)
   const [categoria, setCategoria] = useState(CRITERIOS_PADRAO.categoria)
@@ -58,31 +66,37 @@ function Locais() {
   }
 
   async function carregarLocais(origem: 'inicial' | 'retry' | 'manual' = 'inicial') {
-  if (requisicaoEmAndamento.current) return
-  requisicaoEmAndamento.current = true
+    if (requisicaoEmAndamento.current) return
+    requisicaoEmAndamento.current = true
 
-  if (origem === 'manual') {
-    setAtualizando(true)
-    setMensagemStatus('Atualizando locais...')
-  } else {
-    setCarregando(true)
-  }
-  setErro(false)
+    if (origem === 'manual') {
+      setAtualizando(true)
+      setMensagemStatus('Atualizando locais...')
+    } else {
+      setCarregando(true)
+      setMensagemStatus('')
+    }
+    setErro(false)
 
-  try {
-    const resultado = await ListagemLocais({ forcarAtualizacao: origem !== 'inicial' })
-    setLocais(resultado)
-    setMensagemStatus(origem === 'manual' ? 'Locais atualizados.' : '')
-  } catch {
-    setErro(true)
-    setLocais([])
-    setMensagemStatus('')
-  } finally {
-    requisicaoEmAndamento.current = false
-    setCarregando(false)
-    setAtualizando(false)
+    try {
+      const resultado = await ListagemLocaisComOrigem({ forcarAtualizacao: origem !== 'inicial' })
+      setLocais(resultado.locais)
+      setUltimaCarga({ carregadoEm: resultado.carregadoEm, origem: resultado.origem })
+      setMensagemStatus(origem === 'manual' ? 'Locais atualizados.' : '')
+    } catch {
+      setErro(true)
+      if (origem === 'manual' && locais.length > 0) {
+        setMensagemStatus('Não foi possível atualizar os locais. Os dados da última carga continuam exibidos.')
+      } else {
+        setLocais([])
+        setMensagemStatus('')
+      }
+    } finally {
+      requisicaoEmAndamento.current = false
+      setCarregando(false)
+      setAtualizando(false)
+    }
   }
-}
 
   useEffect(() => {
     carregarLocais()
@@ -92,17 +106,39 @@ function Locais() {
   return <LoadingState message="Carregando locais..." variant="skeleton" />
   }
 
-  if (erro) {
+  if (erro && locais.length === 0) {
     return <ErrorState onRetry={() => carregarLocais('retry')} />
   }
 
   if (locais.length === 0) {
-    return (<EmptyState title="Nenhum local encontrado." message="Não encontramos locais acessíveis para exibir no momento" actionLabel="Atualizar locais" onAction={() => carregarLocais('retry')} /> )
+    return (
+      <section className="page-container stack min-w-0">
+        <h1>Locais</h1>
+        {ultimaCarga && (
+          <p>
+            {ultimaCarga.origem === 'cache' ? 'Dados do cache. ' : ''}
+            Última carga dos dados no portal: {formatarDataHora(ultimaCarga.carregadoEm)}.
+          </p>
+        )}
+        <EmptyState
+          title="Nenhum local encontrado."
+          message="Não encontramos locais acessíveis para exibir no momento"
+          actionLabel="Atualizar locais"
+          onAction={() => carregarLocais('retry')}
+        />
+      </section>
+    )
   }
 
   return (
     <section className="page-container stack min-w-0">
       <h1>Locais</h1>
+      {ultimaCarga && (
+        <p aria-live="polite" className="text-legendas text-cor-textos">
+          {ultimaCarga.origem === 'cache' ? 'Dados do cache. ' : ''}
+          Última carga dos dados no portal: {formatarDataHora(ultimaCarga.carregadoEm)}.
+        </p>
+      )}
 
       <form
         aria-label="Buscar e filtrar locais"
@@ -194,9 +230,15 @@ function Locais() {
         </button>
       </form>
 
-      <p aria-live="polite" className="text-legendas text-cor-textos">
-        {mensagemStatus}
-      </p>
+      {mensagemStatus && (
+        <p
+          aria-live={erro ? 'assertive' : 'polite'}
+          role={erro ? 'alert' : 'status'}
+          className="text-legendas text-cor-textos"
+        >
+          {mensagemStatus}
+        </p>
+      )}
 
       <ContagemResultados total={locaisFiltrados.length} />
 
