@@ -6,10 +6,12 @@ import { LoadingState } from '../../components/LoadingState/LoadingState'
 import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { EmptyState } from '../../components/EmptyState/EmptyState'
 import { Breadcrumb } from '../../components/Breadcrumb/Breadcrumb'
+import { BotaoCompartilhar } from '../../components/BotaoCompartilhar/BotaoCompartilhar'
 
 import type { Endereco, Local } from '../../types/Local'
 
 import { validarIdLocal } from '../../utils/validarIdLocal'
+import { montarUrlDoLocal } from '../../utils/compartilharLink'
 
 type Estado =
   | { tipo: 'carregando' }
@@ -159,6 +161,13 @@ function DetalhesLocal() {
       <LinkVoltar />
 
       <h1 id="titulo-local">{local.nome}</h1>
+      
+      <div>
+        <BotaoCompartilhar
+          titulo={local.nome}
+          url={montarUrlDoLocal(local.id)}
+        />
+      </div>
 
       <dl className="stack">
         <div>
