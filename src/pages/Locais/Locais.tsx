@@ -59,22 +59,22 @@ function Locais() {
 
 
   async function carregarLocais() {
-  setCarregando(true)
-  setErro(false)
+    setCarregando(true)
+    setErro(false)
 
-  try {
-    const resultado = await ListagemLocaisComFallback()
-    setLocais(resultado.locais)
-    setDesatualizado(resultado.desatualizado)
-    setAtualizadoEm(resultado.atualizadoEm)
-  } catch {
-    setErro(true)
-    setLocais([])
-    setDesatualizado(false)
-  } finally {
-    setCarregando(false)
+    try {
+      const resultado = await ListagemLocaisComFallback()
+      setLocais(resultado.locais)
+      setDesatualizado(resultado.desatualizado)
+      setAtualizadoEm(resultado.atualizadoEm)
+    } catch {
+      setErro(true)
+      setLocais([])
+      setDesatualizado(false)
+    } finally {
+      setCarregando(false)
+    }
   }
-}
 
   useEffect(() => {
     carregarLocais()
@@ -98,25 +98,27 @@ function Locais() {
     <section className="stack">
       <h1>Locais</h1>
       {desatualizado && (
-  <div role="status" className="stack rounded-lg bg-cor-superficies-cards p-4">
-    <p>
-      Não foi possível atualizar a lista agora. Exibindo dados salvos
-      {atualizadoEm &&
-        ` às ${new Date(atualizadoEm).toLocaleTimeString('pt-BR', {
-          hour: '2-digit',
-          minute: '2-digit',
-        })}`}
-      , que podem estar desatualizados.
-    </p>
-    <button
-      type="button"
-      onClick={carregarLocais}
-      className="rounded-md bg-[#216FCE] px-4 py-2 text-base font-semibold text-white transition-colors hover:bg-[#244A5A] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#244A5A] focus-visible:ring-offset-2"
-    >
-      Tentar novamente
-    </button>
-  </div>
-)}
+        <div role="status" className="stack rounded-lg bg-cor-superficies-cards p-4">
+          <p>
+            Não foi possível atualizar a lista agora. Exibindo dados salvos
+            {atualizadoEm &&
+              ` às ${new Date(atualizadoEm).toLocaleTimeString('pt-BR', {
+                hour: '2-digit',
+                minute: '2-digit',
+              })}`}
+            , que podem estar desatualizados.
+          </p>
+
+          <button
+            type="button"
+            onClick={carregarLocais}
+            className="rounded-md bg-cor-botao-principal px-4 py-2 text-base font-semibold text-cor-fundo-principal transition-colors hover:bg-cor-apoio focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2"
+          >
+            Tentar novamente
+          </button>
+
+        </div>
+      )}
 
       <form
         aria-label="Buscar e filtrar locais"
