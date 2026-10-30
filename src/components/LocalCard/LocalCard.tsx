@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import type { Local } from '../../types/Local'
+import { OrigemLocal } from '../OrigemLocal'
 
 interface LocalCardProps {
   local: Local
@@ -32,6 +33,8 @@ function LocalCard({ local }: LocalCardProps) {
       <p>
         Acessibilidade: {ROTULOS_ACESSIBILIDADE[local.acessibilidade.status]}
       </p>
+
+      <OrigemLocal origem={local.origem} />
     </article>
   )
 }

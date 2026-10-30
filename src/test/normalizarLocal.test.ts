@@ -16,9 +16,12 @@ describe('normalizarLocal', () => {
 
     const local = normalizarLocal(elemento)
 
+
     expect(local).toEqual({
       id: 123,
+      origem: 'openstreetmap',
       nome: 'Local de teste',
+      descricao: undefined,
       categoria: 'cafe',
       endereco: {
         rua: 'Rua não informada',
@@ -32,6 +35,7 @@ describe('normalizarLocal', () => {
       },
       acessibilidade: {
         status: 'acessivel',
+        descricao: undefined,
       },
     })
   })
@@ -156,6 +160,7 @@ describe('normalizarLocal', () => {
 
     expect(normalizarLocal(elemento)).toEqual({
       id: 201,
+      origem: 'openstreetmap',
       nome: 'Local sem nome',
       categoria: 'cafe',
       endereco: {
@@ -170,6 +175,7 @@ describe('normalizarLocal', () => {
       },
       acessibilidade: {
         status: 'nao_informado',
+        descricao: undefined,
       },
     })
   })

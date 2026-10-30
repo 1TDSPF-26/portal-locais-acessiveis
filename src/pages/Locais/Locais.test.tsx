@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react'
+import { act, render, screen, within } from '@testing-library/react'
 import { limparCacheLocais } from '../../services/CacheLocais'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
@@ -46,9 +46,15 @@ describe('Página Locais - filtros e ordenação', () => {
       .map((heading) => heading.textContent)
   }
 
+
   it('exibe o estado de carregamento enquanto busca os locais', async () => {
+    let concluirBusca!: (resposta: Response) => void
+
     fetchMock.mockImplementationOnce(
-      () => new Promise<Response>(() => {}),
+      () =>
+        new Promise<Response>((resolve) => {
+          concluirBusca = resolve
+        }),
     )
 
     render(
@@ -61,10 +67,26 @@ describe('Página Locais - filtros e ordenação', () => {
 
     expect(status).toHaveTextContent('Carregando locais...')
     expect(status).toHaveAttribute('aria-busy', 'true')
+
     expect(
       status.querySelectorAll('[aria-hidden="true"] article'),
     ).toHaveLength(3)
+
+    await act(async () => {
+      concluirBusca(
+        new Response(JSON.stringify({ elements: elementos }), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        }),
+      )
+    })
+
+    await screen.findByRole('heading', {
+      name: 'Locais',
+      level: 1,
+    })
   })
+
 
   it('filtra por categoria e acessibilidade e combina com a busca sem nova requisição', async () => {
     const user = userEvent.setup()
