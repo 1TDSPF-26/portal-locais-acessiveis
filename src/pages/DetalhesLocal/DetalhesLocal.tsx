@@ -6,10 +6,15 @@ import { LoadingState } from '../../components/LoadingState/LoadingState'
 import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { EmptyState } from '../../components/EmptyState/EmptyState'
 import { Breadcrumb } from '../../components/Breadcrumb/Breadcrumb'
+import { CompartilharEndereco } from '../../components/CompartilharEndereco/CompartilharEndereco'
 
-import type { Endereco, Local } from '../../types/Local'
+import type { Local } from '../../types/Local'
 
 import { validarIdLocal } from '../../utils/validarIdLocal'
+import {
+  formatarEndereco,
+  temEnderecoSuficiente,
+} from '../../utils/formatarEndereco'
 
 type Estado =
   | { tipo: 'carregando' }
@@ -31,18 +36,6 @@ const rotulosAcessibilidade: Record<Local['acessibilidade']['status'], string> =
 
 const classeLink =
   'inline-block rounded-md font-semibold text-cor-botao-principal underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2'
-
-function formatarEndereco(endereco?: Endereco): string | null {
-  if (!endereco) {
-    return null
-  }
-
-  const { rua, numero, cidade, estado } = endereco
-  const ruaENumero = [rua, numero].filter(Boolean).join(', ')
-  const partes = [ruaENumero, cidade, estado].filter(Boolean)
-
-  return partes.length > 0 ? partes.join(' - ') : null
-}
 
 function LinkVoltar() {
   return (
@@ -147,7 +140,7 @@ function DetalhesLocal() {
 
   return (
     <article className="stack" aria-labelledby="titulo-local">
-        
+      
         <Breadcrumb
         items={[
           { label: 'Home', to: '/' },
@@ -173,31 +166,36 @@ function DetalhesLocal() {
 
         <div>
           <dt className="font-semibold">Endereço</dt>
-          <dd>{endereco ?? 'Endereço não informado.'}</dd>
+          <dd>
+            {endereco ?? 'Endereço não informado.'}
+            {endereco && temEnderecoSuficiente(local.endereco) && (
+              <CompartilharEndereco endereco={endereco} nomeLocal={local.nome} />
+            )}
+          </dd>
         </div>
 
-        <div className='min-w-0'>
+        <div className="min-w-0">
           <dt className="font-semibold text-cor-titulos">
             Status de acessibilidade
-            </dt>
+          </dt>
 
           <dd className="mt-2 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-4 text-cor-textos">
             <span className="font-semibold">Status:</span>{' '}
             {rotulosAcessibilidade[local.acessibilidade.status]}
+          </dd>
+        </div>
+
+        {local.acessibilidade.descricao?.trim() && (
+          <div className="min-w-0">
+            <dt className="font-semibold text-cor-titulos">
+              Descrição Complementar:
+            </dt>
+
+            <dd className="mt-2 wrap-anywhere text-cor-textos">
+              {local.acessibilidade.descricao.trim()}
             </dd>
           </div>
-
-          {local.acessibilidade.descricao?.trim() && (
-            <div className="min-w-0">
-              <dt className="font-semibold text-cor-titulos">
-                Descrição Complementar:
-              </dt>
-
-              <dd className="mt-2 wrap-anywhere text-cor-textos">
-                {local.acessibilidade.descricao.trim()}
-                </dd>
-            </div>
-          )}
+        )}
       </dl>
     </article>
   )
