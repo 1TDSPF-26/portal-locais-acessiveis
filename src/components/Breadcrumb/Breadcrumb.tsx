@@ -22,11 +22,11 @@ const classeLink =
           const ehAtual = indice === items.length - 1
 
           return (
-            <li key={`${item.label}-${indice}`} className="flex items-center gap-2">
+            <li key={`${item.label}-${indice}`} className="flex min-w-0 items-center gap-2">
               {ehAtual || !item.to ? (
                 <span
                   aria-current={ehAtual ? 'page' : undefined}
-                  className="font-semibold text-cor-titulos"
+                  className="min-w-0 font-semibold text-cor-titulos wrap-anywhere"
                 >
                   {item.label}
                 </span>

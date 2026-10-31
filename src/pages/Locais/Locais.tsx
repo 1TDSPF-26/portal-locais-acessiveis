@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { ListagemLocais } from '../../services/ListagemLocais'
 import { LoadingState } from '../../components/LoadingState/LoadingState'
@@ -24,17 +24,17 @@ const classeControle =
   'min-h-11 w-full min-w-0 max-w-full rounded-md border border-cor-textos bg-cor-fundo-principal px-3 py-2 text-legendas text-cor-titulos focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2'
 
 function Locais() {
-  useDocumentTitle("Locais");
-
-  const [locais, setLocais] = useState<Local[]>([]);
-  const [carregando, setCarregando] = useState(true);
-  const [erro, setErro] = useState(false);
-  const [termoBusca, setTermoBusca] = useState(CRITERIOS_PADRAO.termoBusca);
-  const [categoria, setCategoria] = useState(CRITERIOS_PADRAO.categoria);
-  const [acessibilidade, setAcessibilidade] = useState(
-    CRITERIOS_PADRAO.acessibilidade,
-  );
-  const [ordem, setOrdem] = useState(CRITERIOS_PADRAO.ordem);
+  useDocumentTitle('Locais')
+  const [locais, setLocais] = useState<Local[]>([])
+  const [carregando, setCarregando] = useState(true)
+  const [erro, setErro] = useState(false)
+  const [atualizando, setAtualizando] = useState(false)
+  const [mensagemStatus, setMensagemStatus] = useState('')
+  const requisicaoEmAndamento = useRef(false)
+  const [termoBusca, setTermoBusca] = useState(CRITERIOS_PADRAO.termoBusca)
+  const [categoria, setCategoria] = useState(CRITERIOS_PADRAO.categoria)
+  const [acessibilidade, setAcessibilidade] = useState(CRITERIOS_PADRAO.acessibilidade)
+  const [ordem, setOrdem] = useState(CRITERIOS_PADRAO.ordem)
 
   // Resultados derivados da lista original: alterar busca, filtros ou ordem não refaz a requisição.
   const categorias = obterCategorias(locais)
@@ -59,20 +59,32 @@ function Locais() {
     setOrdem(CRITERIOS_PADRAO.ordem);
   }
 
-  async function carregarLocais() {
-    setCarregando(true);
-    setErro(false);
+  async function carregarLocais(origem: 'inicial' | 'retry' | 'manual' = 'inicial') {
+  if (requisicaoEmAndamento.current) return
+  requisicaoEmAndamento.current = true
 
-    try {
-      const resultado = await ListagemLocais();
-      setLocais(resultado);
-    } catch {
-      setErro(true);
-      setLocais([]);
-    } finally {
-      setCarregando(false);
-    }
+  if (origem === 'manual') {
+    setAtualizando(true)
+    setMensagemStatus('Atualizando locais...')
+  } else {
+    setCarregando(true)
   }
+  setErro(false)
+
+  try {
+    const resultado = await ListagemLocais({ forcarAtualizacao: origem !== 'inicial' })
+    setLocais(resultado)
+    setMensagemStatus(origem === 'manual' ? 'Locais atualizados.' : '')
+  } catch {
+    setErro(true)
+    setLocais([])
+    setMensagemStatus('')
+  } finally {
+    requisicaoEmAndamento.current = false
+    setCarregando(false)
+    setAtualizando(false)
+  }
+}
 
   useEffect(() => {
     carregarLocais()
@@ -85,16 +97,11 @@ function Locais() {
 
 
   if (erro) {
-    return <ErrorState onRetry={carregarLocais} />;
+    return <ErrorState onRetry={() => carregarLocais('retry')} />
   }
 
   if (locais.length === 0) {
-    return (
-      <EmptyState
-        title="Nenhum local encontrado."
-        message="Não encontramos locais acessíveis para exibir no momento"
-      />
-    );
+    return (<EmptyState title="Nenhum local encontrado." message="Não encontramos locais acessíveis para exibir no momento" actionLabel="Atualizar locais" onAction={() => carregarLocais('retry')} /> )
   }
 
   return (
@@ -176,7 +183,26 @@ function Locais() {
           >
           Limpar filtros
         </button>
+
+        <button
+          type="button"
+          onClick={() => carregarLocais('manual')}
+          aria-disabled={atualizando}
+          className={`inline-flex items-center gap-2 rounded-md border-2 border-cor-botao-principal bg-cor-fundo-principal px-4 py-2 text-botao font-semibold text-cor-botao-principal transition-colors hover:bg-cor-superficies-cards focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2 ${atualizando ? 'cursor-not-allowed opacity-70' : ''}`}
+        >
+          {atualizando && (
+            <span
+              aria-hidden="true"
+              className="h-4 w-4 animate-spin rounded-full border-2 border-cor-botao-principal border-t-transparent"
+            />
+          )}
+          Atualizar locais
+        </button>
       </form>
+
+      <p aria-live="polite" className="text-legendas text-cor-textos">
+        {mensagemStatus}
+      </p>
 
       <ContagemResultados total={locaisFiltrados.length} />
 
