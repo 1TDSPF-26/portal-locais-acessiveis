@@ -28,6 +28,9 @@ function renderizarProvider() {
                             <button onClick={value.toggleHighContrast}>
                                 Alternar contraste
                             </button>
+                            <button onClick={value.resetPreferences}>
+                                Redefinir preferências
+                            </button>
                         </div>
                     );
                 }}
@@ -109,6 +112,37 @@ describe("AccessibilityProvider", () => {
 
         expect(JSON.parse(localStorage.getItem(STORAGE_KEY)!)).toEqual({
             fontSize: "large",
+            highContrast: false,
+        });
+    });
+    it("redefine todas as preferências para os valores padrão", () => {
+        localStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify({
+                fontSize: "large",
+                highContrast: true,
+            })
+        );
+
+        renderizarProvider();
+
+        expect(screen.getByTestId("font-size")).toHaveTextContent("large");
+        expect(screen.getByTestId("high-contrast")).toHaveTextContent("true");
+        fireEvent.click(
+            screen.getByRole("button", {
+                name: "Redefinir preferências",
+            })
+        );
+
+        expect(screen.getByTestId("font-size")).toHaveTextContent("default");
+        expect(screen.getByTestId("high-contrast")).toHaveTextContent("false");
+        expect(document.documentElement.dataset.fontSize).toBe("default");
+        expect(document.documentElement.dataset.contrast).toBe("normal");
+
+        expect(
+            JSON.parse(localStorage.getItem(STORAGE_KEY)!)
+        ).toEqual({
+            fontSize: "default",
             highContrast: false,
         });
     });

@@ -7,6 +7,7 @@ export interface AccessibilityContextData {
     resetFontSize: () => void;
     increaseFontSize: () => void;
     toggleHighContrast: () => void;
+    resetPreferences: () => void;
 }
 
 export const AccessibilityContext =
