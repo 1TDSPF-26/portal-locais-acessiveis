@@ -1,13 +1,13 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from "react";
 
-import { ListagemLocais } from '../../services/ListagemLocais'
-import { LoadingState } from '../../components/LoadingState/LoadingState'
-import { ErrorState } from '../../components/ErrorState/ErrorState'
-import { EmptyState } from '../../components/EmptyState/EmptyState'
-import { ContagemResultados } from '../../components/ContagemResultados/ContagemResultados'
-import LocalCard from '../../components/LocalCard/LocalCard'
+import { ListagemLocais } from "../../services/ListagemLocais";
+import { LoadingState } from "../../components/LoadingState/LoadingState";
+import { ErrorState } from "../../components/ErrorState/ErrorState";
+import { EmptyState } from "../../components/EmptyState/EmptyState";
+import { ContagemResultados } from "../../components/ContagemResultados/ContagemResultados";
+import LocalCard from "../../components/LocalCard/LocalCard";
 
-import type { Local } from '../../types/Local'
+import type { Local } from "../../types/Local";
 import {
   CRITERIOS_PADRAO,
   ROTULOS_ACESSIBILIDADE,
@@ -15,29 +15,83 @@ import {
   obterCategorias,
   type OrdemNome,
   type StatusAcessibilidade,
-} from '../../utils/filtrarLocais'
-import { ITENS_POR_PAGINA, usePaginacao } from './hooks/usePaginacao'
-import { Paginacao } from './hooks/Paginacao'
+} from "../../utils/filtrarLocais";
+import { ITENS_POR_PAGINA, usePaginacao } from "./hooks/usePaginacao";
+import { Paginacao } from "./hooks/Paginacao";
 
 const classeControle =
-  'min-h-11 w-full min-w-0 max-w-full rounded-md border border-cor-textos bg-cor-fundo-principal px-3 py-2 text-legendas text-cor-titulos focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2'
+  "min-h-11 w-full min-w-0 max-w-full rounded-md border border-cor-textos bg-cor-fundo-principal px-3 py-2 text-legendas text-cor-titulos focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2";
+
+function BotaoVoltarTopo() {
+  const [mostrarBotaoTopo, setMostrarBotaoTopo] = useState(false);
+
+  useEffect(() => {
+    function verificarRolagem() {
+      setMostrarBotaoTopo(window.scrollY > 400);
+    }
+
+    window.addEventListener("scroll", verificarRolagem, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", verificarRolagem);
+    };
+  }, []);
+
+  function voltarAoTopo() {
+    const conteudoPrincipal = document.getElementById("conteudo-principal");
+
+    conteudoPrincipal?.focus({ preventScroll: true });
+
+    const movimentoReduzido = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    window.scrollTo({
+      top: 0,
+      behavior: movimentoReduzido ? "auto" : "smooth",
+    });
+  }
+
+  if (!mostrarBotaoTopo) {
+    return null;
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={voltarAoTopo}
+      aria-label="Voltar ao topo da página"
+      className="fixed bottom-6 right-6 z-50 rounded-md bg-cor-botao-principal px-4 py-3 text-botao font-semibold text-cor-fundo-principal shadow-lg transition-colors hover:bg-cor-apoio focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2"
+    >
+      Voltar ao topo
+    </button>
+  );
+}
 
 function Locais() {
-  const [locais, setLocais] = useState<Local[]>([])
-  const [carregando, setCarregando] = useState(true)
-  const [erro, setErro] = useState(false)
-  const [atualizando, setAtualizando] = useState(false)
-  const [mensagemStatus, setMensagemStatus] = useState('')
-  const requisicaoEmAndamento = useRef(false)
-  const [termoBusca, setTermoBusca] = useState(CRITERIOS_PADRAO.termoBusca)
-  const [categoria, setCategoria] = useState(CRITERIOS_PADRAO.categoria)
-  const [acessibilidade, setAcessibilidade] = useState(CRITERIOS_PADRAO.acessibilidade)
-  const [ordem, setOrdem] = useState(CRITERIOS_PADRAO.ordem)
+  const [locais, setLocais] = useState<Local[]>([]);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState(false);
+  const [atualizando, setAtualizando] = useState(false);
+  const [mensagemStatus, setMensagemStatus] = useState("");
+  const requisicaoEmAndamento = useRef(false);
+  const [termoBusca, setTermoBusca] = useState(CRITERIOS_PADRAO.termoBusca);
+  const [categoria, setCategoria] = useState(CRITERIOS_PADRAO.categoria);
+  const [acessibilidade, setAcessibilidade] = useState(
+    CRITERIOS_PADRAO.acessibilidade,
+  );
+  const [ordem, setOrdem] = useState(CRITERIOS_PADRAO.ordem);
 
   // Resultados derivados da lista original: alterar busca, filtros ou ordem não refaz a requisição.
-  const categorias = obterCategorias(locais)
-  const locaisFiltrados = filtrarLocais(locais, { termoBusca, categoria, acessibilidade, ordem })
-  const { itensPaginados,
+  const categorias = obterCategorias(locais);
+  const locaisFiltrados = filtrarLocais(locais, {
+    termoBusca,
+    categoria,
+    acessibilidade,
+    ordem,
+  });
+  const {
+    itensPaginados,
     paginaAtual,
     totalPaginas,
     proximaPagina,
@@ -48,191 +102,203 @@ function Locais() {
   } = usePaginacao({
     itens: locaisFiltrados,
     itensPorPagina: ITENS_POR_PAGINA,
-  })
+  });
 
   function limparFiltros() {
-    setTermoBusca(CRITERIOS_PADRAO.termoBusca)
-    setCategoria(CRITERIOS_PADRAO.categoria)
-    setAcessibilidade(CRITERIOS_PADRAO.acessibilidade)
-    setOrdem(CRITERIOS_PADRAO.ordem)
+    setTermoBusca(CRITERIOS_PADRAO.termoBusca);
+    setCategoria(CRITERIOS_PADRAO.categoria);
+    setAcessibilidade(CRITERIOS_PADRAO.acessibilidade);
+    setOrdem(CRITERIOS_PADRAO.ordem);
   }
 
-  async function carregarLocais(origem: 'inicial' | 'retry' | 'manual' = 'inicial') {
-  if (requisicaoEmAndamento.current) return
-  requisicaoEmAndamento.current = true
+  async function carregarLocais(
+    origem: "inicial" | "retry" | "manual" = "inicial",
+  ) {
+    if (requisicaoEmAndamento.current) return;
+    requisicaoEmAndamento.current = true;
 
-  if (origem === 'manual') {
-    setAtualizando(true)
-    setMensagemStatus('Atualizando locais...')
-  } else {
-    setCarregando(true)
-  }
-  setErro(false)
+    if (origem === "manual") {
+      setAtualizando(true);
+      setMensagemStatus("Atualizando locais...");
+    } else {
+      setCarregando(true);
+    }
+    setErro(false);
 
-  try {
-    const resultado = await ListagemLocais({ forcarAtualizacao: origem !== 'inicial' })
-    setLocais(resultado)
-    setMensagemStatus(origem === 'manual' ? 'Locais atualizados.' : '')
-  } catch {
-    setErro(true)
-    setLocais([])
-    setMensagemStatus('')
-  } finally {
-    requisicaoEmAndamento.current = false
-    setCarregando(false)
-    setAtualizando(false)
+    try {
+      const resultado = await ListagemLocais({
+        forcarAtualizacao: origem !== "inicial",
+      });
+      setLocais(resultado);
+      setMensagemStatus(origem === "manual" ? "Locais atualizados." : "");
+    } catch {
+      setErro(true);
+      setLocais([]);
+      setMensagemStatus("");
+    } finally {
+      requisicaoEmAndamento.current = false;
+      setCarregando(false);
+      setAtualizando(false);
+    }
   }
-}
 
   useEffect(() => {
-    carregarLocais()
-  }, [])
+    carregarLocais();
+  }, []);
 
   if (carregando) {
-  return <LoadingState message="Carregando locais..." variant="skeleton" />
+    return <LoadingState message="Carregando locais..." variant="skeleton" />;
   }
 
   if (erro) {
-    return <ErrorState onRetry={() => carregarLocais('retry')} />
+    return <ErrorState onRetry={() => carregarLocais("retry")} />;
   }
 
   if (locais.length === 0) {
-    return (<EmptyState title="Nenhum local encontrado." message="Não encontramos locais acessíveis para exibir no momento" actionLabel="Atualizar locais" onAction={() => carregarLocais('retry')} /> )
+    return (
+      <EmptyState
+        title="Nenhum local encontrado."
+        message="Não encontramos locais acessíveis para exibir no momento"
+        actionLabel="Atualizar locais"
+        onAction={() => carregarLocais("retry")}
+      />
+    );
   }
 
   return (
-    <section className="page-container stack min-w-0">
-      <h1>Locais</h1>
+    <>
+      <section className="page-container stack min-w-0">
+        <h1>Locais</h1>
 
-      <form
-        aria-label="Buscar e filtrar locais"
-        className="grid min-w-0 grid-cols-1 items-end gap-4 sm:grid-cols-2"
-        onSubmit={(e) => e.preventDefault()}
-      >
-        <div className="flex min-w-0 flex-col gap-2">
-          <label htmlFor="busca-nome">Buscar local por nome:</label>
-          <input
-            id="busca-nome"
-            type="text"
-            placeholder="Digite o nome do local..."
-            value={termoBusca}
-            onChange={(e) => setTermoBusca(e.target.value)}
-            className={classeControle}
-          />
-        </div>
-
-        <div className="flex min-w-0 flex-col gap-2">
-          <label htmlFor="filtro-categoria">Categoria:</label>
-          <select
-            id="filtro-categoria"
-            className={classeControle}
-            value={categoria}
-            onChange={(e) => setCategoria(e.target.value)}
-          >
-            <option value="">Todas as categorias</option>
-            {categorias.map((item) => (
-              <option key={item} value={item}>
-                {item}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="flex min-w-0 flex-col gap-2">
-          <label htmlFor="filtro-acessibilidade">Acessibilidade:</label>
-          <select
-            id="filtro-acessibilidade"
-            className={classeControle}
-            value={acessibilidade}
-            onChange={(e) => setAcessibilidade(e.target.value as StatusAcessibilidade | '')}
-          >
-            <option value="">Todos os níveis</option>
-            {Object.entries(ROTULOS_ACESSIBILIDADE).map(([status, rotulo]) => (
-              <option key={status} value={status}>
-                {rotulo}
-              </option>
-            ))}
-          </select>
-        </div>
-
-
-
-        <div className="flex min-w-0 flex-col gap-2">
-          <label htmlFor="ordenacao-nome">Ordenar por nome:</label>
-          <select
-            id="ordenacao-nome"
-            className={classeControle}
-            value={ordem}
-            onChange={(e) => setOrdem(e.target.value as OrdemNome)}
-          >
-            <option value="asc">A a Z</option>
-            <option value="desc">Z a A</option>
-          </select>
-        </div>
-
-        <button
-          type="button"
-          onClick={limparFiltros}
-          className="min-h-11 w-full min-w-0 whitespace-normal rounded-md bg-cor-botao-principal px-4 py-2 text-botao font-semibold text-cor-fundo-principal transition-colors hover:bg-cor-apoio focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2 sm:col-span-2 sm:w-auto sm:justify-self-start"        
-          >
-          Limpar filtros
-        </button>
-
-        <button
-          type="button"
-          onClick={() => carregarLocais('manual')}
-          aria-disabled={atualizando}
-          className={`inline-flex items-center gap-2 rounded-md border-2 border-cor-botao-principal bg-cor-fundo-principal px-4 py-2 text-botao font-semibold text-cor-botao-principal transition-colors hover:bg-cor-superficies-cards focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2 ${atualizando ? 'cursor-not-allowed opacity-70' : ''}`}
+        <form
+          aria-label="Buscar e filtrar locais"
+          className="grid min-w-0 grid-cols-1 items-end gap-4 sm:grid-cols-2"
+          onSubmit={(e) => e.preventDefault()}
         >
-          {atualizando && (
-            <span
-              aria-hidden="true"
-              className="h-4 w-4 animate-spin rounded-full border-2 border-cor-botao-principal border-t-transparent"
+          <div className="flex min-w-0 flex-col gap-2">
+            <label htmlFor="busca-nome">Buscar local por nome:</label>
+            <input
+              id="busca-nome"
+              type="text"
+              placeholder="Digite o nome do local..."
+              value={termoBusca}
+              onChange={(e) => setTermoBusca(e.target.value)}
+              className={classeControle}
             />
-          )}
-          Atualizar locais
-        </button>
-      </form>
+          </div>
 
-      <p aria-live="polite" className="text-legendas text-cor-textos">
-        {mensagemStatus}
-      </p>
+          <div className="flex min-w-0 flex-col gap-2">
+            <label htmlFor="filtro-categoria">Categoria:</label>
+            <select
+              id="filtro-categoria"
+              className={classeControle}
+              value={categoria}
+              onChange={(e) => setCategoria(e.target.value)}
+            >
+              <option value="">Todas as categorias</option>
+              {categorias.map((item) => (
+                <option key={item} value={item}>
+                  {item}
+                </option>
+              ))}
+            </select>
+          </div>
 
-      <ContagemResultados total={locaisFiltrados.length} />
+          <div className="flex min-w-0 flex-col gap-2">
+            <label htmlFor="filtro-acessibilidade">Acessibilidade:</label>
+            <select
+              id="filtro-acessibilidade"
+              className={classeControle}
+              value={acessibilidade}
+              onChange={(e) =>
+                setAcessibilidade(e.target.value as StatusAcessibilidade | "")
+              }
+            >
+              <option value="">Todos os níveis</option>
+              {Object.entries(ROTULOS_ACESSIBILIDADE).map(
+                ([status, rotulo]) => (
+                  <option key={status} value={status}>
+                    {rotulo}
+                  </option>
+                ),
+              )}
+            </select>
+          </div>
 
-      {locaisFiltrados.length > 0 ? (
+          <div className="flex min-w-0 flex-col gap-2">
+            <label htmlFor="ordenacao-nome">Ordenar por nome:</label>
+            <select
+              id="ordenacao-nome"
+              className={classeControle}
+              value={ordem}
+              onChange={(e) => setOrdem(e.target.value as OrdemNome)}
+            >
+              <option value="asc">A a Z</option>
+              <option value="desc">Z a A</option>
+            </select>
+          </div>
 
-        <>
-          <ul className="stack min-w-0">
-            {itensPaginados.map((local) => (
-              <li key={local.id} className="min-w-0">
-                <LocalCard local={local} />
-              </li>
-            ))}
-          </ul>
-          <Paginacao
-            paginaAtual={paginaAtual}
-            totalPaginas={totalPaginas}
-            temAnterior={temAnterior}
-            temProxima={temProxima}
-            paginaAnterior={paginaAnterior}
-            proximaPagina={proximaPagina}
-            setPaginaAtual={setPaginaAtual}
+          <button
+            type="button"
+            onClick={limparFiltros}
+            className="min-h-11 w-full min-w-0 whitespace-normal rounded-md bg-cor-botao-principal px-4 py-2 text-botao font-semibold text-cor-fundo-principal transition-colors hover:bg-cor-apoio focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2 sm:col-span-2 sm:w-auto sm:justify-self-start"
+          >
+            Limpar filtros
+          </button>
+
+          <button
+            type="button"
+            onClick={() => carregarLocais("manual")}
+            aria-disabled={atualizando}
+            className={`inline-flex items-center gap-2 rounded-md border-2 border-cor-botao-principal bg-cor-fundo-principal px-4 py-2 text-botao font-semibold text-cor-botao-principal transition-colors hover:bg-cor-superficies-cards focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2 ${atualizando ? "cursor-not-allowed opacity-70" : ""}`}
+          >
+            {atualizando && (
+              <span
+                aria-hidden="true"
+                className="h-4 w-4 animate-spin rounded-full border-2 border-cor-botao-principal border-t-transparent"
+              />
+            )}
+            Atualizar locais
+          </button>
+        </form>
+
+        <p aria-live="polite" className="text-legendas text-cor-textos">
+          {mensagemStatus}
+        </p>
+
+        <ContagemResultados total={locaisFiltrados.length} />
+
+        {locaisFiltrados.length > 0 ? (
+          <>
+            <ul className="stack min-w-0">
+              {itensPaginados.map((local) => (
+                <li key={local.id} className="min-w-0">
+                  <LocalCard local={local} />
+                </li>
+              ))}
+            </ul>
+            <Paginacao
+              paginaAtual={paginaAtual}
+              totalPaginas={totalPaginas}
+              temAnterior={temAnterior}
+              temProxima={temProxima}
+              paginaAnterior={paginaAnterior}
+              proximaPagina={proximaPagina}
+              setPaginaAtual={setPaginaAtual}
+            />
+          </>
+        ) : (
+          <EmptyState
+            title="Nenhum resultado encontrado."
+            message="Não encontramos nenhum local que corresponda à busca e aos filtros selecionados."
+            actionLabel="Limpar filtros"
+            onAction={limparFiltros}
           />
-        </>
-
-      ) : (
-        <EmptyState
-          title="Nenhum resultado encontrado."
-          message="Não encontramos nenhum local que corresponda à busca e aos filtros selecionados."
-          actionLabel="Limpar filtros"
-          onAction={limparFiltros}
-        />
-      )}
-    </section>
-  )
-
-
+        )}
+      </section>
+      <BotaoVoltarTopo />
+    </>
+  );
 }
 
-export default Locais
+export default Locais;
