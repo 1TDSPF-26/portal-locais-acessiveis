@@ -33,7 +33,10 @@ function Home() {
             diferentes locais cadastrados na plataforma.
           </p>
           <p>
-            <Link to="/locais">Ver locais cadastrados</Link>
+            <Link to="/locais">Explorar locais</Link>
+          </p>
+          <p>
+            <a href="#como-funciona">Como funciona</a>
           </p>
         </div>
       </section>
