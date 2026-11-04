@@ -21,6 +21,10 @@ export function Footer() {
           </li>
 
           <li>
+            <Link to="/como-contribuir">Como contribuir</Link>
+          </li>
+
+          <li>
             <Link to="/sobre">Sobre</Link>
           </li>
 

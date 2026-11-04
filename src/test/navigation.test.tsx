@@ -99,6 +99,44 @@ describe('Navegação principal', () => {
 
     expect(footer.getByRole('link', { name: 'Favoritos' }))
       .toHaveAttribute('href', '/favoritos')
+
+    expect(footer.getByRole('link', { name: 'Como contribuir' }))
+      .toHaveAttribute('href', '/como-contribuir')
+  })
+
+  it('navega do Footer para a página de orientações e dela para o cadastro', async () => {
+    const user = userEvent.setup()
+
+    renderRoutes('/')
+
+    await user.click(
+      within(
+        screen.getByRole('navigation', {
+          name: 'Navegação do rodapé',
+        }),
+      ).getByRole('link', {
+        name: 'Como contribuir',
+      }),
+    )
+
+    expect(
+      await screen.findByRole('heading', {
+        name: 'Como contribuir com um novo local',
+        level: 1,
+      }),
+    ).toBeInTheDocument()
+
+    const cta = screen.getByRole('link', { name: 'Cadastrar um local' })
+
+    cta.focus()
+    await user.keyboard('{Enter}')
+
+    expect(
+      await screen.findByRole('heading', {
+        name: 'Cadastro de Locais Acessíveis',
+        level: 1,
+      }),
+    ).toBeInTheDocument()
   })
 
   it('navega do Footer para a página de acessibilidade', async () => {

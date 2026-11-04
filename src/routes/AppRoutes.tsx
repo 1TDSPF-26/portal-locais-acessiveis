@@ -20,6 +20,8 @@ import Acessibilidade from '../pages/Acessibilidade/Acessibilidade'
 
 import Favoritos from '../pages/Favoritos/Favoritos'
 
+import ComoContribuir from '../pages/ComoContribuir/ComoContribuir'
+
 function AppRoutes() {
 
   return (
@@ -37,6 +39,8 @@ function AppRoutes() {
           <Route path="/locais/:id" element={<DetalhesLocal />} />
 
           <Route path="/cadastrar" element={<Cadastro />} />
+
+          <Route path="/como-contribuir" element={<ComoContribuir />} />
 
           <Route path="/sobre" element={<Sobre />} />
 
