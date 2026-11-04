@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import type { Local } from '../../types/Local'
+import ImagemLocal from '../ImagemLocal/ImagemLocal'
 
 interface LocalCardProps {
   local: Local
@@ -18,6 +19,8 @@ const ROTULOS_ACESSIBILIDADE: Record<
 function LocalCard({ local }: LocalCardProps) {
   return (
     <article className="stack relative w-full min-w-0 rounded-lg bg-cor-superficies-cards p-4 [overflow-wrap:anywhere]">
+      <ImagemLocal src={local.imagem} nome={local.nome} />
+
       <h2>
         <Link
           to={`/locais/${local.id}`}

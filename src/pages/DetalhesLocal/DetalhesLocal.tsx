@@ -6,6 +6,7 @@ import { LoadingState } from '../../components/LoadingState/LoadingState'
 import { ErrorState } from '../../components/ErrorState/ErrorState'
 import { EmptyState } from '../../components/EmptyState/EmptyState'
 import { Breadcrumb } from '../../components/Breadcrumb/Breadcrumb'
+import ImagemLocal from '../../components/ImagemLocal/ImagemLocal'
 
 import type { Endereco, Local } from '../../types/Local'
 
@@ -159,6 +160,13 @@ function DetalhesLocal() {
       <LinkVoltar />
 
       <h1 id="titulo-local">{local.nome}</h1>
+
+      <ImagemLocal
+        key={local.imagem}
+        src={local.imagem}
+        nome={local.nome}
+        className="max-w-2xl"
+      />
 
       <dl className="stack">
         <div>
