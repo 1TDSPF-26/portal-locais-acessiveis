@@ -32,6 +32,11 @@ export function ListagemLocais({ forcarAtualizacao = false }: OpcoesListagem = {
   return requisicaoEmAndamento
 }
 
+/** Descarta qualquer requisição em andamento. Usado em testes. */
+export function reiniciarListagemLocais() {
+  requisicaoEmAndamento = null
+}
+
 async function consultarOverpass(): Promise<Local[]> {
   const query = `
   [out:json][timeout:90];

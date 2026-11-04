@@ -1,5 +1,6 @@
 import { render, screen, within } from '@testing-library/react'
 import { limparCacheLocais } from '../../services/CacheLocais'
+import { reiniciarListagemLocais } from '../../services/ListagemLocais'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -23,6 +24,7 @@ const fetchMock = vi.fn(
 describe('Página Locais - filtros e ordenação', () => {
   beforeEach(() => {
     limparCacheLocais()
+    reiniciarListagemLocais()
     fetchMock.mockClear()
     vi.spyOn(globalThis, 'fetch').mockImplementation(fetchMock)
   })
@@ -38,6 +40,8 @@ describe('Página Locais - filtros e ordenação', () => {
       </MemoryRouter>,
     )
     await screen.findByRole('heading', { name: 'Locais', level: 1 })
+    // Aguarda o fim do carregamento (o h1 aparece antes dos dados)
+    await screen.findByRole('list')
   }
 
   function nomesExibidos() {
