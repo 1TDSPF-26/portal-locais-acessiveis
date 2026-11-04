@@ -68,4 +68,25 @@ describe('Breadcrumb', () => {
     await user.tab()
     expect(screen.getByRole('link', { name: 'Locais' })).toHaveFocus()
   })
+  it('permite que o nome longo da página atual quebre linha', () => {
+    const nomeLongo = 'Nomedelocalmuitolongosemespacosparatestarquebradelinha'
+
+    render(
+      <MemoryRouter>
+        <Breadcrumb
+          items={[
+            { label: 'Home', to: '/' },
+            { label: 'Locais', to: '/locais' },
+            { label: nomeLongo },
+          ]}
+        />
+      </MemoryRouter>,
+    )
+
+    const paginaAtual = screen.getByText(nomeLongo)
+
+    expect(paginaAtual).toHaveClass('min-w-0', 'wrap-anywhere')
+    expect(paginaAtual.closest('li')).toHaveClass('min-w-0')
+  })
+
 })
