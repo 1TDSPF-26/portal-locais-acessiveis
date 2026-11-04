@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { compartilharLink } from '../../utils/compartilharLink';
 import { BotaoCompartilhar } from './BotaoCompartilhar';
 
-vi.mock('../../utils/compartilhar', () => ({
+vi.mock('../../utils/compartilharLink', () => ({
   compartilharLink: vi.fn(),
 }));
 
