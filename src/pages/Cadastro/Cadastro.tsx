@@ -11,30 +11,36 @@ import {
 } from './validacaoCadastro'
 import { cadastrarLocal } from '../../services/cadastrarLocal'
 import type { CreateLocalPayload } from '../../types/CreateLocalPayload'
+import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 
 type ElementoDeCampo = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
 type SituacaoEnvio = 'inativo' | 'enviando' | 'sucesso' | 'erro'
 
 function Cadastro() {
-  const [nome, setNome] = useState('')
-  const [categoria, setCategoria] = useState('')
-  const [descricao, setDescricao] = useState('')
+  useDocumentTitle("Cadastro");
+
+  const [nome, setNome] = useState("");
+  const [categoria, setCategoria] = useState("");
+  const [descricao, setDescricao] = useState("");
 
   const [endereco, setEndereco] = useState({
-    rua: '',
-    numero: '',
-    cidade: '',
-    estado: '',
-  })
+    rua: "",
+    numero: "",
+    cidade: "",
+    estado: "",
+  });
 
-  const [statusAcessibilidade, setStatusAcessibilidade] = useState('nao_informado')
-  const [descricaoAcessibilidade, setDescricaoAcessibilidade] = useState('')
+  const [statusAcessibilidade, setStatusAcessibilidade] =
+    useState("nao_informado");
+  const [descricaoAcessibilidade, setDescricaoAcessibilidade] = useState("");
 
   const [erros, setErros] = useState<ErrosCadastro>({})
   const [houveTentativaDeEnvio, setHouveTentativaDeEnvio] = useState(false)
   const [situacaoEnvio, setSituacaoEnvio] = useState<SituacaoEnvio>('inativo')
 
-  const camposRef = useRef<Partial<Record<CampoCadastro, ElementoDeCampo | null>>>({})
+  const camposRef = useRef<
+    Partial<Record<CampoCadastro, ElementoDeCampo | null>>
+  >({});
 
   const valoresCadastro: ValoresCadastro = {
     nome,
@@ -44,25 +50,25 @@ function Cadastro() {
     cidade: endereco.cidade,
     estado: endereco.estado,
     statusAcessibilidade,
-  }
+  };
 
   function revalidar(valoresAtualizados: ValoresCadastro) {
     if (!houveTentativaDeEnvio) {
-      return
+      return;
     }
 
-    setErros(validarCadastro(valoresAtualizados))
+    setErros(validarCadastro(valoresAtualizados));
   }
 
   function atualizarEndereco(campo: keyof typeof endereco, valor: string) {
-    const enderecoAtualizado = { ...endereco, [campo]: valor }
-    setEndereco(enderecoAtualizado)
+    const enderecoAtualizado = { ...endereco, [campo]: valor };
+    setEndereco(enderecoAtualizado);
     revalidar({
       ...valoresCadastro,
       rua: enderecoAtualizado.rua,
       cidade: enderecoAtualizado.cidade,
       estado: enderecoAtualizado.estado,
-    })
+    });
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -76,11 +82,11 @@ function Cadastro() {
     setErros(errosEncontrados)
     setHouveTentativaDeEnvio(true)
 
-    const camposInvalidos = listarCamposInvalidos(errosEncontrados)
+    const camposInvalidos = listarCamposInvalidos(errosEncontrados);
 
     if (camposInvalidos.length > 0) {
-      camposRef.current[camposInvalidos[0]]?.focus()
-      return
+      camposRef.current[camposInvalidos[0]]?.focus();
+      return;
     }
 
     const payload: CreateLocalPayload = {
@@ -109,31 +115,31 @@ function Cadastro() {
     }
   }
 
-  const camposInvalidos = listarCamposInvalidos(erros)
-  const idErro = (campo: CampoCadastro) => `erro-${IDS_CAMPOS[campo]}`
+  const camposInvalidos = listarCamposInvalidos(erros);
+  const idErro = (campo: CampoCadastro) => `erro-${IDS_CAMPOS[campo]}`;
 
   function atributosDeErro(campo: CampoCadastro, descritoPor?: string) {
-    const temErro = Boolean(erros[campo])
+    const temErro = Boolean(erros[campo]);
     const descricoes = [descritoPor, temErro ? idErro(campo) : undefined]
       .filter(Boolean)
-      .join(' ')
+      .join(" ");
 
     return {
-      'aria-invalid': temErro || undefined,
-      'aria-describedby': descricoes === '' ? undefined : descricoes,
-    }
+      "aria-invalid": temErro || undefined,
+      "aria-describedby": descricoes === "" ? undefined : descricoes,
+    };
   }
 
   function mensagemDeErro(campo: CampoCadastro) {
     if (!erros[campo]) {
-      return null
+      return null;
     }
 
     return (
       <p className="cadastro__erro wrap-anywhere" id={idErro(campo)}>
         <span aria-hidden="true">⚠</span> <strong>Erro:</strong> {erros[campo]}
       </p>
-    )
+    );
   }
 
   return (
@@ -151,10 +157,13 @@ function Cadastro() {
         className='mt-6 grid min-w-0 gap-6'>
         <div aria-live="assertive" role="alert">
           {camposInvalidos.length > 0 && (
-            <section className="cadastro__resumo-erros" aria-labelledby="titulo-resumo-erros">
+            <section
+              className="cadastro__resumo-erros"
+              aria-labelledby="titulo-resumo-erros"
+            >
               <h2 id="titulo-resumo-erros">
                 {camposInvalidos.length === 1
-                  ? 'Encontramos 1 erro no formulário'
+                  ? "Encontramos 1 erro no formulário"
                   : `Encontramos ${camposInvalidos.length} erros no formulário`}
               </h2>
               <p>Corrija os campos abaixo para continuar o cadastro.</p>
@@ -171,7 +180,10 @@ function Cadastro() {
           )}
         </div>
 
-        <p className="cadastro__aviso-obrigatorio" id="aviso-campos-obrigatorio">
+        <p
+          className="cadastro__aviso-obrigatorio"
+          id="aviso-campos-obrigatorio"
+        >
           Os campos marcados com (obrigatório) precisam ser preenchidos.
         </p>
 
@@ -190,16 +202,16 @@ function Cadastro() {
               type="text"
               value={nome}
               ref={(elemento) => {
-                camposRef.current.nome = elemento
+                camposRef.current.nome = elemento;
               }}
               onChange={(event) => {
-                setNome(event.target.value)
-                revalidar({ ...valoresCadastro, nome: event.target.value })
+                setNome(event.target.value);
+                revalidar({ ...valoresCadastro, nome: event.target.value });
               }}
               {...atributosDeErro('nome')}
               className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cor-apoio'
             />
-            {mensagemDeErro('nome')}
+            {mensagemDeErro("nome")}
           </div>
 
           <div className="flex min-w-0 flex-col gap-2">
@@ -212,16 +224,19 @@ function Cadastro() {
               type="text"
               value={categoria}
               ref={(elemento) => {
-                camposRef.current.categoria = elemento
+                camposRef.current.categoria = elemento;
               }}
               onChange={(event) => {
-                setCategoria(event.target.value)
-                revalidar({ ...valoresCadastro, categoria: event.target.value })
+                setCategoria(event.target.value);
+                revalidar({
+                  ...valoresCadastro,
+                  categoria: event.target.value,
+                });
               }}
               {...atributosDeErro('categoria')}
               className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cor-apoio'
             />
-            {mensagemDeErro('categoria')}
+            {mensagemDeErro("categoria")}
           </div>
 
           <div className="flex min-w-0 flex-col gap-2 md:col-span-2">
@@ -234,16 +249,19 @@ function Cadastro() {
               rows={4}
               value={descricao}
               ref={(elemento) => {
-                camposRef.current.descricao = elemento
+                camposRef.current.descricao = elemento;
               }}
               onChange={(event) => {
-                setDescricao(event.target.value)
-                revalidar({ ...valoresCadastro, descricao: event.target.value })
+                setDescricao(event.target.value);
+                revalidar({
+                  ...valoresCadastro,
+                  descricao: event.target.value,
+                });
               }}
               {...atributosDeErro('descricao')}
               className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cor-apoio resize-y'
             />
-            {mensagemDeErro('descricao')}
+            {mensagemDeErro("descricao")}
           </div>
         </fieldset>
 
@@ -262,13 +280,13 @@ function Cadastro() {
               type="text"
               value={endereco.rua}
               ref={(elemento) => {
-                camposRef.current.rua = elemento
+                camposRef.current.rua = elemento;
               }}
               onChange={(event) => atualizarEndereco('rua', event.target.value)}
               {...atributosDeErro('rua')}
               className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cor-apoio'
             />
-            {mensagemDeErro('rua')}
+            {mensagemDeErro("rua")}
           </div>
 
           <div className="flex min-w-0 flex-col gap-2">
@@ -293,13 +311,13 @@ function Cadastro() {
               type="text"
               value={endereco.cidade}
               ref={(elemento) => {
-                camposRef.current.cidade = elemento
+                camposRef.current.cidade = elemento;
               }}
               onChange={(event) => atualizarEndereco('cidade', event.target.value)}
               {...atributosDeErro('cidade')}
               className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cor-apoio'
             />
-            {mensagemDeErro('cidade')}
+            {mensagemDeErro("cidade")}
           </div>
 
           <div className="flex min-w-0 flex-col gap-2">
@@ -312,13 +330,13 @@ function Cadastro() {
               type="text"
               value={endereco.estado}
               ref={(elemento) => {
-                camposRef.current.estado = elemento
+                camposRef.current.estado = elemento;
               }}
               onChange={(event) => atualizarEndereco('estado', event.target.value)}
               {...atributosDeErro('estado')}
               className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cor-apoio'
             />
-            {mensagemDeErro('estado')}
+            {mensagemDeErro("estado")}
           </div>
         </fieldset>
 
@@ -337,11 +355,14 @@ function Cadastro() {
               name="statusAcessibilidade"
               value={statusAcessibilidade}
               ref={(elemento) => {
-                camposRef.current.statusAcessibilidade = elemento
+                camposRef.current.statusAcessibilidade = elemento;
               }}
               onChange={(event) => {
-                setStatusAcessibilidade(event.target.value)
-                revalidar({ ...valoresCadastro, statusAcessibilidade: event.target.value })
+                setStatusAcessibilidade(event.target.value);
+                revalidar({
+                  ...valoresCadastro,
+                  statusAcessibilidade: event.target.value,
+                });
               }}
               {...atributosDeErro('statusAcessibilidade')}
               className='box-border w-full min-w-0 rounded-lg border border-cor-apoio bg-cor-fundo-principal p-3 text-(length:--text-body) text-cor-textos focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-cor-apoio'
@@ -351,14 +372,14 @@ function Cadastro() {
               <option value="parcial">Parcialmente acessível</option>
               <option value="nao_acessivel">Não acessível</option>
             </select>
-            {mensagemDeErro('statusAcessibilidade')}
+            {mensagemDeErro("statusAcessibilidade")}
           </div>
 
           <div className="flex min-w-0 flex-col gap-2 md:col-span-2">
             <label htmlFor="descricao-acessibilidade" className='font-semibold'>Recursos e limitações de acessibilidade</label>
             <p id="ajuda-acessibilidade">
-              Descreva os recursos conhecidos do local, como rampa ou banheiro adaptado,
-              e as limitações que considerar relevantes.
+              Descreva os recursos conhecidos do local, como rampa ou banheiro
+              adaptado, e as limitações que considerar relevantes.
             </p>
             <textarea
               id="descricao-acessibilidade"
@@ -388,7 +409,7 @@ function Cadastro() {
         </button>
       </form>
     </div>
-  )
+  );
 }
 
-export default Cadastro
+export default Cadastro;

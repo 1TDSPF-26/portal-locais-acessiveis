@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 import heroEcolocalizacao from '../../assets/hero-ecolocalizacao.png'
 
@@ -6,6 +7,8 @@ import './Home.css'
 
 
 function Home() {
+  useDocumentTitle("Home");
+
   return (
     <>
       <section className="home-hero" aria-labelledby="home-hero-titulo">
