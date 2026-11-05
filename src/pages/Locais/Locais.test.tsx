@@ -47,8 +47,12 @@ describe('Página Locais - filtros e ordenação', () => {
   }
 
   it('exibe o estado de carregamento enquanto busca os locais', async () => {
+    let finalizarRequisicao!: (resposta: Response) => void
     fetchMock.mockImplementationOnce(
-      () => new Promise<Response>(() => {}),
+      () =>
+        new Promise<Response>((resolve) => {
+          finalizarRequisicao = resolve
+        }),
     )
 
     render(
@@ -64,6 +68,17 @@ describe('Página Locais - filtros e ordenação', () => {
     expect(
       status.querySelectorAll('[aria-hidden="true"] article'),
     ).toHaveLength(3)
+
+    // Finaliza a requisição simulada e aguarda o carregamento terminar.
+    finalizarRequisicao(
+      new Response(JSON.stringify({ elements: elementos }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      }),
+    )
+
+    await screen.findByRole('heading', { name: 'Locais', level: 1 })
+    expect(screen.queryByText('Carregando locais...')).not.toBeInTheDocument()
   })
 
   it('filtra por categoria e acessibilidade e combina com a busca sem nova requisição', async () => {
