@@ -39,7 +39,10 @@ export function BotaoCompartilhar({ titulo, url }: BotaoCompartilharProps) {
 
   return (
     <div>
-      <button type="button" onClick={handleCompartilhar}>
+      <button 
+        type="button" 
+        className="mt-4 rounded-md bg-cor-erro px-4 py-2 text-base font-semibold text-cor-fundo-principal transition-colors hover:bg-cor-apoio focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cor-apoio focus-visible:ring-offset-2"
+        onClick={handleCompartilhar}>
         Compartilhar
       </button>
       <p role="status">
